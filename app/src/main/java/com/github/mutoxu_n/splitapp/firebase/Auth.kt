@@ -26,8 +26,10 @@ class Auth {
         if(_instance != null)
             throw RuntimeException("Use get() method to get the single instance of this class.")
 
-        if(BuildConfig.DEBUG)
+        if(BuildConfig.DEBUG) {
             auth.useEmulator("10.0.2.2", 9099)
+            signOutIfInvalid()
+        }
 
     }
 
@@ -39,6 +41,14 @@ class Auth {
                 Log.e(TAG, "signInAnonymously: ${auth.uid}")
 
             }
+    }
+
+    // 端末のログイン状態が無効のときにサインアウトする
+    private fun signOutIfInvalid() {
+        auth.currentUser?.getIdToken(false)?.addOnCompleteListener {
+            // ローカルでログイン済 かつ Firebase Auth で認証情報を取得できないときはサインアウト
+            if(!it.isSuccessful && auth.uid != null) auth.signOut()
+        }
     }
 
 }
