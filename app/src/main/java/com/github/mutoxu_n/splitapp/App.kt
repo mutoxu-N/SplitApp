@@ -2,6 +2,7 @@ package com.github.mutoxu_n.splitapp
 
 import android.app.Application
 import android.content.Context
+import com.google.firebase.FirebaseApp
 
 class App: Application() {
     companion object {
@@ -9,7 +10,12 @@ class App: Application() {
         val appContext: Context get() = _appContext!!
 
     }
-    init {
+
+    override fun onCreate() {
+        super.onCreate()
         _appContext = applicationContext
+
+        FirebaseApp.initializeApp(appContext)
     }
+
 }

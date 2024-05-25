@@ -4,9 +4,9 @@ class Store {
     companion object {
         private var _instance: Store? = null
 
-        fun get(): Store? {
+        fun get(): Store {
             if(_instance == null) _instance = Store()
-            return _instance
+            return _instance!!
         }
     }
 
