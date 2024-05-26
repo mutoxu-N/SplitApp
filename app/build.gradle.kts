@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -22,12 +24,23 @@ android {
     }
 
     buildTypes {
+        debug {
+            val port = gradleLocalProperties(rootDir, providers).getProperty("SERVER_PORT")
+            buildConfigField("String", "SERVER_PORT", port)
+            val servAddress = gradleLocalProperties(rootDir, providers).getProperty("SERVER_ADDRESS_DEBUG")
+            buildConfigField("String", "SERVER_ADDRESS", servAddress)
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
+            val port = gradleLocalProperties(rootDir, providers).getProperty("SERVER_PORT")
+            buildConfigField("String", "SERVER_PORT", port)
+            val servAddress = gradleLocalProperties(rootDir, providers).getProperty("SERVER_ADDRESS")
+            buildConfigField("String", "SERVER_ADDRESS", servAddress)
         }
     }
     compileOptions {
