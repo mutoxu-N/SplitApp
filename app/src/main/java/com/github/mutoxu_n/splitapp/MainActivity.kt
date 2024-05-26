@@ -28,7 +28,9 @@ import com.github.mutoxu_n.splitapp.firebase.Auth
 import com.github.mutoxu_n.splitapp.ui.theme.SplitAppTheme
 
 class MainActivity : ComponentActivity() {
-    private var isSignedIn: Boolean by mutableStateOf(false)
+    companion object {
+        private const val TAG = "MainActivity"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,9 +55,14 @@ class MainActivity : ComponentActivity() {
 
                         Button(onClick = { signIn() }) {
                             Text(
-                                text = if (isSignedIn) "Sign Out" else "Sign In"
+                                text = "Sign In"
                             )
+                        }
 
+                        Button(onClick = { Auth.get().signOut() }) {
+                            Text(
+                                text = "Sign Out"
+                            )
                         }
                     }
                 }
