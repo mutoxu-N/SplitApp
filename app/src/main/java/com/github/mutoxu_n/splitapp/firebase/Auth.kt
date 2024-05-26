@@ -10,6 +10,10 @@ class Auth {
     val auth = Firebase.auth
 
     private var _token: String? = null
+        set(value) {
+            field = value
+            onTokenChangedListeners.forEach { it.onTokenChanged(token) }
+        }
 
     val token: String? get() = _token
     val isSignedIn: Boolean get() = _token != null
@@ -74,4 +78,10 @@ class Auth {
         }
     }
 
+
+    // イベントリスナ
+    fun interface OnTokenChangedListener { fun onTokenChanged(token: String?) }
+    private val onTokenChangedListeners = mutableListOf<OnTokenChangedListener>()
+    fun addOnTokenChangedListener(listener: OnTokenChangedListener) { onTokenChangedListeners.add(listener) }
+    fun removeOnTokenChangedListener(listener: OnTokenChangedListener) { onTokenChangedListeners.remove(listener) }
 }

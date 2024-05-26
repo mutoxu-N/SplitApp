@@ -1,7 +1,6 @@
 package com.github.mutoxu_n.splitapp
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -28,12 +27,19 @@ import com.github.mutoxu_n.splitapp.firebase.Auth
 import com.github.mutoxu_n.splitapp.ui.theme.SplitAppTheme
 
 class MainActivity : ComponentActivity() {
+    private var token: String? by mutableStateOf(null)
+
     companion object {
         private const val TAG = "MainActivity"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Auth.get().addOnTokenChangedListener {
+            token = it
+        }
+
         enableEdgeToEdge()
         setContent {
             SplitAppTheme {
@@ -51,6 +57,10 @@ class MainActivity : ComponentActivity() {
 
                         Text(
                             text = "${Auth.get().auth.uid}"
+                        )
+
+                        Text(
+                            text = "token: ${token}"
                         )
 
                         Button(onClick = { signIn() }) {
