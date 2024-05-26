@@ -1,6 +1,5 @@
 package com.github.mutoxu_n.splitapp.firebase
 
-import android.util.Log
 import com.github.mutoxu_n.splitapp.BuildConfig
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -40,7 +39,6 @@ class Auth {
 
         // トークンが変更されたとき
         auth.addIdTokenListener { a: FirebaseAuth ->
-            Log.e(TAG, "addAuthStateListener: ${a.currentUser}")
             if(a.currentUser == null) {
                 _token = null
                 return@addIdTokenListener
@@ -48,7 +46,6 @@ class Auth {
 
             // トークンを取得できた場合はtokenを保存する
             a.currentUser!!.getIdToken(false).addOnCompleteListener {
-                Log.e(TAG, "getIdToken(${it.isSuccessful}): ${it.result.token}")
                 if(it.isSuccessful) {
                     _token = it.result.token
                 }

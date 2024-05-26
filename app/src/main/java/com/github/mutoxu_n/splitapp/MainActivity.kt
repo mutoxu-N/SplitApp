@@ -1,6 +1,7 @@
 package com.github.mutoxu_n.splitapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -27,17 +28,22 @@ import com.github.mutoxu_n.splitapp.firebase.Auth
 import com.github.mutoxu_n.splitapp.ui.theme.SplitAppTheme
 
 class MainActivity : ComponentActivity() {
-    private var token: String? by mutableStateOf(null)
+    private var uid: String? by mutableStateOf(null)
 
     companion object {
         private const val TAG = "MainActivity"
+    }
+
+    // 動作テスト用
+    private fun run() {
+        Log.e(TAG, "run: Clicked")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         Auth.get().addOnTokenChangedListener {
-            token = it
+            uid = Auth.get().auth.uid
         }
 
         enableEdgeToEdge()
@@ -56,11 +62,7 @@ class MainActivity : ComponentActivity() {
                         )
 
                         Text(
-                            text = "${Auth.get().auth.uid}"
-                        )
-
-                        Text(
-                            text = "token: ${token}"
+                            text = "uid: $uid"
                         )
 
                         Button(onClick = { signIn() }) {
@@ -72,6 +74,13 @@ class MainActivity : ComponentActivity() {
                         Button(onClick = { Auth.get().signOut() }) {
                             Text(
                                 text = "Sign Out"
+                            )
+                        }
+
+                        // 動作テスト用
+                        Button(onClick = { run() }) {
+                            Text(
+                                text = "RUN"
                             )
                         }
                     }
