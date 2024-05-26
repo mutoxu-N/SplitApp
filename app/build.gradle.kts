@@ -82,6 +82,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // Retrofit
+    implementation("com.squareup.moshi:moshi-kotlin")
 
     // firebase
     implementation(platform(libs.firebase.bom))
