@@ -1,4 +1,4 @@
-package com.github.mutoxu_n.splitapp.firebase
+package com.github.mutoxu_n.splitapp.common
 
 class Store {
     companion object {

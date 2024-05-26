@@ -1,4 +1,4 @@
-package com.github.mutoxu_n.splitapp.firebase
+package com.github.mutoxu_n.splitapp.common
 
 import com.github.mutoxu_n.splitapp.BuildConfig
 import com.google.firebase.Firebase
