@@ -25,11 +25,12 @@ android {
 
     buildTypes {
         debug {
-            val port = gradleLocalProperties(rootDir, providers).getProperty("SERVER_PORT")
+            val port = gradleLocalProperties(rootDir, providers).getProperty("SERVER_PORT_DEBUG")
             buildConfigField("String", "SERVER_PORT", port)
             val servAddress = gradleLocalProperties(rootDir, providers).getProperty("SERVER_ADDRESS_DEBUG")
             buildConfigField("String", "SERVER_ADDRESS", servAddress)
         }
+
         release {
             isMinifyEnabled = false
             proguardFiles(
