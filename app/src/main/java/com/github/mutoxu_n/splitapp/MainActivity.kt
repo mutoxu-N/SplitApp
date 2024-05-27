@@ -8,6 +8,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
@@ -75,15 +77,30 @@ class MainActivity : ComponentActivity() {
                         }
 
                         // 動作テスト用
-                        Button(onClick = {
-                            lifecycleScope.launch {
-                                val res = API().hello("api_param")
-                                Log.e(TAG, "hello: $res")
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                        ) {
+                            Button(onClick = {
+                                lifecycleScope.launch {
+                                    val res = API().test()
+                                    Log.e(TAG, "test: $res")
+                                }
+                            }) {
+                                Text(
+                                    text = "test"
+                                )
                             }
-                        }) {
-                            Text(
-                                text = "RUN"
-                            )
+                            Spacer(modifier = Modifier.size(16.dp))
+                            Button(onClick = {
+                                lifecycleScope.launch {
+                                    val res = API().reset()
+                                    Log.e(TAG, "reset: $res")
+                                }
+                            }) {
+                                Text(
+                                    text = "reset"
+                                )
+                            }
                         }
                     }
                 }
