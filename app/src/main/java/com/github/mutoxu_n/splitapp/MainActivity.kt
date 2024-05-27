@@ -23,8 +23,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
+import com.github.mutoxu_n.splitapp.api.API
 import com.github.mutoxu_n.splitapp.common.Auth
 import com.github.mutoxu_n.splitapp.ui.theme.SplitAppTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     private var uid: String? by mutableStateOf(null)
@@ -77,7 +80,13 @@ class MainActivity : ComponentActivity() {
                         }
 
                         // 動作テスト用
-                        Button(onClick = { run() }) {
+                        Button(onClick = {
+                            run()
+                            lifecycleScope.launch {
+                                val res = API().hello("api_param")
+                                Log.e(TAG, "hello: $res")
+                            }
+                        }) {
                             Text(
                                 text = "RUN"
                             )

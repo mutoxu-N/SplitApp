@@ -25,8 +25,6 @@ android {
 
     buildTypes {
         debug {
-            val port = gradleLocalProperties(rootDir, providers).getProperty("SERVER_PORT_DEBUG")
-            buildConfigField("String", "SERVER_PORT", port)
             val servAddress = gradleLocalProperties(rootDir, providers).getProperty("SERVER_ADDRESS_DEBUG")
             buildConfigField("String", "SERVER_ADDRESS", servAddress)
         }
@@ -38,8 +36,6 @@ android {
                 "proguard-rules.pro"
             )
 
-            val port = gradleLocalProperties(rootDir, providers).getProperty("SERVER_PORT")
-            buildConfigField("String", "SERVER_PORT", port)
             val servAddress = gradleLocalProperties(rootDir, providers).getProperty("SERVER_ADDRESS")
             buildConfigField("String", "SERVER_ADDRESS", servAddress)
         }
@@ -82,8 +78,13 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // Coroutines
+    implementation( libs.kotlinx.coroutines.core)
+
     // Retrofit
-    implementation("com.squareup.moshi:moshi-kotlin")
+    implementation(libs.retrofit)
+    implementation(libs.converter.moshi)
+    implementation(libs.com.squareup.moshi.moshi.kotlin)
 
     // firebase
     implementation(platform(libs.firebase.bom))
