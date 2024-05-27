@@ -78,6 +78,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose")
+
     // Coroutines
     implementation( libs.kotlinx.coroutines.core)
 

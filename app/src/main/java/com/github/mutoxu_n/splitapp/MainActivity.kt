@@ -36,11 +36,6 @@ class MainActivity : ComponentActivity() {
         private const val TAG = "MainActivity"
     }
 
-    // 動作テスト用
-    private fun run() {
-        Log.e(TAG, "run: Clicked")
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -81,7 +76,6 @@ class MainActivity : ComponentActivity() {
 
                         // 動作テスト用
                         Button(onClick = {
-                            run()
                             lifecycleScope.launch {
                                 val res = API().hello("api_param")
                                 Log.e(TAG, "hello: $res")
