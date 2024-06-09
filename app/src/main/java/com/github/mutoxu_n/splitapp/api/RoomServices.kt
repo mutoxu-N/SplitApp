@@ -10,6 +10,7 @@ interface RoomServices {
     @POST("room/create")
     suspend fun createRoom(
         @Header("token") token: String,
+        @Header("name") name: String,
         @Body settings: Settings,
     ): Response<Map<String, Any>>
 }

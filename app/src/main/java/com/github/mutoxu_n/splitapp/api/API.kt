@@ -58,15 +58,15 @@ class API {
         if(Auth.get().token == null) return
         val settings = Settings(
             splitUnit = 10,
-            permissionReceiptEdit = Role.toString(),
-            permissionReceiptCreate = Role.toString(),
+            permissionReceiptEdit = Role.OWNER.toString(),
+            permissionReceiptCreate = Role.NORMAL.toString(),
             onNewMemberRequest = "everyone",
             acceptRate = 50,
 
         )
 
         val service = retrofit.create(RoomServices::class.java)
-        val response = service.createRoom(Auth.get().token!!, settings)
+        val response = service.createRoom(Auth.get().token!!, "mutoxu=N", settings)
         Log.e("API.roomCreate()", response.body().toString())
     }
 }
