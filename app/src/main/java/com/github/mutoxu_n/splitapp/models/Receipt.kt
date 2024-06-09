@@ -2,17 +2,18 @@ package com.github.mutoxu_n.splitapp.models
 
 import com.google.firebase.firestore.IgnoreExtraProperties
 import com.google.firebase.firestore.ServerTimestamp
+import com.squareup.moshi.Json
 import java.util.Date
 
 @IgnoreExtraProperties
 data class Receipt(
-    val id: String,
-    val stuff: String,
-    val paid: String,
-    val buyers: List<String>,
-    val payment: Int,
-    val reportedBy: String,
-    @ServerTimestamp var timestamp: Date? = null,
+    @Json(name = FIELD_ID) val id: String,
+    @Json(name = FIELD_STUFF) val stuff: String,
+    @Json(name = FIELD_PAID) val paid: String,
+    @Json(name = FIELD_BUYERS) val buyers: List<String>,
+    @Json(name = FIELD_PAYMENT) val payment: Int,
+    @Json(name = FIELD_REPORTED_BY) val reportedBy: String,
+    @Json(name = FIELD_TIMESTAMP) @ServerTimestamp var timestamp: Date? = null,
 ) {
     companion object {
         const val FIELD_ID = "id"
@@ -20,7 +21,7 @@ data class Receipt(
         const val FIELD_PAID = "paid"
         const val FIELD_BUYERS = "buyers"
         const val FIELD_PAYMENT = "payment"
-        const val FIELD_REPORTED_BY = "reportedBy"
+        const val FIELD_REPORTED_BY = "reported_by"
         const val FIELD_TIMESTAMP = "timestamp"
 
         @Suppress("UNCHECKED_CAST")
