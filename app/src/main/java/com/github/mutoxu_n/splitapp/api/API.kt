@@ -69,4 +69,11 @@ class API {
         val response = service.createRoom(Auth.get().token!!, "mutoxu=N", settings)
         Log.e("API.roomCreate()", response.body().toString())
     }
+
+    suspend fun roomJoin(roomId: String) {
+        if(Auth.get().token == null) return
+        val service = retrofit.create(RoomServices::class.java)
+        val response = service.joinRoom(Auth.get().token!!, "mutoxu=N", roomId)
+        Log.e("API.roomJoin()", response.body().toString())
+    }
 }
