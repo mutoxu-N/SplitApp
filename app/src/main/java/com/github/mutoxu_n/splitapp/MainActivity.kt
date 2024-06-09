@@ -82,8 +82,8 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Button(onClick = {
                                 lifecycleScope.launch {
-                                    val res = API().test()
-                                    Log.e(TAG, "test: $res")
+                                    val res = API().roomCreate()
+//                                    Log.e(TAG, "test: $res")
                                 }
                             }) {
                                 Text(

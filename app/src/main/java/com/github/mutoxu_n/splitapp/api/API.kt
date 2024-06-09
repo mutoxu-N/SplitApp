@@ -3,6 +3,8 @@ package com.github.mutoxu_n.splitapp.api
 import android.util.Log
 import com.github.mutoxu_n.splitapp.BuildConfig
 import com.github.mutoxu_n.splitapp.common.Auth
+import com.github.mutoxu_n.splitapp.models.Role
+import com.github.mutoxu_n.splitapp.models.Settings
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
@@ -50,5 +52,21 @@ class API {
         val service = retrofit.create(TestService::class.java)
         val response = service.reset(Auth.get().token!!)
         Log.e("API.reset()", response.toString())
+    }
+
+    suspend fun roomCreate() {
+        if(Auth.get().token == null) return
+        val settings = Settings(
+            splitUnit = 10,
+            permissionReceiptEdit = Role.toString(),
+            permissionReceiptCreate = Role.toString(),
+            onNewMemberRequest = "everyone",
+            acceptRate = 50,
+
+        )
+
+        val service = retrofit.create(RoomServices::class.java)
+        val response = service.createRoom(Auth.get().token!!, settings)
+        Log.e("API.roomCreate()", response.body().toString())
     }
 }

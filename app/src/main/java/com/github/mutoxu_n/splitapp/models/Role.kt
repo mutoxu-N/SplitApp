@@ -7,5 +7,8 @@ enum class Role(val roleId: Int) {
 
     companion object {
         fun fromString(role: String) = Role.valueOf(role.uppercase(Locale.getDefault()))
+
     }
+
+    override fun toString() = name.lowercase(Locale.getDefault())
 }
