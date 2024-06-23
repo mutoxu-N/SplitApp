@@ -82,7 +82,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Button(onClick = {
                                 lifecycleScope.launch {
-                                    API().vote("", "", true)
+                                    API().createGuest("UYJL1C", "Guest")
                                 }
                             }) {
                                 Text(

@@ -5,6 +5,7 @@ import com.github.mutoxu_n.splitapp.BuildConfig
 import com.github.mutoxu_n.splitapp.common.Auth
 import com.github.mutoxu_n.splitapp.models.Role
 import com.github.mutoxu_n.splitapp.models.Settings
+import com.github.mutoxu_n.splitapp.models.User
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
@@ -99,4 +100,18 @@ class API {
         val response = service.accept(Auth.get().token!!, roomId, body)
         Log.e("API.vote()", response.body().toString())
     }
+
+    suspend fun createGuest(roomId: String, name: String) {
+        if(Auth.get().token == null) return
+        val service = retrofit.create(RoomServices::class.java)
+        val user = User(
+            name = name,
+            uid = "",
+            weight = 1.0,
+            role = Role.NORMAL.roleId,
+        )
+        val response = service.createGuest(Auth.get().token!!, roomId, user)
+        Log.e("API.createGuest()", response.body().toString())
+    }
+
 }

@@ -7,9 +7,9 @@ import kotlin.jvm.Throws
 @IgnoreExtraProperties
 data class User(
     @Json(name = FIELD_NAME) val name: String,
-    @Json(name = FIELD_UID) val uid: String?,
+    @Json(name = FIELD_UID) val uid: String,
     @Json(name = FIELD_WEIGHT) val weight: Double,
-    @Json(name = FIELD_ROLE) val role: String,
+    @Json(name = FIELD_ROLE) val role: Int,
 ) {
     companion object {
         const val FIELD_NAME = "name"
@@ -21,9 +21,9 @@ data class User(
         fun fromMap(map: Map<String, Any>): User{
             return User(
                 name = map[FIELD_NAME] as String,
-                uid = map[FIELD_UID] as String?,
+                uid = map[FIELD_UID] as String,
                 weight = map[FIELD_WEIGHT] as Double,
-                role = map[FIELD_ROLE] as String,
+                role = map[FIELD_ROLE] as Int,
             )
         }
     }
