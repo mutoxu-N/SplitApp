@@ -22,8 +22,32 @@ interface RoomServices {
         @Header("name") name: String,
         @Path("room_id") roomId: String,
     ): Response<Map<String, Any>>
+
+    @POST("room/{room_id}/vote")
+    suspend fun vote(
+        @Header("token") token: String,
+        @Path("room_id") roomId: String,
+        @Body body: VoteBody,
+    ): Response<Map<String, Any>>
+
+
+    @POST("room/{room_id}/accept")
+    suspend fun accept(
+        @Header("token") token: String,
+        @Path("room_id") roomId: String,
+        @Body body: AcceptBody,
+    ): Response<Map<String, Any>>
 }
 
 data class RoomCreateBody(
     @Json(name = "settings") val settings: Settings,
+)
+
+data class VoteBody(
+    @Json(name = "vote_for") val voteFor: String,
+    @Json(name = "accepted") val accepted: Boolean,
+)
+data class AcceptBody(
+    @Json(name = "accept_for") val acceptFor: String,
+    @Json(name = "accepted") val accepted: Boolean,
 )

@@ -82,14 +82,14 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Button(onClick = {
                                 lifecycleScope.launch {
-//                                    API().roomJoin("B9VQUF")
-                                    API().roomCreate()
+                                    API().vote("", "", true)
                                 }
                             }) {
                                 Text(
                                     text = "test"
                                 )
                             }
+
                             Spacer(modifier = Modifier.size(16.dp))
                             Button(onClick = {
                                 lifecycleScope.launch {
@@ -99,6 +99,30 @@ class MainActivity : ComponentActivity() {
                             }) {
                                 Text(
                                     text = "reset"
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.size(16.dp))
+                            Button(onClick = {
+                                lifecycleScope.launch {
+                                    val res = API().roomCreate()
+                                    Log.e(TAG, "create: $res")
+                                }
+                            }) {
+                                Text(
+                                    text = "create"
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.size(16.dp))
+                            Button(onClick = {
+                                lifecycleScope.launch {
+                                    val res = API().roomJoin("I30DWC")
+                                    Log.e(TAG, "join: $res")
+                                }
+                            }) {
+                                Text(
+                                    text = "join"
                                 )
                             }
                         }

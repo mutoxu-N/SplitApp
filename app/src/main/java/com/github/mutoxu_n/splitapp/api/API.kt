@@ -51,7 +51,7 @@ class API {
 
         val service = retrofit.create(TestService::class.java)
         val response = service.reset(Auth.get().token!!)
-        Log.e("API.reset()", response.toString())
+        Log.e("API.reset()", response.body().toString())
     }
 
     suspend fun roomCreate() {
@@ -76,5 +76,27 @@ class API {
         val service = retrofit.create(RoomServices::class.java)
         val response = service.joinRoom(Auth.get().token!!, "mutoxu=N", roomId)
         Log.e("API.roomJoin()", response.body().toString())
+    }
+
+    suspend fun vote(roomId: String, voteFor: String, accepted: Boolean) {
+        if(Auth.get().token == null) return
+        val service = retrofit.create(RoomServices::class.java)
+        val body = VoteBody(
+            voteFor = voteFor,
+            accepted = accepted,
+        )
+        val response = service.vote(Auth.get().token!!, roomId, body)
+        Log.e("API.vote()", response.body().toString())
+    }
+
+    suspend fun accept(roomId: String, accept_for: String, accepted: Boolean) {
+        if(Auth.get().token == null) return
+        val service = retrofit.create(RoomServices::class.java)
+        val body = AcceptBody(
+            acceptFor = accept_for,
+            accepted = accepted,
+        )
+        val response = service.accept(Auth.get().token!!, roomId, body)
+        Log.e("API.vote()", response.body().toString())
     }
 }
