@@ -89,11 +89,11 @@ class API {
         Log.e("API.vote()", response.body().toString())
     }
 
-    suspend fun accept(roomId: String, accept_for: String, accepted: Boolean) {
+    suspend fun accept(roomId: String, acceptFor: String, accepted: Boolean) {
         if(Auth.get().token == null) return
         val service = retrofit.create(RoomServices::class.java)
         val body = AcceptBody(
-            acceptFor = accept_for,
+            acceptFor = acceptFor,
             accepted = accepted,
         )
         val response = service.accept(Auth.get().token!!, roomId, body)
