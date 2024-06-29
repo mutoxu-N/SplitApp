@@ -45,6 +45,13 @@ interface RoomServices {
         @Path("room_id") roomId: String,
         @Body body: User,
     ): Response<Map<String, Any>>
+
+    @POST("room/{room_id}/member/edit")
+    suspend fun editMember(
+        @Header("token") token: String,
+        @Path("room_id") roomId: String,
+        @Body body: EditMemberBody,
+    ): Response<Map<String, Any>>
 }
 
 data class RoomCreateBody(
@@ -59,4 +66,9 @@ data class VoteBody(
 data class AcceptBody(
     @Json(name = "accept_for") val acceptFor: String,
     @Json(name = "accepted") val accepted: Boolean,
+)
+
+data class EditMemberBody(
+    @Json(name = "old") var oldName: String,
+    @Json(name = "new") var newUser: User,
 )

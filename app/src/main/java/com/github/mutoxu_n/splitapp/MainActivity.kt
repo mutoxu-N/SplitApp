@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.github.mutoxu_n.splitapp.api.API
 import com.github.mutoxu_n.splitapp.common.Auth
+import com.github.mutoxu_n.splitapp.models.Role
+import com.github.mutoxu_n.splitapp.models.User
 import com.github.mutoxu_n.splitapp.ui.theme.SplitAppTheme
 import kotlinx.coroutines.launch
 
@@ -82,7 +84,12 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Button(onClick = {
                                 lifecycleScope.launch {
-                                    API().createGuest("UYJL1C", "Guest")
+                                    API().editMember("UYJL1C", "Guest", User(
+                                        name = "NewGuest",
+                                        uid = "",
+                                        role = Role.MODERATOR.roleId,
+                                        weight = 100.0,
+                                    ))
                                 }
                             }) {
                                 Text(

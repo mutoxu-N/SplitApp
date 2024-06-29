@@ -114,4 +114,15 @@ class API {
         Log.e("API.createGuest()", response.body().toString())
     }
 
+
+    suspend fun editMember(roomId: String, name: String, new: User) {
+        if(Auth.get().token == null) return
+        val service = retrofit.create(RoomServices::class.java)
+        val body = EditMemberBody(
+            oldName = name,
+            newUser = new,
+        )
+        val response = service.editMember(Auth.get().token!!, roomId, body)
+        Log.e("API.editMember()", response.body().toString())
+    }
 }
