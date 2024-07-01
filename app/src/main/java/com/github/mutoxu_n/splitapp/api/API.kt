@@ -3,6 +3,7 @@ package com.github.mutoxu_n.splitapp.api
 import android.util.Log
 import com.github.mutoxu_n.splitapp.BuildConfig
 import com.github.mutoxu_n.splitapp.common.Auth
+import com.github.mutoxu_n.splitapp.models.Receipt
 import com.github.mutoxu_n.splitapp.models.Role
 import com.github.mutoxu_n.splitapp.models.Settings
 import com.github.mutoxu_n.splitapp.models.User
@@ -132,6 +133,13 @@ class API {
         if (Auth.get().token == null) return
         val service = retrofit.create(RoomServices::class.java)
         val response = service.deleteRoom(Auth.get().token!!, roomId)
-        Log.e("API.editMember()", response.body().toString())
+        Log.e("API.deleteRoom()", response.body().toString())
+    }
+
+    suspend fun addReceipt(roomId: String, receipt: Receipt) {
+        if (Auth.get().token == null) return
+        val service = retrofit.create(RoomServices::class.java)
+        val response = service.addReceipt(Auth.get().token!!, roomId, receipt)
+        Log.e("API.addReceipt()", response.body().toString())
     }
 }

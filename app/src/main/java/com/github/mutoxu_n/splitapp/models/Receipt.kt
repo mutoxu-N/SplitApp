@@ -3,17 +3,18 @@ package com.github.mutoxu_n.splitapp.models
 import com.google.firebase.firestore.IgnoreExtraProperties
 import com.google.firebase.firestore.ServerTimestamp
 import com.squareup.moshi.Json
+import java.time.LocalDate
 import java.util.Date
 
 @IgnoreExtraProperties
 data class Receipt(
-    @Json(name = FIELD_ID) val id: String,
+    @Json(name = FIELD_ID) val id: String = "null",
     @Json(name = FIELD_STUFF) val stuff: String,
     @Json(name = FIELD_PAID) val paid: String,
     @Json(name = FIELD_BUYERS) val buyers: List<String>,
     @Json(name = FIELD_PAYMENT) val payment: Int,
-    @Json(name = FIELD_REPORTED_BY) val reportedBy: String,
-    @Json(name = FIELD_TIMESTAMP) @ServerTimestamp var timestamp: Date? = null,
+    @Json(name = FIELD_REPORTED_BY) val reportedBy: String = "null",
+    @Json(name = FIELD_TIMESTAMP)  var timestamp: String = "",
 ) {
     companion object {
         const val FIELD_ID = "id"
@@ -34,7 +35,7 @@ data class Receipt(
                 buyers = map[FIELD_BUYERS] as List<String>,
                 payment = map[FIELD_PAYMENT] as Int,
                 reportedBy = map[FIELD_REPORTED_BY] as String,
-                timestamp = map[FIELD_TIMESTAMP] as Date,
+                timestamp = map[FIELD_TIMESTAMP].toString(),
             )
         }
     }

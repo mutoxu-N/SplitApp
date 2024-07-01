@@ -29,6 +29,7 @@ import androidx.lifecycle.ReportFragment.Companion.reportFragment
 import androidx.lifecycle.lifecycleScope
 import com.github.mutoxu_n.splitapp.api.API
 import com.github.mutoxu_n.splitapp.common.Auth
+import com.github.mutoxu_n.splitapp.models.Receipt
 import com.github.mutoxu_n.splitapp.models.Role
 import com.github.mutoxu_n.splitapp.models.Settings
 import com.github.mutoxu_n.splitapp.models.User
@@ -86,7 +87,12 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Button(onClick = {
                                 lifecycleScope.launch {
-                                    API().deleteRoom("AB12C3")
+                                    API().addReceipt("AB12C3", Receipt(
+                                        stuff = "computer",
+                                        paid = "sample member",
+                                        buyers = listOf("sample member"),
+                                        payment = 120_000,
+                                    ))
                                 }
                             }) {
                                 Text(

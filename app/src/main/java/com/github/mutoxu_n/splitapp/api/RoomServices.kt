@@ -1,5 +1,6 @@
 package com.github.mutoxu_n.splitapp.api
 
+import com.github.mutoxu_n.splitapp.models.Receipt
 import com.github.mutoxu_n.splitapp.models.Settings
 import com.github.mutoxu_n.splitapp.models.User
 import com.squareup.moshi.Json
@@ -64,6 +65,13 @@ interface RoomServices {
     suspend fun deleteRoom(
         @Header("token") token: String,
         @Path("room_id") roomId: String,
+    ): Response<Map<String, Any>>
+
+    @POST("room/{room_id}/receipt/add")
+    suspend fun addReceipt(
+        @Header("token") token: String,
+        @Path("room_id") roomId: String,
+        @Body body: Receipt,
     ): Response<Map<String, Any>>
 }
 
