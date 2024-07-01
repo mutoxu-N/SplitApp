@@ -59,6 +59,12 @@ interface RoomServices {
         @Path("room_id") roomId: String,
         @Body body: EditSettingsBody,
     ): Response<Map<String, Any>>
+
+    @POST("room/{room_id}/delete")
+    suspend fun deleteRoom(
+        @Header("token") token: String,
+        @Path("room_id") roomId: String,
+    ): Response<Map<String, Any>>
 }
 
 data class RoomCreateBody(

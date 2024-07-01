@@ -86,14 +86,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Button(onClick = {
                                 lifecycleScope.launch {
-                                    API().editSettings("AB12C3", Settings(
-                                        name = "test",
-                                        splitUnit = 1000,
-                                        permissionReceiptEdit = Role.OWNER.toString(),
-                                        permissionReceiptCreate = Role.NORMAL.toString(),
-                                        onNewMemberRequest = "always",
-                                        acceptRate = 10,
-                                    ))
+                                    API().deleteRoom("AB12C3")
                                 }
                             }) {
                                 Text(

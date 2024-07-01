@@ -127,4 +127,11 @@ class API {
         val response = service.editSettings(Auth.get().token!!, roomId, body)
         Log.e("API.editMember()", response.body().toString())
     }
+
+    suspend fun deleteRoom(roomId: String) {
+        if (Auth.get().token == null) return
+        val service = retrofit.create(RoomServices::class.java)
+        val response = service.deleteRoom(Auth.get().token!!, roomId)
+        Log.e("API.editMember()", response.body().toString())
+    }
 }
