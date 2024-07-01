@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ReportFragment.Companion.reportFragment
 import androidx.lifecycle.lifecycleScope
 import com.github.mutoxu_n.splitapp.api.API
 import com.github.mutoxu_n.splitapp.common.Auth
@@ -84,8 +85,8 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Button(onClick = {
                                 lifecycleScope.launch {
-                                    API().editMember("UYJL1C", "Guest", User(
-                                        name = "NewGuest",
+                                    API().editMember("AB12C3", "sample member", User(
+                                        name = "mutoxu=N",
                                         uid = "",
                                         role = Role.MODERATOR.roleId,
                                         weight = 100.0,
@@ -124,8 +125,8 @@ class MainActivity : ComponentActivity() {
                             Spacer(modifier = Modifier.size(16.dp))
                             Button(onClick = {
                                 lifecycleScope.launch {
-                                    val res = API().roomJoin("I30DWC")
-                                    Log.e(TAG, "join: $res")
+                                    val res = API().roomJoin("AB12C3")
+                                    Log.e(TAG, "join: ${res}")
                                 }
                             }) {
                                 Text(
