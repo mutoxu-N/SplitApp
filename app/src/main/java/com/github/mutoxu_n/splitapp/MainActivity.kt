@@ -30,6 +30,7 @@ import androidx.lifecycle.lifecycleScope
 import com.github.mutoxu_n.splitapp.api.API
 import com.github.mutoxu_n.splitapp.common.Auth
 import com.github.mutoxu_n.splitapp.models.Role
+import com.github.mutoxu_n.splitapp.models.Settings
 import com.github.mutoxu_n.splitapp.models.User
 import com.github.mutoxu_n.splitapp.ui.theme.SplitAppTheme
 import kotlinx.coroutines.launch
@@ -85,11 +86,13 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Button(onClick = {
                                 lifecycleScope.launch {
-                                    API().editMember("AB12C3", "sample member", User(
-                                        name = "mutoxu=N",
-                                        uid = "",
-                                        role = Role.MODERATOR.roleId,
-                                        weight = 100.0,
+                                    API().editSettings("AB12C3", Settings(
+                                        name = "test",
+                                        splitUnit = 1000,
+                                        permissionReceiptEdit = Role.OWNER.toString(),
+                                        permissionReceiptCreate = Role.NORMAL.toString(),
+                                        onNewMemberRequest = "always",
+                                        acceptRate = 10,
                                     ))
                                 }
                             }) {
@@ -113,7 +116,13 @@ class MainActivity : ComponentActivity() {
                             Spacer(modifier = Modifier.size(16.dp))
                             Button(onClick = {
                                 lifecycleScope.launch {
-                                    val res = API().roomCreate()
+                                    val res = API().roomCreate(Settings(
+                                        name = "sample room",
+                                        splitUnit = 10,
+                                        permissionReceiptEdit = Role.OWNER.toString(),
+                                        permissionReceiptCreate = Role.NORMAL.toString(),
+                                        onNewMemberRequest = "always", acceptRate = 50,
+                                    ))
                                     Log.e(TAG, "create: $res")
                                 }
                             }) {

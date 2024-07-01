@@ -52,6 +52,13 @@ interface RoomServices {
         @Path("room_id") roomId: String,
         @Body body: EditMemberBody,
     ): Response<Map<String, Any>>
+
+    @POST("room/{room_id}/settings/edit")
+    suspend fun editSettings(
+        @Header("token") token: String,
+        @Path("room_id") roomId: String,
+        @Body body: EditSettingsBody,
+    ): Response<Map<String, Any>>
 }
 
 data class RoomCreateBody(
@@ -71,4 +78,8 @@ data class AcceptBody(
 data class EditMemberBody(
     @Json(name = "old") var oldName: String,
     @Json(name = "new") var newUser: User,
+)
+
+data class EditSettingsBody(
+    @Json(name = "settings") val settings: Settings,
 )
