@@ -87,8 +87,8 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Button(onClick = {
                                 lifecycleScope.launch {
-                                    API().addReceipt("AB12C3", Receipt(
-                                        stuff = "computer",
+                                    API().editReceipt("AB12C3", "RJBFyzAxoBYQfonE2u1T", Receipt(
+                                        stuff = "Kei-SuperComputer",
                                         paid = "sample member",
                                         buyers = listOf("sample member"),
                                         payment = 120_000,

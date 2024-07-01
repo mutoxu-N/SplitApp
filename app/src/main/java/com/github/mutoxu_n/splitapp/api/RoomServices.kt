@@ -73,6 +73,13 @@ interface RoomServices {
         @Path("room_id") roomId: String,
         @Body body: Receipt,
     ): Response<Map<String, Any>>
+
+    @POST("room/{room_id}/receipt/edit")
+    suspend fun editReceipt(
+        @Header("token") token: String,
+        @Path("room_id") roomId: String,
+        @Body body: EditReceiptBody,
+    ): Response<Map<String, Any>>
 }
 
 data class RoomCreateBody(
@@ -96,4 +103,9 @@ data class EditMemberBody(
 
 data class EditSettingsBody(
     @Json(name = "settings") val settings: Settings,
+)
+
+data class EditReceiptBody(
+    @Json(name = "receipt_id") var receiptId: String,
+    @Json(name = "receipt") var receipt: Receipt,
 )
