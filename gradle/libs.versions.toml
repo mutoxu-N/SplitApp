@@ -14,12 +14,14 @@ activityCompose = "1.9.0"
 composeBom = "2024.05.00"
 moshi = "1.12.0"
 moshiKotlin = "1.13.0"
+ossLicensesPlugin = "0.10.6"
+playServicesOssLicenses = "17.1.0"
 retrofit = "2.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose" }
 com-squareup-moshi-moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshiKotlin" }
-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "converterGson" }
 firebase-auth-ktx = { module = "com.google.firebase:firebase-auth-ktx", version = "23.0.0" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
@@ -42,8 +44,9 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshiKotlin" }
 moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin" }
 moshi-v1120 = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
+oss-licenses-plugin = { module = "com.google.android.gms:oss-licenses-plugin", version.ref = "ossLicensesPlugin" }
+play-services-oss-licenses = { module = "com.google.android.gms:play-services-oss-licenses", version.ref = "playServicesOssLicenses" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
-squareup-moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

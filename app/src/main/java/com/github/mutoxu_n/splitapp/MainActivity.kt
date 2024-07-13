@@ -1,5 +1,6 @@
 package com.github.mutoxu_n.splitapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -34,6 +35,8 @@ import com.github.mutoxu_n.splitapp.models.Role
 import com.github.mutoxu_n.splitapp.models.Settings
 import com.github.mutoxu_n.splitapp.models.User
 import com.github.mutoxu_n.splitapp.ui.theme.SplitAppTheme
+import com.google.android.gms.oss.licenses.OssLicensesActivity
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -78,6 +81,15 @@ class MainActivity : ComponentActivity() {
                         Button(onClick = { Auth.get().signOut() }) {
                             Text(
                                 text = "Sign Out"
+                            )
+                        }
+
+                        Button(onClick = {
+                            val intent = Intent(this@MainActivity, OssLicensesMenuActivity::class.java)
+                            startActivity(intent)
+                        }) {
+                            Text(
+                                text = "licences"
                             )
                         }
 

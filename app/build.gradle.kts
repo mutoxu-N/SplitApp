@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.gms.google-services")
+    id("com.google.android.gms.oss-licenses-plugin")
 }
 
 android {
@@ -79,7 +80,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // ViewModel
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose")
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     // Coroutines
     implementation( libs.kotlinx.coroutines.core)
@@ -93,4 +94,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.firebase.auth.ktx)
+
+    // license
+    implementation(libs.play.services.oss.licenses)
 }
