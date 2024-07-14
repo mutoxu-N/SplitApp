@@ -27,11 +27,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.components.dialogs.ValueChangeDialog
 import com.github.mutoxu_n.splitapp.models.RequestType
 import com.github.mutoxu_n.splitapp.models.Role
@@ -63,14 +65,14 @@ fun SettingsEditor(
 
         // ルーム名
         if(isReadOnly) {
-            DisplayRow(name = "ルーム名", value = roomName)
+            DisplayRow(name = stringResource(R.string.settings_room_name), value = roomName)
         } else {
             OutlinedTextField(
                 modifier = modifier
                     .padding(7.dp, 0.dp)
                     .fillMaxWidth(),
                 value = settings.name,
-                label = { Text(text = "ルーム名") },
+                label = { Text(text = stringResource(id = R.string.settings_room_name)) },
                 onValueChange = {
                     isError = it.isBlank()
                     roomName = it
@@ -79,7 +81,7 @@ fun SettingsEditor(
             )
         }
         DisplayRow(
-            name = "割り勘単位",
+            name = stringResource(R.string.settings_split_unit),
             value = splitUnit,
             isReadOnly = isReadOnly,
             onValueChange = {
@@ -87,7 +89,7 @@ fun SettingsEditor(
             }
         )
         DisplayRow(
-            name = "レシート作成権限",
+            name = stringResource(R.string.settings_perm_receipt_create),
             value = permissionReceiptCreate,
             isReadOnly = isReadOnly,
             onValueChange = {
@@ -95,7 +97,7 @@ fun SettingsEditor(
             }
         )
         DisplayRow(
-            name = "レシート編集権限",
+            name = stringResource(R.string.settings_perm_receipt_edit),
             value = permissionReceiptEdit,
             isReadOnly = isReadOnly,
             onValueChange = {
@@ -103,7 +105,7 @@ fun SettingsEditor(
             }
         )
         DisplayRow(
-            name = "新規メンバー",
+            name = stringResource(R.string.settings_new_member),
             value = onNewMemberRequest,
             isReadOnly = isReadOnly,
             onValueChange = {
@@ -112,7 +114,7 @@ fun SettingsEditor(
         )
 
         DisplayRow(
-            name = "承認レート",
+            name = stringResource(R.string.settings_accept_rate),
             value = acceptRate,
             suffix = "%",
             isReadOnly = isReadOnly,
@@ -131,11 +133,12 @@ fun SettingsEditor(
             )
         }
 
-        HorizontalDivider()
         if(!isReadOnly) {
+            HorizontalDivider()
             Button(
                 modifier = modifier,
                 onClick = {
+                    if(isError) return@Button
                     onSettingsChange(
                         Settings(
                             name = roomName,
@@ -149,7 +152,8 @@ fun SettingsEditor(
                 },
                 content = {
                     Text(text = saveButtonText)
-                }
+                },
+                enabled = !isError
             )
         }
 
