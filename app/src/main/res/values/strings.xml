@@ -4,4 +4,8 @@
     <string name="role_moderator">管理者</string>
     <string name="role_owner">オーナー</string>
     <string name="role_unknown">エラー</string>
+    <string name="role_creator">作成者</string>
+    <string name="request_type_always">いつでも</string>
+    <string name="request_type_vote">投票</string>
+    <string name="request_type_moderator">管理者が承認</string>
 </resources>

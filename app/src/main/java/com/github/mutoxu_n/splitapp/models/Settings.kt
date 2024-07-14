@@ -5,6 +5,6 @@ data class Settings(
     val splitUnit: Int,
     val permissionReceiptCreate: Role,
     val permissionReceiptEdit: Role,
-    val onNewMemberRequest: NewMemberRequestType,
+    val onNewMemberRequest: RequestType,
     val acceptRate: Int,
 )
