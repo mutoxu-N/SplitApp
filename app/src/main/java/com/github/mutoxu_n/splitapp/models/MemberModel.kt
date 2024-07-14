@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import kotlin.jvm.Throws
 
 @IgnoreExtraProperties
-data class Member(
+data class MemberModel(
     @Json(name = FIELD_NAME) val name: String,
     @Json(name = FIELD_UID) val uid: String,
     @Json(name = FIELD_WEIGHT) val weight: Double,
@@ -18,8 +18,8 @@ data class Member(
         const val FIELD_ROLE = "role"
 
         @Throws(ClassCastException::class)
-        fun fromMap(map: Map<String, Any>): Member{
-            return Member(
+        fun fromMap(map: Map<String, Any>): MemberModel{
+            return MemberModel(
                 name = map[FIELD_NAME] as String,
                 uid = map[FIELD_UID] as String,
                 weight = map[FIELD_WEIGHT] as Double,

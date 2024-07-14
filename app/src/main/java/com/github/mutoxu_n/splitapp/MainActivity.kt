@@ -29,9 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.github.mutoxu_n.splitapp.api.API
 import com.github.mutoxu_n.splitapp.common.Auth
-import com.github.mutoxu_n.splitapp.models.Receipt
+import com.github.mutoxu_n.splitapp.models.ReceiptModel
 import com.github.mutoxu_n.splitapp.models.Role
-import com.github.mutoxu_n.splitapp.models.Settings
+import com.github.mutoxu_n.splitapp.models.SettingsModel
 import com.github.mutoxu_n.splitapp.ui.theme.SplitAppTheme
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import kotlinx.coroutines.launch
@@ -96,7 +96,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Button(onClick = {
                                 lifecycleScope.launch {
-                                    API().editReceipt("AB12C3", "RJBFyzAxoBYQfonE2u1T", Receipt(
+                                    API().editReceipt("AB12C3", "RJBFyzAxoBYQfonE2u1T", ReceiptModel(
                                         stuff = "Kei-SuperComputer",
                                         paid = "sample member",
                                         buyers = listOf("sample member"),
@@ -124,7 +124,7 @@ class MainActivity : ComponentActivity() {
                             Spacer(modifier = Modifier.size(16.dp))
                             Button(onClick = {
                                 lifecycleScope.launch {
-                                    val res = API().roomCreate(Settings(
+                                    val res = API().roomCreate(SettingsModel(
                                         name = "sample room",
                                         splitUnit = 10,
                                         permissionReceiptEdit = Role.OWNER.toString(),

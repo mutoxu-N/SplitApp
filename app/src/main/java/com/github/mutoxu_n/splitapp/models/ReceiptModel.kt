@@ -1,13 +1,10 @@
 package com.github.mutoxu_n.splitapp.models
 
 import com.google.firebase.firestore.IgnoreExtraProperties
-import com.google.firebase.firestore.ServerTimestamp
 import com.squareup.moshi.Json
-import java.time.LocalDate
-import java.util.Date
 
 @IgnoreExtraProperties
-data class Receipt(
+data class ReceiptModel(
     @Json(name = FIELD_ID) val id: String = "null",
     @Json(name = FIELD_STUFF) val stuff: String,
     @Json(name = FIELD_PAID) val paid: String,
@@ -27,8 +24,8 @@ data class Receipt(
 
         @Suppress("UNCHECKED_CAST")
         @Throws(ClassCastException::class)
-        fun fromMap(map: Map<String, Any>): Receipt{
-            return Receipt(
+        fun fromMap(map: Map<String, Any>): ReceiptModel{
+            return ReceiptModel(
                 id = map[FIELD_ID] as String,
                 stuff = map[FIELD_STUFF] as String,
                 paid = map[FIELD_PAID] as String,

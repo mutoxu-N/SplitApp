@@ -2,7 +2,7 @@ package com.github.mutoxu_n.splitapp.models
 
 import com.squareup.moshi.Json
 
-data class Settings(
+data class SettingsModel(
     @Json(name = "name") val name: String,
     @Json(name = "split_unit") val splitUnit: Int,
     @Json(name = "permission_receipt_create") val permissionReceiptCreate: String,

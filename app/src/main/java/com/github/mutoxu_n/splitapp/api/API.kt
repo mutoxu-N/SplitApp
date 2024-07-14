@@ -3,10 +3,10 @@ package com.github.mutoxu_n.splitapp.api
 import android.util.Log
 import com.github.mutoxu_n.splitapp.BuildConfig
 import com.github.mutoxu_n.splitapp.common.Auth
-import com.github.mutoxu_n.splitapp.models.Receipt
+import com.github.mutoxu_n.splitapp.models.ReceiptModel
 import com.github.mutoxu_n.splitapp.models.Role
-import com.github.mutoxu_n.splitapp.models.Settings
-import com.github.mutoxu_n.splitapp.models.Member
+import com.github.mutoxu_n.splitapp.models.SettingsModel
+import com.github.mutoxu_n.splitapp.models.MemberModel
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
@@ -56,11 +56,11 @@ class API {
         Log.e("API.reset()", response.body().toString())
     }
 
-    suspend fun roomCreate(settings: Settings) {
+    suspend fun roomCreate(settingsModel: SettingsModel) {
         if (Auth.get().token == null) return
 
         val service = retrofit.create(RoomServices::class.java)
-        val body = RoomCreateBody(settings = settings)
+        val body = RoomCreateBody(settingsModel = settingsModel)
         val response = service.createRoom(Auth.get().token!!, "mutoxu=N", body)
         Log.e("API.roomCreate()", response.body().toString())
     }
@@ -97,33 +97,33 @@ class API {
     suspend fun createGuest(roomId: String, name: String) {
         if (Auth.get().token == null) return
         val service = retrofit.create(RoomServices::class.java)
-        val member = Member(
+        val memberModel = MemberModel(
             name = name,
             uid = "",
             weight = 1.0,
             role = Role.NORMAL.roleId,
         )
-        val response = service.createGuest(Auth.get().token!!, roomId, member)
+        val response = service.createGuest(Auth.get().token!!, roomId, memberModel)
         Log.e("API.createGuest()", response.body().toString())
     }
 
 
-    suspend fun editMember(roomId: String, name: String, new: Member) {
+    suspend fun editMember(roomId: String, name: String, new: MemberModel) {
         if (Auth.get().token == null) return
         val service = retrofit.create(RoomServices::class.java)
         val body = EditMemberBody(
             oldName = name,
-            newMember = new,
+            newMemberModel = new,
         )
         val response = service.editMember(Auth.get().token!!, roomId, body)
         Log.e("API.editMember()", response.body().toString())
     }
 
-    suspend fun editSettings(roomId: String, settings: Settings) {
+    suspend fun editSettings(roomId: String, settingsModel: SettingsModel) {
         if (Auth.get().token == null) return
         val service = retrofit.create(RoomServices::class.java)
         val body = EditSettingsBody(
-            settings = settings,
+            settingsModel = settingsModel,
         )
         val response = service.editSettings(Auth.get().token!!, roomId, body)
         Log.e("API.editMember()", response.body().toString())
@@ -136,19 +136,19 @@ class API {
         Log.e("API.deleteRoom()", response.body().toString())
     }
 
-    suspend fun addReceipt(roomId: String, receipt: Receipt) {
+    suspend fun addReceipt(roomId: String, receiptModel: ReceiptModel) {
         if (Auth.get().token == null) return
         val service = retrofit.create(RoomServices::class.java)
-        val response = service.addReceipt(Auth.get().token!!, roomId, receipt)
+        val response = service.addReceipt(Auth.get().token!!, roomId, receiptModel)
         Log.e("API.addReceipt()", response.body().toString())
     }
 
-    suspend fun editReceipt(roomId: String, receiptId: String, receipt: Receipt) {
+    suspend fun editReceipt(roomId: String, receiptId: String, receiptModel: ReceiptModel) {
         if (Auth.get().token == null) return
         val service = retrofit.create(RoomServices::class.java)
         val body = EditReceiptBody(
             receiptId = receiptId,
-            receipt = receipt,
+            receiptModel = receiptModel,
         )
         val response = service.editReceipt(Auth.get().token!!, roomId, body)
         Log.e("API.editReceipt()", response.body().toString())

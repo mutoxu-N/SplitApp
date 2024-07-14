@@ -30,15 +30,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.mutoxu_n.splitapp.components.dialogs.ValueChangeDialog
-import com.github.mutoxu_n.splitapp.models.Settings
+import com.github.mutoxu_n.splitapp.models.SettingsModel
 import com.github.mutoxu_n.splitapp.ui.theme.SplitAppTheme
 
 @Composable
 fun SettingsEditor(
     modifier: Modifier = Modifier,
     isReadOnly: Boolean = true,
-    settings: Settings,
-    onSettingsChange: (Settings) -> Unit = {},
+    settingsModel: SettingsModel,
+    onSettingsChange: (SettingsModel) -> Unit = {},
     saveButtonText: String = "ルーム設定を保存する"
 ) {
     Column(
@@ -47,23 +47,23 @@ fun SettingsEditor(
         verticalArrangement = Arrangement.spacedBy(5.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        var roomName by rememberSaveable { mutableStateOf(settings.name) }
-        var splitUnit by rememberSaveable { mutableIntStateOf(settings.splitUnit) }
-        var permissionReceiptCreate by rememberSaveable { mutableStateOf(settings.permissionReceiptCreate) }
-        var permissionReceiptEdit by rememberSaveable { mutableStateOf(settings.permissionReceiptEdit) }
-        var onNewMemberRequest by rememberSaveable { mutableStateOf(settings.onNewMemberRequest) }
-        var acceptRate by rememberSaveable { mutableIntStateOf(settings.acceptRate) }
-        var isError by rememberSaveable { mutableStateOf(settings.name.isBlank()) }
+        var roomName by rememberSaveable { mutableStateOf(settingsModel.name) }
+        var splitUnit by rememberSaveable { mutableIntStateOf(settingsModel.splitUnit) }
+        var permissionReceiptCreate by rememberSaveable { mutableStateOf(settingsModel.permissionReceiptCreate) }
+        var permissionReceiptEdit by rememberSaveable { mutableStateOf(settingsModel.permissionReceiptEdit) }
+        var onNewMemberRequest by rememberSaveable { mutableStateOf(settingsModel.onNewMemberRequest) }
+        var acceptRate by rememberSaveable { mutableIntStateOf(settingsModel.acceptRate) }
+        var isError by rememberSaveable { mutableStateOf(settingsModel.name.isBlank()) }
 
         // ルーム名
         if(isReadOnly) {
-            DisplayRow(name = "ルーム名", value = settings.name)
+            DisplayRow(name = "ルーム名", value = settingsModel.name)
         } else {
             OutlinedTextField(
                 modifier = modifier
                     .padding(7.dp, 0.dp)
                     .fillMaxWidth(),
-                value = settings.name,
+                value = settingsModel.name,
                 label = { Text(text = "ルーム名") },
                 onValueChange = {
                     isError = it.isBlank()
@@ -74,7 +74,7 @@ fun SettingsEditor(
         }
         DisplayRow(
             name = "割り勘単位",
-            value = settings.splitUnit,
+            value = settingsModel.splitUnit,
             isReadOnly = isReadOnly,
             onValueChange = {
                 splitUnit = it
@@ -82,7 +82,7 @@ fun SettingsEditor(
         )
         DisplayRow(
             name = "レシート作成権限",
-            value = settings.permissionReceiptCreate,
+            value = settingsModel.permissionReceiptCreate,
             isReadOnly = isReadOnly,
             onValueChange = {
                 permissionReceiptCreate = it
@@ -90,7 +90,7 @@ fun SettingsEditor(
         )
         DisplayRow(
             name = "レシート編集権限",
-            value = settings.permissionReceiptEdit,
+            value = settingsModel.permissionReceiptEdit,
             isReadOnly = isReadOnly,
             onValueChange = {
                 permissionReceiptEdit = it
@@ -98,7 +98,7 @@ fun SettingsEditor(
         )
         DisplayRow(
             name = "新規メンバー",
-            value = settings.onNewMemberRequest,
+            value = settingsModel.onNewMemberRequest,
             isReadOnly = isReadOnly,
             onValueChange = {
                 onNewMemberRequest = it
@@ -107,7 +107,7 @@ fun SettingsEditor(
 
         DisplayRow(
             name = "承認レート",
-            value = settings.acceptRate,
+            value = settingsModel.acceptRate,
             suffix = "%",
             isReadOnly = isReadOnly,
             onValueChange = {
@@ -129,7 +129,7 @@ fun SettingsEditor(
                 modifier = modifier,
                 onClick = {
                     onSettingsChange(
-                        Settings(
+                        SettingsModel(
                             name = roomName,
                             splitUnit = splitUnit,
                             permissionReceiptCreate = permissionReceiptCreate,
@@ -205,7 +205,7 @@ private fun <T> DisplayRow(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun SettingsEditorPreview() {
-    val readOnly = Settings(
+    val readOnly = SettingsModel(
         name = "readOnly",
         splitUnit = 10,
         permissionReceiptEdit = "OWNER",
@@ -213,7 +213,7 @@ fun SettingsEditorPreview() {
         onNewMemberRequest = "always",
         acceptRate = 50,
     )
-    val writable = Settings(
+    val writable = SettingsModel(
         name = "writable",
         splitUnit = 10,
         permissionReceiptEdit = "OWNER",
@@ -228,14 +228,14 @@ fun SettingsEditorPreview() {
             ) {
                 HorizontalDivider(color= Color(0xFFFF0000))
                 SettingsEditor(
-                    settings = readOnly
+                    settingsModel = readOnly
                 )
                 HorizontalDivider(color= Color(0xFFFF0000))
 
                 Spacer(modifier = Modifier.size(10.dp))
                 HorizontalDivider(color= Color(0xFF0000FF))
                 SettingsEditor(
-                    settings = writable,
+                    settingsModel = writable,
                     isReadOnly = false
                 )
                 HorizontalDivider(color= Color(0xFF0000FF))

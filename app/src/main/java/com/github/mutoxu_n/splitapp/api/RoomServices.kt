@@ -1,8 +1,8 @@
 package com.github.mutoxu_n.splitapp.api
 
-import com.github.mutoxu_n.splitapp.models.Receipt
-import com.github.mutoxu_n.splitapp.models.Settings
-import com.github.mutoxu_n.splitapp.models.Member
+import com.github.mutoxu_n.splitapp.models.ReceiptModel
+import com.github.mutoxu_n.splitapp.models.SettingsModel
+import com.github.mutoxu_n.splitapp.models.MemberModel
 import com.squareup.moshi.Json
 import retrofit2.Response
 import retrofit2.http.Body
@@ -44,7 +44,7 @@ interface RoomServices {
     suspend fun createGuest(
         @Header("token") token: String,
         @Path("room_id") roomId: String,
-        @Body body: Member,
+        @Body body: MemberModel,
     ): Response<Map<String, Any>>
 
     @POST("room/{room_id}/member/edit")
@@ -71,7 +71,7 @@ interface RoomServices {
     suspend fun addReceipt(
         @Header("token") token: String,
         @Path("room_id") roomId: String,
-        @Body body: Receipt,
+        @Body body: ReceiptModel,
     ): Response<Map<String, Any>>
 
     @POST("room/{room_id}/receipt/edit")
@@ -83,7 +83,7 @@ interface RoomServices {
 }
 
 data class RoomCreateBody(
-    @Json(name = "settings") val settings: Settings,
+    @Json(name = "settings") val settingsModel: SettingsModel,
 )
 
 data class VoteBody(
@@ -98,14 +98,14 @@ data class AcceptBody(
 
 data class EditMemberBody(
     @Json(name = "old") var oldName: String,
-    @Json(name = "new") var newMember: Member,
+    @Json(name = "new") var newMemberModel: MemberModel,
 )
 
 data class EditSettingsBody(
-    @Json(name = "settings") val settings: Settings,
+    @Json(name = "settings") val settingsModel: SettingsModel,
 )
 
 data class EditReceiptBody(
     @Json(name = "receipt_id") var receiptId: String,
-    @Json(name = "receipt") var receipt: Receipt,
+    @Json(name = "receipt") var receiptModel: ReceiptModel,
 )
