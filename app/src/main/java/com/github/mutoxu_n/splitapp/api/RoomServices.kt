@@ -2,7 +2,7 @@ package com.github.mutoxu_n.splitapp.api
 
 import com.github.mutoxu_n.splitapp.models.Receipt
 import com.github.mutoxu_n.splitapp.models.Settings
-import com.github.mutoxu_n.splitapp.models.User
+import com.github.mutoxu_n.splitapp.models.Member
 import com.squareup.moshi.Json
 import retrofit2.Response
 import retrofit2.http.Body
@@ -44,7 +44,7 @@ interface RoomServices {
     suspend fun createGuest(
         @Header("token") token: String,
         @Path("room_id") roomId: String,
-        @Body body: User,
+        @Body body: Member,
     ): Response<Map<String, Any>>
 
     @POST("room/{room_id}/member/edit")
@@ -98,7 +98,7 @@ data class AcceptBody(
 
 data class EditMemberBody(
     @Json(name = "old") var oldName: String,
-    @Json(name = "new") var newUser: User,
+    @Json(name = "new") var newMember: Member,
 )
 
 data class EditSettingsBody(

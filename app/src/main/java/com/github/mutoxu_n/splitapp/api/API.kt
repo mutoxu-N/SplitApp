@@ -6,7 +6,7 @@ import com.github.mutoxu_n.splitapp.common.Auth
 import com.github.mutoxu_n.splitapp.models.Receipt
 import com.github.mutoxu_n.splitapp.models.Role
 import com.github.mutoxu_n.splitapp.models.Settings
-import com.github.mutoxu_n.splitapp.models.User
+import com.github.mutoxu_n.splitapp.models.Member
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
@@ -97,23 +97,23 @@ class API {
     suspend fun createGuest(roomId: String, name: String) {
         if (Auth.get().token == null) return
         val service = retrofit.create(RoomServices::class.java)
-        val user = User(
+        val member = Member(
             name = name,
             uid = "",
             weight = 1.0,
             role = Role.NORMAL.roleId,
         )
-        val response = service.createGuest(Auth.get().token!!, roomId, user)
+        val response = service.createGuest(Auth.get().token!!, roomId, member)
         Log.e("API.createGuest()", response.body().toString())
     }
 
 
-    suspend fun editMember(roomId: String, name: String, new: User) {
+    suspend fun editMember(roomId: String, name: String, new: Member) {
         if (Auth.get().token == null) return
         val service = retrofit.create(RoomServices::class.java)
         val body = EditMemberBody(
             oldName = name,
-            newUser = new,
+            newMember = new,
         )
         val response = service.editMember(Auth.get().token!!, roomId, body)
         Log.e("API.editMember()", response.body().toString())
