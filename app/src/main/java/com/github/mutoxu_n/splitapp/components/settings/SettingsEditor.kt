@@ -83,6 +83,7 @@ fun SettingsEditor(
         DisplayRow(
             name = stringResource(R.string.settings_split_unit),
             value = splitUnit,
+            prefix = stringResource(R.string.settings_currency),
             isReadOnly = isReadOnly,
             onValueChange = {
                 splitUnit = it
@@ -167,10 +168,10 @@ private fun <T> DisplayRow(
     isReadOnly: Boolean = true,
     name: String,
     value: T,
+    prefix: String = "",
     suffix: String = "",
     onValueChange: (T) -> Unit = {}
 ) {
-    var newValue by rememberSaveable { mutableStateOf(value) }
     var isDialogShown by rememberSaveable { mutableStateOf(false) }
 
     Row(
@@ -190,7 +191,7 @@ private fun <T> DisplayRow(
         Text(
             modifier = modifier
                 .clickable { isDialogShown = true },
-            text = "$value$suffix",
+            text = "$prefix$value$suffix",
             textAlign = TextAlign.End,
             style = MaterialTheme.typography.bodyMedium,
             maxLines = 1,
@@ -205,8 +206,7 @@ private fun <T> DisplayRow(
             value = value,
             onDismiss = { isDialogShown = false },
             onConfirm = {
-                newValue = it
-                onValueChange(newValue)
+                onValueChange(it)
                 isDialogShown = false
             },
         )

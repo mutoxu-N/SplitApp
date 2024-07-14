@@ -84,10 +84,6 @@ class MainActivity : ComponentActivity() {
                             onNewMemberRequest = RequestType.ALWAYS,
                             acceptRate = 30,
                         )
-                        SettingsEditor(
-                            settings = writable,
-                            isReadOnly = false
-                        )
 
                         Button(onClick = { signIn() }) {
                             Text(
@@ -110,67 +106,72 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
+                        SettingsEditor(
+                            settings = writable,
+                            isReadOnly = false
+                        )
+
                         // 動作テスト用
-                        Row(
-                            horizontalArrangement = Arrangement.Center,
-                        ) {
-                            Button(onClick = {
-                                lifecycleScope.launch {
-                                    API().editReceipt("AB12C3", "RJBFyzAxoBYQfonE2u1T", ReceiptModel(
-                                        stuff = "Kei-SuperComputer",
-                                        paid = "sample member",
-                                        buyers = listOf("sample member"),
-                                        payment = 120_000,
-                                    ))
-                                }
-                            }) {
-                                Text(
-                                    text = "test"
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.size(16.dp))
-                            Button(onClick = {
-                                lifecycleScope.launch {
-                                    val res = API().reset()
-                                    Log.e(TAG, "reset: $res")
-                                }
-                            }) {
-                                Text(
-                                    text = "reset"
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.size(16.dp))
-                            Button(onClick = {
-                                lifecycleScope.launch {
-                                    val res = API().roomCreate(SettingsModel(
-                                        name = "sample room",
-                                        splitUnit = 10,
-                                        permissionReceiptEdit = Role.OWNER.toString(),
-                                        permissionReceiptCreate = Role.NORMAL.toString(),
-                                        onNewMemberRequest = "always", acceptRate = 50,
-                                    ))
-                                    Log.e(TAG, "create: $res")
-                                }
-                            }) {
-                                Text(
-                                    text = "create"
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.size(16.dp))
-                            Button(onClick = {
-                                lifecycleScope.launch {
-                                    val res = API().roomJoin("AB12C3")
-                                    Log.e(TAG, "join: ${res}")
-                                }
-                            }) {
-                                Text(
-                                    text = "join"
-                                )
-                            }
-                        }
+//                        Row(
+//                            horizontalArrangement = Arrangement.Center,
+//                        ) {
+//                            Button(onClick = {
+//                                lifecycleScope.launch {
+//                                    API().editReceipt("AB12C3", "RJBFyzAxoBYQfonE2u1T", ReceiptModel(
+//                                        stuff = "Kei-SuperComputer",
+//                                        paid = "sample member",
+//                                        buyers = listOf("sample member"),
+//                                        payment = 120_000,
+//                                    ))
+//                                }
+//                            }) {
+//                                Text(
+//                                    text = "test"
+//                                )
+//                            }
+//
+//                            Spacer(modifier = Modifier.size(16.dp))
+//                            Button(onClick = {
+//                                lifecycleScope.launch {
+//                                    val res = API().reset()
+//                                    Log.e(TAG, "reset: $res")
+//                                }
+//                            }) {
+//                                Text(
+//                                    text = "reset"
+//                                )
+//                            }
+//
+//                            Spacer(modifier = Modifier.size(16.dp))
+//                            Button(onClick = {
+//                                lifecycleScope.launch {
+//                                    val res = API().roomCreate(SettingsModel(
+//                                        name = "sample room",
+//                                        splitUnit = 10,
+//                                        permissionReceiptEdit = Role.OWNER.toString(),
+//                                        permissionReceiptCreate = Role.NORMAL.toString(),
+//                                        onNewMemberRequest = "always", acceptRate = 50,
+//                                    ))
+//                                    Log.e(TAG, "create: $res")
+//                                }
+//                            }) {
+//                                Text(
+//                                    text = "create"
+//                                )
+//                            }
+//
+//                            Spacer(modifier = Modifier.size(16.dp))
+//                            Button(onClick = {
+//                                lifecycleScope.launch {
+//                                    val res = API().roomJoin("AB12C3")
+//                                    Log.e(TAG, "join: ${res}")
+//                                }
+//                            }) {
+//                                Text(
+//                                    text = "join"
+//                                )
+//                            }
+//                        }
                     }
                 }
             }

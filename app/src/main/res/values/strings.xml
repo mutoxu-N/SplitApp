@@ -15,4 +15,5 @@
     <string name="settings_perm_receipt_edit">レシート編集権限</string>
     <string name="settings_new_member">新規メンバー</string>
     <string name="settings_accept_rate">承認レート</string>
+    <string name="settings_currency">¥</string>
 </resources>
