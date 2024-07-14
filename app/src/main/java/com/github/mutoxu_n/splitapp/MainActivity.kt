@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -29,8 +31,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.github.mutoxu_n.splitapp.api.API
 import com.github.mutoxu_n.splitapp.common.Auth
+import com.github.mutoxu_n.splitapp.components.settings.SettingsEditor
 import com.github.mutoxu_n.splitapp.models.ReceiptModel
+import com.github.mutoxu_n.splitapp.models.RequestType
 import com.github.mutoxu_n.splitapp.models.Role
+import com.github.mutoxu_n.splitapp.models.Settings
 import com.github.mutoxu_n.splitapp.models.SettingsModel
 import com.github.mutoxu_n.splitapp.ui.theme.SplitAppTheme
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
@@ -58,6 +63,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background,
                 ) {
                     Column(
+//                        modifier = Modifier
+//                            .verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
@@ -67,6 +74,19 @@ class MainActivity : ComponentActivity() {
 
                         Text(
                             text = "uid: $uid"
+                        )
+
+                        val writable = Settings(
+                            name = "writable",
+                            splitUnit = 10,
+                            permissionReceiptEdit = Role.OWNER,
+                            permissionReceiptCreate = Role.NORMAL,
+                            onNewMemberRequest = RequestType.ALWAYS,
+                            acceptRate = 30,
+                        )
+                        SettingsEditor(
+                            settings = writable,
+                            isReadOnly = false
                         )
 
                         Button(onClick = { signIn() }) {

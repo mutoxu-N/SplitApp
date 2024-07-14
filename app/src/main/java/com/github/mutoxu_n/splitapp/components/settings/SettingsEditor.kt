@@ -1,5 +1,6 @@
 package com.github.mutoxu_n.splitapp.components.settings
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -33,7 +36,6 @@ import com.github.mutoxu_n.splitapp.components.dialogs.ValueChangeDialog
 import com.github.mutoxu_n.splitapp.models.RequestType
 import com.github.mutoxu_n.splitapp.models.Role
 import com.github.mutoxu_n.splitapp.models.Settings
-import com.github.mutoxu_n.splitapp.models.SettingsModel
 import com.github.mutoxu_n.splitapp.ui.theme.SplitAppTheme
 
 @Composable
@@ -46,7 +48,8 @@ fun SettingsEditor(
 ) {
     Column(
         modifier = modifier
-            .padding(10.dp),
+            .padding(10.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(5.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -60,7 +63,7 @@ fun SettingsEditor(
 
         // ルーム名
         if(isReadOnly) {
-            DisplayRow(name = "ルーム名", value = settings.name)
+            DisplayRow(name = "ルーム名", value = roomName)
         } else {
             OutlinedTextField(
                 modifier = modifier
@@ -77,7 +80,7 @@ fun SettingsEditor(
         }
         DisplayRow(
             name = "割り勘単位",
-            value = settings.splitUnit,
+            value = splitUnit,
             isReadOnly = isReadOnly,
             onValueChange = {
                 splitUnit = it
@@ -85,7 +88,7 @@ fun SettingsEditor(
         )
         DisplayRow(
             name = "レシート作成権限",
-            value = settings.permissionReceiptCreate,
+            value = permissionReceiptCreate,
             isReadOnly = isReadOnly,
             onValueChange = {
                 permissionReceiptCreate = it
@@ -93,7 +96,7 @@ fun SettingsEditor(
         )
         DisplayRow(
             name = "レシート編集権限",
-            value = settings.permissionReceiptEdit,
+            value = permissionReceiptEdit,
             isReadOnly = isReadOnly,
             onValueChange = {
                 permissionReceiptEdit = it
@@ -101,7 +104,7 @@ fun SettingsEditor(
         )
         DisplayRow(
             name = "新規メンバー",
-            value = settings.onNewMemberRequest,
+            value = onNewMemberRequest,
             isReadOnly = isReadOnly,
             onValueChange = {
                 onNewMemberRequest = it
@@ -110,7 +113,7 @@ fun SettingsEditor(
 
         DisplayRow(
             name = "承認レート",
-            value = settings.acceptRate,
+            value = acceptRate,
             suffix = "%",
             isReadOnly = isReadOnly,
             onValueChange = {
@@ -121,7 +124,9 @@ fun SettingsEditor(
         if(!isReadOnly) {
             Slider(
                 value = acceptRate.toFloat(),
-                onValueChange = { acceptRate = it.toInt() },
+                onValueChange = {
+                    acceptRate = it.toInt()
+                },
                 valueRange = 0f..100f,
             )
         }
