@@ -9,13 +9,13 @@ enum class RequestType {
 
     companion object {
         private val map = mapOf(
-            ALWAYS to App.appContext.getString(R.string.request_type_always),
-            VOTE to App.appContext.getString(R.string.request_type_vote),
-            MODERATOR to App.appContext.getString(R.string.request_type_moderator),
+            ALWAYS to (App.appContext?.getString(R.string.request_type_always) ?: ALWAYS.name),
+            VOTE to (App.appContext?.getString(R.string.request_type_vote) ?: VOTE.name),
+            MODERATOR to (App.appContext?.getString(R.string.request_type_moderator) ?: MODERATOR.name),
         )
 
         fun fromString(type: String) = RequestType.valueOf(type.uppercase(Locale.getDefault()))
     }
 
-    override fun toString() = map[this] ?: "エラー"
+    override fun toString() = map[this] ?: (App.appContext?.getString(R.string.request_type_error) ?: "ERROR")
 }

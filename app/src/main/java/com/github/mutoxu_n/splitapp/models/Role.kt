@@ -9,14 +9,14 @@ enum class Role(val roleId: Int) {
 
     companion object {
         private val map = mapOf(
-            NORMAL.roleId to App.appContext.getString(R.string.role_normal),
-            CREATOR.roleId to App.appContext.getString(R.string.role_creator),
-            MODERATOR.roleId to App.appContext.getString(R.string.role_moderator),
-            OWNER.roleId to App.appContext.getString(R.string.role_owner),
+            NORMAL.roleId to (App.appContext?.getString(R.string.role_normal) ?: NORMAL.name),
+            CREATOR.roleId to (App.appContext?.getString(R.string.role_creator) ?: CREATOR.name),
+            MODERATOR.roleId to (App.appContext?.getString(R.string.role_moderator) ?: MODERATOR.name),
+            OWNER.roleId to (App.appContext?.getString(R.string.role_owner) ?: OWNER.name),
         )
         fun fromString(role: String) = Role.valueOf(role.uppercase(Locale.getDefault()))
 
     }
 
-    override fun toString() = map[roleId] ?: App.appContext.getString(R.string.role_unknown)
+    override fun toString() = map[roleId] ?: (App.appContext?.getString(R.string.role_unknown) ?: "ERROR")
 }

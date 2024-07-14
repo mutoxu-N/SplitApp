@@ -8,4 +8,5 @@
     <string name="request_type_always">いつでも</string>
     <string name="request_type_vote">投票</string>
     <string name="request_type_moderator">管理者が承認</string>
+    <string name="request_type_error">ERROR</string>
 </resources>

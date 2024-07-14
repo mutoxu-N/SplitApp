@@ -7,7 +7,7 @@ import com.google.firebase.FirebaseApp
 class App: Application() {
     companion object {
         private var _appContext: Context? = null
-        val appContext: Context get() = _appContext!!
+        val appContext: Context? get() = _appContext
 
     }
 
@@ -15,7 +15,7 @@ class App: Application() {
         super.onCreate()
         _appContext = applicationContext
 
-        FirebaseApp.initializeApp(appContext)
+        FirebaseApp.initializeApp(applicationContext)
     }
 
 }
