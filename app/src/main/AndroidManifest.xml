@@ -12,8 +12,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.SplitApp">
+        android:theme="@style/Theme.SplitApp"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".EditReceiptActivity"
+            android:exported="false"
+            android:label="@string/title_activity_edit_receipt"
+            android:theme="@style/Theme.SplitApp" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -29,7 +34,7 @@
             android:theme="@style/Theme.AppCompat" />
         <activity
             android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
-            android:theme="@style/Theme.AppCompat"/>
+            android:theme="@style/Theme.AppCompat" />
     </application>
 
 </manifest>

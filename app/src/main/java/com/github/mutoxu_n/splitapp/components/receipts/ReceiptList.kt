@@ -7,13 +7,18 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,7 +40,8 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun ReceiptList(
     modifier: Modifier = Modifier,
-    receipts: List<Receipt> = listOf()
+    receipts: List<Receipt> = listOf(),
+    launchEditReceiptActivity: (Receipt) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier
@@ -46,7 +52,10 @@ fun ReceiptList(
     ) {
         items(receipts) { receipt ->
             key(receipt.id) {
-                ReceiptListItem(receipt = receipt)
+                ReceiptListItem(
+                    receipt = receipt,
+                    launchEditReceiptActivity = { launchEditReceiptActivity(it) },
+                )
             }
         }
     }
@@ -55,7 +64,8 @@ fun ReceiptList(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ReceiptListItem(
-    receipt: Receipt
+    receipt: Receipt,
+    launchEditReceiptActivity: (Receipt) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -73,15 +83,32 @@ private fun ReceiptListItem(
     ) {
         val df = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")
         Column {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = stringResource(
+                        R.string.receipt_summary,
+                        receipt.paid.name,
+                        receipt.stuff,
+                        stringResource(id = R.string.settings_currency),
+                        "%,d".format(receipt.payment)
+                    ),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+                OutlinedIconButton(onClick = { launchEditReceiptActivity(receipt) }) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = null,
+                    )
+                }
+            }
             Text(
                 text = df.format(receipt.timestamp.atZone(ZoneId.systemDefault())),
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.bodySmall,
-            )
-            Text(
-                text = "${receipt.paid.name}が${receipt.stuff}を${stringResource(id = R.string.settings_currency)}${"%,d".format(receipt.payment)}で購入しました",
-                color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.bodyLarge,
             )
             HorizontalDivider(modifier = Modifier.padding(0.dp, 3.dp, 0.dp, 0.dp))
             FlowRow(
@@ -105,7 +132,7 @@ private fun ReceiptListItem(
                         onClick = {},
                         label = {
                             Text(
-                                text = "全員",
+                                text = stringResource(R.string.term_everyone),
                                 color = MaterialTheme.colorScheme.onSurface,
                                 style = MaterialTheme.typography.bodySmall,
                             )
@@ -114,7 +141,7 @@ private fun ReceiptListItem(
             }
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "報告者: ${receipt.reportedBy.name}",
+                text = stringResource(R.string.receipt_reported, receipt.reportedBy.name),
                 textAlign = TextAlign.End,
                 maxLines = 1,
                 style = MaterialTheme.typography.bodySmall,
@@ -177,7 +204,8 @@ private fun ReceiptListPreview() {
                         reportedBy = member2,
                         timestamp = date,
                     )
-                )
+                ),
+                launchEditReceiptActivity = {},
             )
         }
     }
@@ -209,7 +237,8 @@ private fun ReceiptListItemPreview() {
     MaterialTheme {
         Surface {
             ReceiptListItem(
-                receipt = receipt
+                receipt = receipt,
+                launchEditReceiptActivity = {},
             )
         }
     }
@@ -235,7 +264,8 @@ private fun ReceiptListItemAllBuyerPreview() {
     MaterialTheme {
         Surface {
             ReceiptListItem(
-                receipt = receipt
+                receipt = receipt,
+                launchEditReceiptActivity = {},
             )
         }
     }
