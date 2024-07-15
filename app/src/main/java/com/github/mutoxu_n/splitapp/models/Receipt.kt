@@ -1,6 +1,6 @@
 package com.github.mutoxu_n.splitapp.models
 
-import java.util.Date
+import java.time.LocalDateTime
 
 data class Receipt(
     val id: String = "null",
@@ -9,5 +9,5 @@ data class Receipt(
     val buyers: List<Member>,
     val payment: Int,
     val reportedBy: Member,
-    var timestamp: Date,
+    var timestamp: LocalDateTime,
 )

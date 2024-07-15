@@ -102,26 +102,26 @@ class MainActivity : ComponentActivity() {
 //                            isReadOnly = false
 //                        )
                         
-                        RoomIdDisplay(
-                            roomId = "AB12C3",
-                            onCopyClicked = {
-                                // Copy RoomId
-                                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                                val clip = ClipData.newPlainText(getString(R.string.secret_clipboard_room_id), it)
-                                clipboard.setPrimaryClip(clip)
-                                Toast.makeText(this@MainActivity, "ルームID($it)をコピーしました", Toast.LENGTH_SHORT).show()
-                            },
-                            onShareClicked = {
-                                // Sharesheet 表示
-                                val intent = Intent().apply {
-                                    action = Intent.ACTION_SEND
-                                    putExtra(Intent.EXTRA_TEXT, it)
-                                    type = "text/plain"
-                                }
-                                val shareIntent  = Intent.createChooser(intent, null)
-                                startActivity(shareIntent)
-                            }
-                        )
+//                        RoomIdDisplay(
+//                            roomId = "AB12C3",
+//                            onCopyClicked = {
+//                                // Copy RoomId
+//                                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+//                                val clip = ClipData.newPlainText(getString(R.string.secret_clipboard_room_id), it)
+//                                clipboard.setPrimaryClip(clip)
+//                                Toast.makeText(this@MainActivity, "ルームID($it)をコピーしました", Toast.LENGTH_SHORT).show()
+//                            },
+//                            onShareClicked = {
+//                                // Sharesheet 表示
+//                                val intent = Intent().apply {
+//                                    action = Intent.ACTION_SEND
+//                                    putExtra(Intent.EXTRA_TEXT, it)
+//                                    type = "text/plain"
+//                                }
+//                                val shareIntent  = Intent.createChooser(intent, null)
+//                                startActivity(shareIntent)
+//                            }
+//                        )
 
                         // 動作テスト用
 //                        Row(
