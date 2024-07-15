@@ -1,20 +1,19 @@
 package com.github.mutoxu_n.splitapp
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -28,19 +27,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.lifecycleScope
-import com.github.mutoxu_n.splitapp.api.API
 import com.github.mutoxu_n.splitapp.common.Auth
-import com.github.mutoxu_n.splitapp.components.settings.SettingsEditor
-import com.github.mutoxu_n.splitapp.models.ReceiptModel
-import com.github.mutoxu_n.splitapp.models.RequestType
-import com.github.mutoxu_n.splitapp.models.Role
-import com.github.mutoxu_n.splitapp.models.Settings
-import com.github.mutoxu_n.splitapp.models.SettingsModel
-import com.github.mutoxu_n.splitapp.models.SplitUnit
+import com.github.mutoxu_n.splitapp.components.settings.RoomIdDisplay
 import com.github.mutoxu_n.splitapp.ui.theme.SplitAppTheme
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     private var uid: String? by mutableStateOf(null)
@@ -77,14 +67,6 @@ class MainActivity : ComponentActivity() {
                             text = "uid: $uid"
                         )
 
-                        val writable = Settings(
-                            name = "writable",
-                            splitUnit = SplitUnit.TEN,
-                            permissionReceiptEdit = Role.OWNER,
-                            permissionReceiptCreate = Role.NORMAL,
-                            onNewMemberRequest = RequestType.ALWAYS,
-                            acceptRate = 30,
-                        )
 
                         Button(onClick = { signIn() }) {
                             Text(
@@ -107,9 +89,38 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        SettingsEditor(
-                            settings = writable,
-                            isReadOnly = false
+//                        val writable = Settings(
+//                            name = "writable",
+//                            splitUnit = SplitUnit.TEN,
+//                            permissionReceiptEdit = Role.OWNER,
+//                            permissionReceiptCreate = Role.NORMAL,
+//                            onNewMemberRequest = RequestType.ALWAYS,
+//                            acceptRate = 30,
+//                        )
+//                        SettingsEditor(
+//                            settings = writable,
+//                            isReadOnly = false
+//                        )
+                        
+                        RoomIdDisplay(
+                            roomId = "AB12C3",
+                            onCopyClicked = {
+                                // Copy RoomId
+                                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                val clip = ClipData.newPlainText(getString(R.string.secret_clipboard_room_id), it)
+                                clipboard.setPrimaryClip(clip)
+                                Toast.makeText(this@MainActivity, "ルームID($it)をコピーしました", Toast.LENGTH_SHORT).show()
+                            },
+                            onShareClicked = {
+                                // Sharesheet 表示
+                                val intent = Intent().apply {
+                                    action = Intent.ACTION_SEND
+                                    putExtra(Intent.EXTRA_TEXT, it)
+                                    type = "text/plain"
+                                }
+                                val shareIntent  = Intent.createChooser(intent, null)
+                                startActivity(shareIntent)
+                            }
                         )
 
                         // 動作テスト用

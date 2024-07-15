@@ -18,4 +18,5 @@
     <string name="settings_currency">¥</string>
     <string name="button_cancel">キャンセル</string>
     <string name="button_confirm">完了</string>
+    <string name="secret_clipboard_room_id">SplitRoomId</string>
 </resources>

@@ -10,7 +10,6 @@ import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -25,6 +24,8 @@ import com.github.mutoxu_n.splitapp.ui.theme.SplitAppTheme
 fun RoomIdDisplay(
     modifier: Modifier = Modifier,
     roomId: String,
+    onCopyClicked: (String) -> Unit = {},
+    onShareClicked: (String) -> Unit = {},
 ) {
     Column(
         modifier = modifier
@@ -46,14 +47,14 @@ fun RoomIdDisplay(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { onCopyClicked(roomId) }) {
                 Icon(
                     imageVector = Icons.Default.ContentCopy,
                     contentDescription = null,
                 )
             }
 
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { onShareClicked(roomId) }) {
                 Icon(
                     imageVector = Icons.Default.Share,
                     contentDescription = null,
