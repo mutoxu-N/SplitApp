@@ -40,7 +40,7 @@ fun <T> ValueChangeDialog(
     value: T,
     onDismiss: () -> Unit,
     onConfirm: (T) -> Unit,
-    entries: List<T>,
+    entries: List<T> = listOf(),
 ) {
     var newValue by rememberSaveable { mutableStateOf(value) }
     var isExpanded by rememberSaveable { mutableStateOf(false) }
@@ -157,16 +157,103 @@ fun <T> ValueChangeDialog(
 
 @Preview(showBackground = true, showSystemUi = true, locale = "ja")
 @Composable
-fun SettingsEditorPreview() {
+private fun StringPreview() {
     SplitAppTheme {
         Surface {
             Box(modifier = Modifier.fillMaxSize()) {
                 ValueChangeDialog(
-                    title = "設定項目",
+                    title = "文字列の設定",
+                    value = "入力データ",
+                    onDismiss = {},
+                    onConfirm = {},
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true, locale = "ja")
+@Composable
+private fun IntPreview() {
+    SplitAppTheme {
+        Surface {
+            Box(modifier = Modifier.fillMaxSize()) {
+                ValueChangeDialog(
+                    title = "整数の設定",
+                    value = 10,
+                    onDismiss = {},
+                    onConfirm = {},
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true, locale = "ja")
+@Composable
+private fun RolePreview() {
+    SplitAppTheme {
+        Surface {
+            Box(modifier = Modifier.fillMaxSize()) {
+                ValueChangeDialog(
+                    title = "Roleの設定",
                     value = Role.OWNER,
                     onDismiss = {},
                     onConfirm = {},
                     entries = Role.entries
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true, locale = "ja")
+@Composable
+private fun SplitUnitPreview() {
+    SplitAppTheme {
+        Surface {
+            Box(modifier = Modifier.fillMaxSize()) {
+                ValueChangeDialog(
+                    title = "SplitUnitの設定",
+                    value = SplitUnit.TEN,
+                    onDismiss = {},
+                    onConfirm = {},
+                    entries = SplitUnit.entries
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true, locale = "ja")
+@Composable
+private fun RequestTypePreview() {
+    SplitAppTheme {
+        Surface {
+            Box(modifier = Modifier.fillMaxSize()) {
+                ValueChangeDialog(
+                    title = "RequestTypeの設定",
+                    value = RequestType.ALWAYS,
+                    onDismiss = {},
+                    onConfirm = {},
+                    entries = RequestType.entries
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true, locale = "ja")
+@Composable
+private fun ErrorPreview() {
+    SplitAppTheme {
+        Surface {
+            Box(modifier = Modifier.fillMaxSize()) {
+                ValueChangeDialog(
+                    title = "非対応データの設定",
+                    value = 1f,
+                    onDismiss = {},
+                    onConfirm = {},
                 )
             }
         }

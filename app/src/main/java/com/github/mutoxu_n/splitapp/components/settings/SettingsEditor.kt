@@ -1,6 +1,5 @@
 package com.github.mutoxu_n.splitapp.components.settings
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -257,7 +256,7 @@ private fun <T> DisplayRow(
 
 @Preview(showBackground = true, showSystemUi = true, locale = "ja")
 @Composable
-fun SettingsEditorPreview() {
+private fun ReadonlyPreview() {
     val readOnly = Settings(
         name = "readOnly",
         splitUnit = SplitUnit.TEN,
@@ -266,6 +265,19 @@ fun SettingsEditorPreview() {
         onNewMemberRequest = RequestType.ALWAYS,
         acceptRate = 50,
     )
+    SplitAppTheme {
+        Surface {
+            SettingsEditor(
+                settings = readOnly
+            )
+        }
+    }
+}
+
+
+@Preview(showBackground = true, showSystemUi = true, locale = "ja")
+@Composable
+private fun WritablePreview() {
     val writable = Settings(
         name = "writable",
         splitUnit = SplitUnit.TEN,
@@ -276,23 +288,10 @@ fun SettingsEditorPreview() {
     )
     SplitAppTheme {
         Surface {
-            Column(
-                modifier = Modifier.padding(0.dp, 10.dp)
-            ) {
-                HorizontalDivider(color= Color(0xFFFF0000))
-                SettingsEditor(
-                    settings = readOnly
-                )
-                HorizontalDivider(color= Color(0xFFFF0000))
-
-                Spacer(modifier = Modifier.size(10.dp))
-                HorizontalDivider(color= Color(0xFF0000FF))
-                SettingsEditor(
-                    settings = writable,
-                    isReadOnly = false
-                )
-                HorizontalDivider(color= Color(0xFF0000FF))
-            }
+            SettingsEditor(
+                settings = writable,
+                isReadOnly = false
+            )
         }
     }
 }
