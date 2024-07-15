@@ -80,6 +80,7 @@ fun SettingsEditor(
                     isError = it.isBlank()
                     roomName = it
                 },
+                maxLines = 1,
                 isError = isError,
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
             )
@@ -141,7 +142,7 @@ fun SettingsEditor(
                     suffix = "%",
                     isReadOnly = false,
                     onValueChange = {
-                        acceptRate = it
+                        acceptRate = if(it > 100) 100 else it
                     },
                 )
 

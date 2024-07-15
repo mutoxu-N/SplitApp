@@ -83,6 +83,7 @@ fun <T> ValueChangeDialog(
                             newValue = it as T
                         },
                         isError = isError,
+                        maxLines = 1,
                         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
                     )
                 }
@@ -92,23 +93,22 @@ fun <T> ValueChangeDialog(
                         modifier = Modifier
                             .padding(7.dp, 0.dp)
                             .fillMaxWidth(),
-                        value = newValue.toString(),
+                        value = if((newValue as Int) < 0) "" else newValue.toString(),
                         onValueChange = {
                             try {
-                                isError = it.isBlank()
+                                if(it.isBlank()) {
+                                    newValue = -1 as T
+                                }
                                 val n = it.toInt()
-                                if(n > 0) {
+                                if(n >= 0) {
                                     newValue = n as T
-
-                                } else {
-                                    isError = true
+                                    isError = false
                                 }
 
-                            } catch (e: NumberFormatException) {
-                                isError = true
-                            }
+                            } catch (_: NumberFormatException) {}
                         },
                         isError = isError,
+                        maxLines = 1,
                         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Decimal),
                     )
                 }
