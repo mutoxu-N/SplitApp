@@ -79,6 +79,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // icons
+    implementation(libs.androidx.material.icons.extended)
+
     // ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
