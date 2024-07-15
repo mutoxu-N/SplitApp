@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
@@ -28,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -64,20 +66,21 @@ fun SettingsEditor(
         var isError by rememberSaveable { mutableStateOf(settings.name.isBlank()) }
 
         // ルーム名
-        if(isReadOnly) {
+        if (isReadOnly) {
             DisplayRow(name = stringResource(R.string.settings_room_name), value = roomName)
         } else {
             OutlinedTextField(
                 modifier = modifier
                     .padding(7.dp, 0.dp)
                     .fillMaxWidth(),
-                value = settings.name,
+                value = roomName,
                 label = { Text(text = stringResource(id = R.string.settings_room_name)) },
                 onValueChange = {
                     isError = it.isBlank()
                     roomName = it
                 },
                 isError = isError,
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
             )
         }
         DisplayRow(
@@ -114,24 +117,56 @@ fun SettingsEditor(
             }
         )
 
-        DisplayRow(
-            name = stringResource(R.string.settings_accept_rate),
-            value = acceptRate,
-            suffix = "%",
-            isReadOnly = isReadOnly,
-            onValueChange = {
-                acceptRate = it
-            }
-        )
 
-        if(!isReadOnly) {
-            Slider(
-                value = acceptRate.toFloat(),
-                onValueChange = {
-                    acceptRate = it.toInt()
-                },
-                valueRange = 0f..100f,
+
+        if (isReadOnly) {
+            DisplayRow(
+                name = stringResource(R.string.settings_accept_rate),
+                value = acceptRate,
+                suffix = "%",
+                isReadOnly = true,
             )
+
+        } else {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(0.dp)
+            ) {
+                DisplayRow(
+                    name = stringResource(R.string.settings_accept_rate),
+                    value = acceptRate,
+                    suffix = "%",
+                    isReadOnly = false,
+                    onValueChange = {
+                        acceptRate = it
+                    }
+                )
+
+                Row(
+                    modifier = Modifier.padding(10.dp, 0.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = "0%",
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+
+                    Slider(
+                        modifier = Modifier.weight(1f),
+                        value = acceptRate.toFloat(),
+                        onValueChange = {
+                            acceptRate = it.toInt()
+                        },
+                        valueRange = 0f..100f,
+                    )
+
+                    Text(
+                        text = "100%",
+                        textAlign = TextAlign.End,
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                }
+            }
         }
 
         if(!isReadOnly) {
@@ -189,8 +224,7 @@ private fun <T> DisplayRow(
         )
         Spacer(modifier = modifier.size(3.dp))
         Text(
-            modifier = modifier
-                .clickable { isDialogShown = true },
+            modifier = if(isReadOnly) modifier else modifier.clickable { isDialogShown = true },
             text = "$prefix$value$suffix",
             textAlign = TextAlign.End,
             style = MaterialTheme.typography.bodyMedium,
