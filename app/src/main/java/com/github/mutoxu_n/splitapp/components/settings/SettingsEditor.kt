@@ -40,6 +40,7 @@ import com.github.mutoxu_n.splitapp.components.dialogs.ValueChangeDialog
 import com.github.mutoxu_n.splitapp.models.RequestType
 import com.github.mutoxu_n.splitapp.models.Role
 import com.github.mutoxu_n.splitapp.models.Settings
+import com.github.mutoxu_n.splitapp.models.SplitUnit
 import com.github.mutoxu_n.splitapp.ui.theme.SplitAppTheme
 
 @Composable
@@ -58,7 +59,7 @@ fun SettingsEditor(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         var roomName by rememberSaveable { mutableStateOf(settings.name) }
-        var splitUnit by rememberSaveable { mutableIntStateOf(settings.splitUnit) }
+        var splitUnit by rememberSaveable { mutableStateOf(settings.splitUnit) }
         var permissionReceiptCreate by rememberSaveable { mutableStateOf(settings.permissionReceiptCreate) }
         var permissionReceiptEdit by rememberSaveable { mutableStateOf(settings.permissionReceiptEdit) }
         var onNewMemberRequest by rememberSaveable { mutableStateOf(settings.onNewMemberRequest) }
@@ -86,11 +87,11 @@ fun SettingsEditor(
         DisplayRow(
             name = stringResource(R.string.settings_split_unit),
             value = splitUnit,
-            prefix = stringResource(R.string.settings_currency),
             isReadOnly = isReadOnly,
             onValueChange = {
                 splitUnit = it
-            }
+            },
+            entries = SplitUnit.entries
         )
         DisplayRow(
             name = stringResource(R.string.settings_perm_receipt_create),
@@ -98,7 +99,8 @@ fun SettingsEditor(
             isReadOnly = isReadOnly,
             onValueChange = {
                 permissionReceiptCreate = it
-            }
+            },
+            entries = Role.entries.filter { it != Role.CREATOR }
         )
         DisplayRow(
             name = stringResource(R.string.settings_perm_receipt_edit),
@@ -106,7 +108,8 @@ fun SettingsEditor(
             isReadOnly = isReadOnly,
             onValueChange = {
                 permissionReceiptEdit = it
-            }
+            },
+            entries = Role.entries
         )
         DisplayRow(
             name = stringResource(R.string.settings_new_member),
@@ -114,7 +117,8 @@ fun SettingsEditor(
             isReadOnly = isReadOnly,
             onValueChange = {
                 onNewMemberRequest = it
-            }
+            },
+            entries = RequestType.entries
         )
 
 
@@ -138,7 +142,7 @@ fun SettingsEditor(
                     isReadOnly = false,
                     onValueChange = {
                         acceptRate = it
-                    }
+                    },
                 )
 
                 Row(
@@ -205,7 +209,8 @@ private fun <T> DisplayRow(
     value: T,
     prefix: String = "",
     suffix: String = "",
-    onValueChange: (T) -> Unit = {}
+    onValueChange: (T) -> Unit = {},
+    entries: List<T> = listOf(),
 ) {
     var isDialogShown by rememberSaveable { mutableStateOf(false) }
 
@@ -243,6 +248,7 @@ private fun <T> DisplayRow(
                 onValueChange(it)
                 isDialogShown = false
             },
+            entries = entries
         )
     }
 }
@@ -253,7 +259,7 @@ private fun <T> DisplayRow(
 fun SettingsEditorPreview() {
     val readOnly = Settings(
         name = "readOnly",
-        splitUnit = 10,
+        splitUnit = SplitUnit.TEN,
         permissionReceiptEdit = Role.OWNER,
         permissionReceiptCreate = Role.NORMAL,
         onNewMemberRequest = RequestType.ALWAYS,
@@ -261,7 +267,7 @@ fun SettingsEditorPreview() {
     )
     val writable = Settings(
         name = "writable",
-        splitUnit = 10,
+        splitUnit = SplitUnit.TEN,
         permissionReceiptEdit = Role.OWNER,
         permissionReceiptCreate = Role.NORMAL,
         onNewMemberRequest = RequestType.ALWAYS,

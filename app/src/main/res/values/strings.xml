@@ -16,4 +16,6 @@
     <string name="settings_new_member">新規メンバー</string>
     <string name="settings_accept_rate">承認レート</string>
     <string name="settings_currency">¥</string>
+    <string name="button_cancel">キャンセル</string>
+    <string name="button_confirm">完了</string>
 </resources>

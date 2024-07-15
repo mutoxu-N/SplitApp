@@ -37,6 +37,7 @@ import com.github.mutoxu_n.splitapp.models.RequestType
 import com.github.mutoxu_n.splitapp.models.Role
 import com.github.mutoxu_n.splitapp.models.Settings
 import com.github.mutoxu_n.splitapp.models.SettingsModel
+import com.github.mutoxu_n.splitapp.models.SplitUnit
 import com.github.mutoxu_n.splitapp.ui.theme.SplitAppTheme
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import kotlinx.coroutines.launch
@@ -78,7 +79,7 @@ class MainActivity : ComponentActivity() {
 
                         val writable = Settings(
                             name = "writable",
-                            splitUnit = 10,
+                            splitUnit = SplitUnit.TEN,
                             permissionReceiptEdit = Role.OWNER,
                             permissionReceiptCreate = Role.NORMAL,
                             onNewMemberRequest = RequestType.ALWAYS,
