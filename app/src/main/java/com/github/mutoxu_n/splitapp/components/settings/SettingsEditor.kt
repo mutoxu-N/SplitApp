@@ -196,7 +196,7 @@ fun SettingsEditor(
 //            )
             DoneButton(
                 modifier = Modifier,
-                onComfirmed= {
+                onConfirmed= {
                     onSettingsChange(
                         Settings(
                             name = roomName,
