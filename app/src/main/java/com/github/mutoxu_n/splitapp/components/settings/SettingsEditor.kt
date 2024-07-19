@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -34,6 +33,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.mutoxu_n.splitapp.R
+import com.github.mutoxu_n.splitapp.components.DoneButton
 import com.github.mutoxu_n.splitapp.components.dialogs.ValueChangeDialog
 import com.github.mutoxu_n.splitapp.models.RequestType
 import com.github.mutoxu_n.splitapp.models.Role
@@ -174,10 +174,29 @@ fun SettingsEditor(
 
         if(!isReadOnly) {
             HorizontalDivider()
-            Button(
-                modifier = modifier,
-                onClick = {
-                    if(isError) return@Button
+//            Button(
+//                modifier = modifier,
+//                onClick = {
+//                    if(isError) return@Button
+//                    onSettingsChange(
+//                        Settings(
+//                            name = roomName,
+//                            splitUnit = splitUnit,
+//                            permissionReceiptCreate = permissionReceiptCreate,
+//                            permissionReceiptEdit = permissionReceiptEdit,
+//                            onNewMemberRequest = onNewMemberRequest,
+//                            acceptRate = acceptRate
+//                        )
+//                    )
+//                },
+//                content = {
+//                    Text(text = saveButtonText)
+//                },
+//                enabled = !isError
+//            )
+            DoneButton(
+                modifier = Modifier,
+                onComfirmed= {
                     onSettingsChange(
                         Settings(
                             name = roomName,
@@ -189,11 +208,10 @@ fun SettingsEditor(
                         )
                     )
                 },
-                content = {
-                    Text(text = saveButtonText)
-                },
-                enabled = !isError
+                enabled = !isError,
+                doneButtonText = saveButtonText,
             )
+
         }
 
     }
