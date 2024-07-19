@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.gms.google-services")
     id("com.google.android.gms.oss-licenses-plugin")
+    id("org.jetbrains.kotlin.plugin.parcelize")
 }
 
 android {
