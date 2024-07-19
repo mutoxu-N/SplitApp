@@ -127,7 +127,7 @@ fun ReceiptDetailDisplay(
         HorizontalDivider()
         DoneButton(
             doneButtonText = "レシートの内容を保存する",
-            onComfirmed = {
+            onConfirmed = {
                 onValueChanged(receipt.copy(
                     paid = paid,
                     payment = payment,

@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.github.mutoxu_n.splitapp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.github.mutoxu_n.splitapp"

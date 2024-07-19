@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 @Composable
 fun DoneButton(
     modifier: Modifier = Modifier,
-    onComfirmed: () -> Unit = {},
+    onConfirmed: () -> Unit = {},
     enabled: Boolean = true,
     doneButtonText: String,
 ) {
@@ -16,7 +16,7 @@ fun DoneButton(
         modifier = modifier,
         onClick = {
             if(enabled) return@Button
-            onComfirmed()
+            onConfirmed()
         },
         content = {
             Text(text = doneButtonText)
