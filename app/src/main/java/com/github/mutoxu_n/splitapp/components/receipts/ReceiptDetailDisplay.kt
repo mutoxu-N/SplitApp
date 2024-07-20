@@ -32,7 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.mutoxu_n.splitapp.BuildConfig
 import com.github.mutoxu_n.splitapp.R
-import com.github.mutoxu_n.splitapp.components.DoneButton
+import com.github.mutoxu_n.splitapp.components.elements.DoneButton
 import com.github.mutoxu_n.splitapp.components.dialogs.ListSelectDialog
 import com.github.mutoxu_n.splitapp.components.dialogs.ValueChangeDialog
 import com.github.mutoxu_n.splitapp.models.Member
@@ -54,7 +54,7 @@ fun ReceiptDetailDisplay(
     var payment by rememberSaveable { mutableIntStateOf(receipt.payment) }
     var buyers by rememberSaveable { mutableStateOf(receipt.buyers) }
 
-    val df = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")
+    val df = DateTimeFormatter.ofPattern(stringResource(R.string.format_datetime))
 
     Column(
         modifier = modifier
@@ -74,13 +74,13 @@ fun ReceiptDetailDisplay(
         )
 
         DisplayRow(
-            name = "支払い者",
+            name = stringResource(R.string.receipt_paid),
             isReadOnly = false,
             value = paid,
             onValueChanged = { paid = it }
         )
         DisplayRow(
-            name = "支払金額",
+            name = stringResource(R.string.receipt_payment),
             isReadOnly = false,
             value = payment,
             prefix = stringResource(id = R.string.settings_currency),
@@ -89,7 +89,7 @@ fun ReceiptDetailDisplay(
 
         Column {
             DisplayRow(
-                name = "購入者",
+                name = stringResource(R.string.receipt_term_buyer),
                 isReadOnly = false,
                 value = buyers,
                 suffix = "人",
@@ -112,11 +112,11 @@ fun ReceiptDetailDisplay(
         }
 
         DisplayRow(
-            name = "報告者",
+            name = stringResource(R.string.receipt_term_reported_by),
             value = receipt.reportedBy,
         )
         DisplayRow(
-            name = "作成日時",
+            name = stringResource(R.string.receipt_term_created_time),
             value = df.format(receipt.timestamp.atZone(java.time.ZoneId.systemDefault())),
         )
 
@@ -130,7 +130,7 @@ fun ReceiptDetailDisplay(
 
         HorizontalDivider()
         DoneButton(
-            doneButtonText = "レシートの内容を保存する",
+            doneButtonText = stringResource(R.string.button_save_receipt),
             onConfirmed = {
                 onValueChanged(receipt.copy(
                     paid = paid,
@@ -178,7 +178,7 @@ private fun <T> DisplayRow(
                 is Member -> value.name
                 is List<*> -> {
                     // メンバーリストの場合
-                    if(value.isEmpty()) "全員"
+                    if(value.isEmpty()) stringResource(id = R.string.term_everyone)
                     else "${value.size}$suffix"
                 }
                 else -> value

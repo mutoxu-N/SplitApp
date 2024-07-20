@@ -1,4 +1,4 @@
-package com.github.mutoxu_n.splitapp.components
+package com.github.mutoxu_n.splitapp.components.elements
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text

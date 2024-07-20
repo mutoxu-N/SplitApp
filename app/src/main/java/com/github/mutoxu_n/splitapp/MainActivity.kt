@@ -42,8 +42,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Auth.get().addOnTokenChangedListener {
-            uid = Auth.get().auth.uid
+        Auth.addOnTokenChangedListener {
+            uid = Auth.auth.uid
         }
 
         enableEdgeToEdge()
@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        Button(onClick = { Auth.get().signOut() }) {
+                        Button(onClick = { Auth.signOut() }) {
                             Text(
                                 text = "Sign Out"
                             )
@@ -191,8 +191,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun signIn() {
-        val auth = Auth.get()
-        auth.signIn()
+        Auth.signIn()
     }
 }
 

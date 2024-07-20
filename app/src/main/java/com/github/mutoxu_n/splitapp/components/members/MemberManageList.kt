@@ -78,7 +78,7 @@ private fun MemberManageListItem(
 
         Row {
             Text(
-                text = stringResource(R.string.term_permission) + ": ",
+                text = stringResource(R.string.member_role) + ": ",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,
             )
@@ -104,7 +104,7 @@ private fun MemberManageListItem(
 
     if(isDialogShown) {
         ValueChangeDialog(
-            title = stringResource(R.string.term_role),
+            title = stringResource(R.string.member_role),
             value = member.role,
             onDismiss = { isDialogShown = false },
             onConfirm = {

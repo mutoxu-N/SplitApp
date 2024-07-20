@@ -81,7 +81,7 @@ private fun ReceiptListItem(
             )
             .padding(10.dp, 5.dp)
     ) {
-        val df = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")
+        val df = DateTimeFormatter.ofPattern(stringResource(id = R.string.format_datetime))
         Column {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
