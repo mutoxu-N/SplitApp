@@ -23,4 +23,6 @@
     <string name="receipt_summary">%1$sが%2$sを%3$s%4$sで購入しました</string>
     <string name="term_everyone">全員</string>
     <string name="receipt_reported">報告者: %1$s</string>
+    <string name="term_permission">権限</string>
+    <string name="term_role">役職</string>
 </resources>
