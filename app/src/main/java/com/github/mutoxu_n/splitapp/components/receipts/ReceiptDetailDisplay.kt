@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.github.mutoxu_n.splitapp.components.receipts
 
 import androidx.compose.foundation.clickable
@@ -31,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.github.mutoxu_n.splitapp.BuildConfig
 import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.components.DoneButton
+import com.github.mutoxu_n.splitapp.components.dialogs.ListSelectDialog
 import com.github.mutoxu_n.splitapp.components.dialogs.ValueChangeDialog
 import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.Receipt
@@ -45,6 +48,7 @@ fun ReceiptDetailDisplay(
     modifier: Modifier = Modifier,
     receipt: Receipt,
     onValueChanged: (Receipt) -> Unit,
+    members: List<Member>,
 ) {
     var paid by rememberSaveable { mutableStateOf(receipt.paid) }
     var payment by rememberSaveable { mutableIntStateOf(receipt.payment) }
@@ -89,9 +93,9 @@ fun ReceiptDetailDisplay(
                 isReadOnly = false,
                 value = buyers,
                 suffix = "人",
-                onValueChanged = { buyers = it },
+                onValueChanged = { buyers = (it as List<Member>) },
                 multiselect = true,
-                entries = listOf(), // 全ユーザー
+                entries = members, // 全ユーザー
             )
             if(buyers.isNotEmpty()) {
                 FlowRow(
@@ -189,16 +193,31 @@ private fun <T> DisplayRow(
     }
 
     if(isDialogShown) {
-        ValueChangeDialog(
-            title = name,
-            value = value,
-            onDismiss = { isDialogShown = false },
-            onConfirm = {
-                onValueChanged(it)
-                isDialogShown = false
-            },
-            entries = entries,
-        )
+        if(value is List<*>) {
+            ListSelectDialog(
+                title = name,
+                selected = value as List<T>,
+                candidates = entries,
+                onDismiss = { isDialogShown = false },
+                onConfirm = {
+                    onValueChanged(it as T)
+                    isDialogShown = false
+                },
+                multiselect = multiselect,
+            )
+
+        } else {
+            ValueChangeDialog(
+                title = name,
+                value = value,
+                onDismiss = { isDialogShown = false },
+                onConfirm = {
+                    onValueChanged(it)
+                    isDialogShown = false
+                },
+                entries = entries,
+            )
+        }
     }
 }
 
@@ -224,6 +243,7 @@ private fun ReceiptDetailDisplayEveryonePreview() {
             ReceiptDetailDisplay(
                 receipt = receipt,
                 onValueChanged = {},
+                members = listOf(member),
             )
         }
     }
@@ -257,6 +277,7 @@ private fun ReceiptDetailDisplayPreview() {
             ReceiptDetailDisplay(
                 receipt = receipt,
                 onValueChanged = {},
+                members = listOf(member1, member2)
             )
         }
     }

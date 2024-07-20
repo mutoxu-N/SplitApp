@@ -45,6 +45,7 @@ fun<T> ListSelectDialog(
 
     val elem = candidates.first()
     var newValue by rememberSaveable { mutableStateOf(selected) }
+    var everyone by rememberSaveable { mutableStateOf(newValue.isEmpty()) }
     var isError by rememberSaveable { mutableStateOf(newValue.isEmpty()) }
 
     AlertDialog(
@@ -58,7 +59,12 @@ fun<T> ListSelectDialog(
         },
         confirmButton = {
             Button(
-                onClick = { onConfirm(newValue) },
+                onClick = {
+                    if(multiselect && everyone)
+                        onConfirm(listOf())
+                    else
+                        onConfirm(newValue)
+                },
                 enabled = !isError,
             ) {
                 Text(text = stringResource(R.string.button_confirm))
@@ -77,53 +83,45 @@ fun<T> ListSelectDialog(
                 is Member -> {
                     if(multiselect) {
                         Column {
+                            CheckboxRow(
+                                name = "全員",
+                                onClicked = {
+                                    everyone = it
+                                    if(it) {
+                                        newValue = listOf()
+
+                                    } else {
+                                        newValue = candidates.toList()
+                                    }
+                                },
+                                selected = everyone,
+                                enabled = true,
+                            )
+
                             val selectedNames = newValue.map { (it as Member).name }
                             candidates.forEach { tmp ->
                                 val member = tmp as Member
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .selectable(
-                                            selected = selectedNames.contains(member.name),
-                                            onClick = {
-                                                newValue =
-                                                    if (selectedNames.contains(member.name))
-                                                        newValue
-                                                            .toMutableList()
-                                                            .apply {
-                                                                removeIf { x -> (x as Member).name == member.name }
-                                                            }
-                                                    else
-                                                        newValue
-                                                            .toMutableList()
-                                                            .apply {
-                                                                add(member as T)
-                                                            }
-                                                isError = newValue.isEmpty()
-                                            }
-                                        ),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                ) {
-                                    Checkbox(
-                                        checked = selectedNames.contains(member.name),
-                                        onCheckedChange = { b ->
-                                            newValue = if(b)
-                                                newValue.toMutableList().apply {
-                                                    add(member as T)
-                                                }
+                                CheckboxRow(
+                                    name = member.name,
+                                    onClicked = {
+                                        newValue =
+                                            if (selectedNames.contains(member.name))
+                                                newValue
+                                                    .toMutableList()
+                                                    .apply {
+                                                        removeIf { x -> (x as Member).name == member.name }
+                                                    }
                                             else
-                                                newValue.toMutableList().apply {
-                                                    removeIf { x -> (x as Member).name == member.name }
-                                                }
-                                            isError = newValue.isEmpty()
-                                        }
-                                    )
-                                    Text(
-                                        text = member.name,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                    )
-                                }
+                                                newValue
+                                                    .toMutableList()
+                                                    .apply {
+                                                        add(member as T)
+                                                    }
+                                        isError = newValue.isEmpty()
+                                    },
+                                    selected = everyone || selectedNames.contains(member.name),
+                                    enabled = !everyone,
+                                )
                             }
                         }
 
@@ -132,29 +130,13 @@ fun<T> ListSelectDialog(
                         Column {
                             candidates.forEach {
                                 val member = it as Member
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .selectable(
-                                            selected = member.name == (newValue[0] as Member).name,
-                                            onClick = {
-                                                newValue = listOf(member as T)
-                                            }
-                                        ),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                ) {
-                                    RadioButton(
-                                        selected = member.name == (newValue[0] as Member).name,
-                                        onClick = {
-                                            newValue = listOf(member as T)
-                                        }
-                                    )
-                                    Text(
-                                        text = member.name,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                    )
-                                }
+                                RadioRow(
+                                    name = member.name,
+                                    onClicked = {
+                                        newValue = listOf(member as T)
+                                    },
+                                    selected = member.name == (newValue[0] as Member).name
+                                )
                             }
                         }
 
@@ -163,7 +145,62 @@ fun<T> ListSelectDialog(
             }
         },
     )
+}
 
+@Composable
+private fun CheckboxRow(
+    name: String,
+    onClicked: (Boolean) -> Unit,
+    selected: Boolean,
+    enabled: Boolean,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .selectable(
+                selected = selected,
+                onClick = { onClicked(!selected) }
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Checkbox(
+            checked = selected,
+            onCheckedChange = { onClicked(it) },
+            enabled = enabled,
+        )
+        Text(
+            text = name,
+            style = MaterialTheme.typography.bodyMedium,
+            color = if(enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.secondary,
+        )
+    }
+}
+
+@Composable
+private fun RadioRow(
+    name: String,
+    onClicked: () -> Unit,
+    selected: Boolean,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .selectable(
+                selected = selected,
+                onClick = { onClicked() }
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        RadioButton(
+            selected = selected,
+            onClick = { onClicked() }
+        )
+        Text(
+            text = name,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+    }
 }
 
 
