@@ -7,6 +7,6 @@ import kotlinx.parcelize.Parcelize
 data class Member(
     val name: String,
     val uid: String,
-    val weight: Double,
+    val weight: Float,
     val role: Role,
 ): Parcelable

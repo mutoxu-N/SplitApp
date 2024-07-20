@@ -208,7 +208,7 @@ private fun ReceiptDetailDisplayEveryonePreview() {
     val member = Member(
         name = "sample member",
         uid = "null",
-        weight = 1.0,
+        weight = 1.0f,
         role = Role.OWNER,
     )
     val receipt = Receipt(
@@ -235,13 +235,13 @@ private fun ReceiptDetailDisplayPreview() {
     val member1 = Member(
         name = "sample member",
         uid = "null",
-        weight = 1.0,
+        weight = 1.0f,
         role = Role.OWNER,
     )
     val member2 = Member(
         name = "2nd member",
         uid = "null",
-        weight = 1.0,
+        weight = 1.0f,
         role = Role.NORMAL,
     )
     val receipt = Receipt(

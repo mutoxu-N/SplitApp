@@ -157,13 +157,13 @@ private fun ReceiptListPreview() {
     val member1 = Member(
         name = "Owner member",
         uid = "null",
-        weight = 1.0,
+        weight = 1.0f,
         role = Role.OWNER,
     )
     val member2 = Member(
         name = "Normal member",
         uid = "null",
-        weight = 1.0,
+        weight = 1.0f,
         role = Role.NORMAL,
     )
     val date = LocalDateTime.of(2024, 1, 1, 0, 0, 0)
@@ -217,13 +217,13 @@ private fun ReceiptListItemPreview() {
     val member1 = Member(
         name = "Owner member",
         uid = "null",
-        weight = 1.0,
+        weight = 1.0f,
         role = Role.OWNER,
     )
     val member2 = Member(
         name = "Normal member",
         uid = "null",
-        weight = 1.0,
+        weight = 1.0f,
         role = Role.NORMAL,
     )
     val receipt = Receipt(
@@ -250,7 +250,7 @@ private fun ReceiptListItemAllBuyerPreview() {
     val member1 = Member(
         name = "Owner member",
         uid = "null",
-        weight = 1.0,
+        weight = 1.0f,
         role = Role.OWNER,
     )
     val receipt = Receipt(

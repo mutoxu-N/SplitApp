@@ -28,7 +28,6 @@ import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.Role
 import com.github.mutoxu_n.splitapp.ui.theme.SplitAppTheme
-import kotlin.reflect.jvm.internal.impl.util.Check
 
 @Composable
 fun<T> ListSelectDialog(
@@ -174,19 +173,19 @@ private fun ListSelectDialogSinglePreview() {
     val member1 = Member(
         name = "member1",
         uid = "null",
-        weight = 1.0,
+        weight = 1.0f,
         role = Role.OWNER,
     )
     val member2 = Member(
         name = "member2",
         uid = "null",
-        weight = 1.0,
+        weight = 1.0f,
         role = Role.NORMAL,
     )
     val member3 = Member(
         name = "member3",
         uid = "null",
-        weight = 1.0,
+        weight = 1.0f,
         role = Role.NORMAL,
     )
 
@@ -210,19 +209,19 @@ private fun ListSelectDialogMultiPreview() {
     val member1 = Member(
         name = "member1",
         uid = "null",
-        weight = 1.0,
+        weight = 1.0f,
         role = Role.OWNER,
     )
     val member2 = Member(
         name = "member2",
         uid = "null",
-        weight = 1.0,
+        weight = 1.0f,
         role = Role.NORMAL,
     )
     val member3 = Member(
         name = "member3",
         uid = "null",
-        weight = 1.0,
+        weight = 1.0f,
         role = Role.NORMAL,
     )
 
