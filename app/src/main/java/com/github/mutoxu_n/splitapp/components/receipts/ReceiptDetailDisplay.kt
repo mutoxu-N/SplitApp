@@ -173,7 +173,7 @@ private fun <T> DisplayRow(
         Spacer(modifier = modifier.size(3.dp))
 
         Text(
-            modifier = modifier.clickable { isDialogShown = true },
+            modifier = if(isReadOnly) modifier else modifier.clickable { isDialogShown = true },
             text = "$prefix${when(value) {
                 is Member -> value.name
                 is List<*> -> {
