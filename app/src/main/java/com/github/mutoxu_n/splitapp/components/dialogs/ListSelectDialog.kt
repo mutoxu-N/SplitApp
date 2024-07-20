@@ -46,7 +46,7 @@ fun<T> ListSelectDialog(
     val elem = candidates.first()
     var newValue by rememberSaveable { mutableStateOf(selected) }
     var everyone by rememberSaveable { mutableStateOf(newValue.isEmpty()) }
-    var isError by rememberSaveable { mutableStateOf(newValue.isEmpty()) }
+    var isError by rememberSaveable { mutableStateOf(false) }
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
