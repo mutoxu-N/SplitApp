@@ -5,7 +5,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 
-class Auth {
+object Auth {
     val auth = Firebase.auth
 
     private var _token: String? = null
@@ -17,20 +17,8 @@ class Auth {
     val token: String? get() = _token
     val isSignedIn: Boolean get() = _token != null
 
-    companion object {
-        private const val TAG = "Auth"
-        private var _instance: Auth? = null
-
-        fun get(): Auth {
-            if(_instance == null) _instance = Auth()
-            return _instance!!
-        }
-    }
 
     init {
-        if(_instance != null)
-            throw RuntimeException("Use get() method to get the single instance of this class.")
-
         // デバッグ時
         if(BuildConfig.DEBUG) {
             auth.useEmulator("10.0.2.2", 9099)
@@ -52,16 +40,15 @@ class Auth {
             }
         }
 
-
-
         signIn()
-
     }
 
+    // サインイン
     fun signIn() {
         auth.signInAnonymously()
     }
 
+    // サインアウト
     fun signOut() {
         auth.signOut()
         _token = null
@@ -74,7 +61,6 @@ class Auth {
             if(!it.isSuccessful && auth.uid != null) signOut()
         }
     }
-
 
     // イベントリスナ
     fun interface OnTokenChangedListener { fun onTokenChanged(token: String?) }
