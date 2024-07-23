@@ -15,14 +15,14 @@ object Auth {
         }
 
     val token: String? get() = _token
-    val isSignedIn: Boolean get() = _token != null
+    val isLoggedIn: Boolean get() = _token != null
 
 
     init {
         // デバッグ時
         if(BuildConfig.DEBUG) {
             auth.useEmulator("10.0.2.2", 9099)
-            signOutIfInvalid()
+            logoutIfInvalid()
         }
 
         // トークンが変更されたとき
@@ -40,25 +40,25 @@ object Auth {
             }
         }
 
-        signIn()
+        login()
     }
 
-    // サインイン
-    fun signIn() {
+    // ログイン
+    fun login() {
         auth.signInAnonymously()
     }
 
-    // サインアウト
-    fun signOut() {
+    // ログアウト
+    fun logout() {
         auth.signOut()
         _token = null
     }
 
-    // 端末のログイン状態が無効のときにサインアウトする
-    private fun signOutIfInvalid() {
+    // 端末のログイン状態が無効のときにログアウトする
+    private fun logoutIfInvalid() {
         auth.currentUser?.getIdToken(false)?.addOnCompleteListener {
-            // ローカルでログイン済 かつ Firebase Auth で認証情報を取得できないときはサインアウト
-            if(!it.isSuccessful && auth.uid != null) signOut()
+            // ローカルでログイン済 かつ Firebase Auth で認証情報を取得できないときはログアウト
+            if(!it.isSuccessful && auth.uid != null) logout()
         }
     }
 

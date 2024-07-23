@@ -37,7 +37,7 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 
 class MainActivity : ComponentActivity() {
     private var uid: String? by mutableStateOf(null)
-    private var signOutDialogShown: Boolean by mutableStateOf(false)
+    private var isLogoutDialogShown: Boolean by mutableStateOf(false)
 
     companion object {
         private const val TAG = "MainActivity"
@@ -72,23 +72,23 @@ class MainActivity : ComponentActivity() {
                                     .align(Alignment.CenterHorizontally),
                             )
 
-                            if (Auth.isSignedIn) {
-                                // サインイン済
+                            if (Auth.isLoggedIn) {
+                                // ログイン済
                                 Button(onClick = { startRoomJoinActivity() })
-                                    { Text(text = "ルームに参加",) }
+                                    { Text(text = stringResource(R.string.button_join_room)) }
 
 
                                 OutlinedButton(onClick = { startRoomCreateActivity() })
-                                    { Text(text = "ルームを作る",) }
+                                    { Text(text = stringResource(R.string.button_create_room)) }
 
-                                // サインアウト
-                                TextButton(onClick = { signOutDialogShown = true})
-                                    { Text(text = "サインアウト") }
+                                // ログアウト
+                                TextButton(onClick = { isLogoutDialogShown = true})
+                                    { Text(text = stringResource(R.string.term_logout)) }
 
                             } else {
-                                // 未サインイン
-                                Button(onClick = { signIn() })
-                                { Text(text = "サインイン") }
+                                // 未ログイン
+                                Button(onClick = { login() })
+                                { Text(text = stringResource(R.string.term_login)) }
                             }
 
                             // デバッグモード
@@ -136,15 +136,15 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-                    if(signOutDialogShown) {
+                    if(isLogoutDialogShown) {
                         // ログアウト確認ダイアログ
                         AttentionDialog(
                             title = stringResource(R.string.logout_dialog_title),
                             message = stringResource(R.string.logout_dialog_message),
-                            onDismiss = { signOutDialogShown = false },
+                            onDismiss = { isLogoutDialogShown = false },
                             onConfirm = {
-                                signOutDialogShown = false
-                                signOut()
+                                isLogoutDialogShown = false
+                                logout()
                             },
                             confirmText = stringResource(R.string.logout_dialog_confirm_text),
                         )
@@ -162,12 +162,12 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun signIn() {
-        Auth.signIn()
+    private fun login() {
+        Auth.login()
     }
 
-    private fun signOut() {
-        Auth.signOut()
+    private fun logout() {
+        Auth.logout()
     }
 
     private fun startRoomJoinActivity(roomId: String? = null) {

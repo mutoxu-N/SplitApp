@@ -4,6 +4,8 @@
 
     <string name="button_cancel">キャンセル</string>
     <string name="button_confirm">完了</string>
+    <string name="button_create_room">ルームを作る</string>
+    <string name="button_join_room">ルームに参加</string>
     <string name="button_save_receipt">レシートの内容を保存する</string>
     <string name="button_save_settings">ルーム設定を保存する</string>
 
@@ -11,6 +13,7 @@
 
     <string name="format_datetime">yyyy/MM/dd HH:mm</string>
 
+    <string name="logout_dialog_confirm_text">ログアウト</string>
     <string name="logout_dialog_message">ログアウトすると全ての情報が失われ、既存のルームに関する全ての情報にアクセスできなくなります。まだ割り勘支払いの終わっていないルームに参加している場合は支払い情報が失われる可能性があります。ログアウトしてもよろしいですか？</string>
     <string name="logout_dialog_title">ログアウトします</string>
 
@@ -47,8 +50,9 @@
     <string name="settings_split_unit">割り勘単位</string>
 
     <string name="term_everyone">全員</string>
+    <string name="term_login">ログイン</string>
+    <string name="term_logout">ログアウト</string>
     <string name="term_permission">権限</string>
 
     <string name="title_activity_edit_receipt">EditReceiptActivity</string>
-    <string name="logout_dialog_confirm_text">ログアウト</string>
 </resources>
