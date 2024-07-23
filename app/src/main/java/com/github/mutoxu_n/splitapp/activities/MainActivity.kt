@@ -1,4 +1,4 @@
-package com.github.mutoxu_n.splitapp
+package com.github.mutoxu_n.splitapp.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -30,6 +30,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.github.mutoxu_n.splitapp.App
+import com.github.mutoxu_n.splitapp.BuildConfig
+import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.common.Auth
 import com.github.mutoxu_n.splitapp.components.dialogs.AttentionDialog
 import com.github.mutoxu_n.splitapp.ui.theme.SplitAppTheme
@@ -75,15 +78,15 @@ class MainActivity : ComponentActivity() {
                             if (Auth.isLoggedIn) {
                                 // ログイン済
                                 Button(onClick = { startRoomJoinActivity() })
-                                    { Text(text = stringResource(R.string.button_join_room)) }
+                                { Text(text = stringResource(R.string.button_join_room)) }
 
 
                                 OutlinedButton(onClick = { startRoomCreateActivity() })
-                                    { Text(text = stringResource(R.string.button_create_room)) }
+                                { Text(text = stringResource(R.string.button_create_room)) }
 
                                 // ログアウト
-                                TextButton(onClick = { isLogoutDialogShown = true})
-                                    { Text(text = stringResource(R.string.term_logout)) }
+                                TextButton(onClick = { isLogoutDialogShown = true })
+                                { Text(text = stringResource(R.string.term_logout)) }
 
                             } else {
                                 // 未ログイン
@@ -129,14 +132,17 @@ class MainActivity : ComponentActivity() {
                         ) {
                             TextButton(
                                 onClick = {
-                                    val intent = Intent(this@MainActivity, OssLicensesMenuActivity::class.java)
+                                    val intent = Intent(
+                                        this@MainActivity,
+                                        OssLicensesMenuActivity::class.java
+                                    )
                                     startActivity(intent)
                                 }) { Text(text = "ライセンス") }
                             Spacer(modifier = Modifier.size(20.dp))
                         }
                     }
 
-                    if(isLogoutDialogShown) {
+                    if (isLogoutDialogShown) {
                         // ログアウト確認ダイアログ
                         AttentionDialog(
                             title = stringResource(R.string.logout_dialog_title),
@@ -180,7 +186,6 @@ class MainActivity : ComponentActivity() {
         // TODO: RoomCreateActivityに遷移
     }
 }
-
 
 @Composable
 private fun LogoDisplay(modifier: Modifier = Modifier) {

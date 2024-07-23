@@ -1,4 +1,4 @@
-package com.github.mutoxu_n.splitapp
+package com.github.mutoxu_n.splitapp.activities
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
