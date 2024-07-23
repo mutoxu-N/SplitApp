@@ -14,6 +14,11 @@
         android:theme="@style/Theme.SplitApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activities.RoomJoinActivity"
+            android:exported="false"
+            android:label="@string/title_activity_room_join"
+            android:theme="@style/Theme.SplitApp" />
+        <activity
             android:name=".activities.EditReceiptActivity"
             android:exported="false"
             android:label="@string/title_activity_edit_receipt"

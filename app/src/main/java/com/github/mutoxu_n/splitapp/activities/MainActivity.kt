@@ -178,7 +178,7 @@ class MainActivity : ComponentActivity() {
 
     private fun startRoomJoinActivity(roomId: String? = null) {
         Log.i(TAG, "RoomJoinActivity launched")
-        // TODO: RoomJoinActivityに遷移
+        RoomJoinActivity.launch(context = this, roomId = roomId)
     }
 
     private fun startRoomCreateActivity() {
