@@ -1,23 +1,25 @@
 package com.github.mutoxu_n.splitapp
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,7 +30,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.github.mutoxu_n.splitapp.common.Auth
-import com.github.mutoxu_n.splitapp.components.settings.RoomIdDisplay
 import com.github.mutoxu_n.splitapp.ui.theme.SplitAppTheme
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 
@@ -53,80 +54,51 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    Column(
-//                        modifier = Modifier
-//                            .verticalScroll(rememberScrollState()),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally,
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
                     ) {
-                        LogoDisplay(
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
-                        )
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize(1f),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
 
-                        Text(
-                            text = "uid: $uid"
-                        )
-
-
-                        Button(onClick = { signIn() }) {
-                            Text(
-                                text = "Sign In"
+                            LogoDisplay(
+                                modifier = Modifier
+                                    .align(Alignment.CenterHorizontally),
                             )
-                        }
 
-                        Button(onClick = { Auth.signOut() }) {
-                            Text(
-                                text = "Sign Out"
-                            )
-                        }
+                            if (Auth.isSignedIn) {
+                                // サインイン済
+                                Button(onClick = { startRoomJoinActivity() })
+                                    { Text(text = "ルームに参加",) }
 
-                        Button(onClick = {
-                            val intent = Intent(this@MainActivity, OssLicensesMenuActivity::class.java)
-                            startActivity(intent)
-                        }) {
-                            Text(
-                                text = "licences"
-                            )
-                        }
 
-//                        val writable = Settings(
-//                            name = "writable",
-//                            splitUnit = SplitUnit.TEN,
-//                            permissionReceiptEdit = Role.OWNER,
-//                            permissionReceiptCreate = Role.NORMAL,
-//                            onNewMemberRequest = RequestType.ALWAYS,
-//                            acceptRate = 30,
-//                        )
-//                        SettingsEditor(
-//                            settings = writable,
-//                            isReadOnly = false
-//                        )
-                        
-//                        RoomIdDisplay(
-//                            roomId = "AB12C3",
-//                            onCopyClicked = {
-//                                // Copy RoomId
-//                                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-//                                val clip = ClipData.newPlainText(getString(R.string.secret_clipboard_room_id), it)
-//                                clipboard.setPrimaryClip(clip)
-//                                Toast.makeText(this@MainActivity, "ルームID($it)をコピーしました", Toast.LENGTH_SHORT).show()
-//                            },
-//                            onShareClicked = {
-//                                // Sharesheet 表示
-//                                val intent = Intent().apply {
-//                                    action = Intent.ACTION_SEND
-//                                    putExtra(Intent.EXTRA_TEXT, it)
-//                                    type = "text/plain"
-//                                }
-//                                val shareIntent  = Intent.createChooser(intent, null)
-//                                startActivity(shareIntent)
-//                            }
-//                        )
+                                OutlinedButton(onClick = { startRoomCreateActivity() })
+                                    { Text(text = "ルームを作る",) }
 
-                        // 動作テスト用
-//                        Row(
-//                            horizontalArrangement = Arrangement.Center,
-//                        ) {
+                                // サインアウト
+                                TextButton(onClick = { signOut() })
+                                { Text(text = "サインアウト") }
+
+                            } else {
+                                // 未サインイン
+                                Button(onClick = { signIn() })
+                                { Text(text = "サインイン") }
+                            }
+
+                            // デバッグモード
+                            Spacer(modifier = Modifier.size(16.dp))
+                            if (BuildConfig.DEBUG) {
+                                Text(
+                                    text = "UID: $uid",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                )
+                            }
+
+//                            // 動作テスト用
 //                            Button(onClick = {
 //                                lifecycleScope.launch {
 //                                    API().editReceipt("AB12C3", "RJBFyzAxoBYQfonE2u1T", ReceiptModel(
@@ -141,59 +113,57 @@ class MainActivity : ComponentActivity() {
 //                                    text = "test"
 //                                )
 //                            }
-//
-//                            Spacer(modifier = Modifier.size(16.dp))
-//                            Button(onClick = {
-//                                lifecycleScope.launch {
-//                                    val res = API().reset()
-//                                    Log.e(TAG, "reset: $res")
-//                                }
-//                            }) {
-//                                Text(
-//                                    text = "reset"
-//                                )
-//                            }
-//
-//                            Spacer(modifier = Modifier.size(16.dp))
-//                            Button(onClick = {
-//                                lifecycleScope.launch {
-//                                    val res = API().roomCreate(SettingsModel(
-//                                        name = "sample room",
-//                                        splitUnit = 10,
-//                                        permissionReceiptEdit = Role.OWNER.toString(),
-//                                        permissionReceiptCreate = Role.NORMAL.toString(),
-//                                        onNewMemberRequest = "always", acceptRate = 50,
-//                                    ))
-//                                    Log.e(TAG, "create: $res")
-//                                }
-//                            }) {
-//                                Text(
-//                                    text = "create"
-//                                )
-//                            }
-//
-//                            Spacer(modifier = Modifier.size(16.dp))
-//                            Button(onClick = {
-//                                lifecycleScope.launch {
-//                                    val res = API().roomJoin("AB12C3")
-//                                    Log.e(TAG, "join: ${res}")
-//                                }
-//                            }) {
-//                                Text(
-//                                    text = "join"
-//                                )
-//                            }
-//                        }
+//                            // 動作テスト用 終了
+                        }
+
+                        // ライセンス表示
+                        Column(
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .align(Alignment.BottomCenter),
+                            verticalArrangement = Arrangement.Bottom,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            TextButton(
+                                onClick = {
+                                    val intent = Intent(this@MainActivity, OssLicensesMenuActivity::class.java)
+                                    startActivity(intent)
+                                }) { Text(text = "ライセンス") }
+                            Spacer(modifier = Modifier.size(20.dp))
+                        }
                     }
                 }
             }
         }
     }
 
+    init {
+        val roomId = App.roomId
+        if(roomId != null) {
+            // ルームIDが設定されている場合
+            startRoomJoinActivity(roomId = roomId)
+        }
+    }
+
     private fun signIn() {
         Auth.signIn()
     }
+
+    private fun signOut() {
+        Auth.signOut()
+    }
+
+    private fun startRoomJoinActivity(roomId: String? = null) {
+        Log.i(TAG, "RoomJoinActivity launched")
+        // TODO: RoomJoinActivityに遷移
+    }
+
+    private fun startRoomCreateActivity() {
+        Log.i(TAG, "RoomCreateActivity launched")
+        // TODO: RoomCreateActivityに遷移
+    }
 }
+
 
 @Composable
 private fun LogoDisplay(modifier: Modifier = Modifier) {
