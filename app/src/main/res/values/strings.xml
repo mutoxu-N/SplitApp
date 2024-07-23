@@ -11,6 +11,9 @@
 
     <string name="format_datetime">yyyy/MM/dd HH:mm</string>
 
+    <string name="logout_dialog_message">ログアウトすると全ての情報が失われ、既存のルームに関する全ての情報にアクセスできなくなります。まだ割り勘支払いの終わっていないルームに参加している場合は支払い情報が失われる可能性があります。ログアウトしてもよろしいですか？</string>
+    <string name="logout_dialog_title">ログアウトします</string>
+
     <string name="member_role">役職</string>
     <string name="member_weight">重み</string>
 
@@ -47,4 +50,5 @@
     <string name="term_permission">権限</string>
 
     <string name="title_activity_edit_receipt">EditReceiptActivity</string>
+    <string name="logout_dialog_confirm_text">ログアウト</string>
 </resources>

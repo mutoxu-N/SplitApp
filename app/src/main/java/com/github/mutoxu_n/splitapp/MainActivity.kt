@@ -28,13 +28,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.github.mutoxu_n.splitapp.common.Auth
+import com.github.mutoxu_n.splitapp.components.dialogs.AttentionDialog
 import com.github.mutoxu_n.splitapp.ui.theme.SplitAppTheme
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 
 class MainActivity : ComponentActivity() {
     private var uid: String? by mutableStateOf(null)
+    private var signOutDialogShown: Boolean by mutableStateOf(false)
 
     companion object {
         private const val TAG = "MainActivity"
@@ -79,8 +82,8 @@ class MainActivity : ComponentActivity() {
                                     { Text(text = "ルームを作る",) }
 
                                 // サインアウト
-                                TextButton(onClick = { signOut() })
-                                { Text(text = "サインアウト") }
+                                TextButton(onClick = { signOutDialogShown = true})
+                                    { Text(text = "サインアウト") }
 
                             } else {
                                 // 未サインイン
@@ -131,6 +134,20 @@ class MainActivity : ComponentActivity() {
                                 }) { Text(text = "ライセンス") }
                             Spacer(modifier = Modifier.size(20.dp))
                         }
+                    }
+
+                    if(signOutDialogShown) {
+                        // ログアウト確認ダイアログ
+                        AttentionDialog(
+                            title = stringResource(R.string.logout_dialog_title),
+                            message = stringResource(R.string.logout_dialog_message),
+                            onDismiss = { signOutDialogShown = false },
+                            onConfirm = {
+                                signOutDialogShown = false
+                                signOut()
+                            },
+                            confirmText = stringResource(R.string.logout_dialog_confirm_text),
+                        )
                     }
                 }
             }
