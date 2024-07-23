@@ -66,7 +66,17 @@ class App: Application() {
                 }
             }
 
+        // ルームIDのバリデーション
+        fun validateRoomID(roomId: String): Boolean {
+            // 6文字
+            if(roomId.length != 6) return false
 
+            // アルファベット(大文字) or 数字
+            for(c in roomId.toCharArray())
+                if(!c.isLetterOrDigit() || c.isLowerCase()) return false
+
+            return true
+        }
     }
 
     override fun onCreate() {

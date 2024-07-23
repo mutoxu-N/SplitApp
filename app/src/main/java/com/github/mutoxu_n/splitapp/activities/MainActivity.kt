@@ -164,7 +164,7 @@ class MainActivity : ComponentActivity() {
         val roomId = App.roomId
         if(roomId != null) {
             // ルームIDが設定されている場合
-            startRoomJoinActivity(roomId = roomId)
+            startRoomJoinActivity()
         }
     }
 
@@ -176,9 +176,9 @@ class MainActivity : ComponentActivity() {
         Auth.logout()
     }
 
-    private fun startRoomJoinActivity(roomId: String? = null) {
+    private fun startRoomJoinActivity() {
         Log.i(TAG, "RoomJoinActivity launched")
-        RoomJoinActivity.launch(context = this, roomId = roomId)
+        RoomJoinActivity.launch(context = this)
     }
 
     private fun startRoomCreateActivity() {
