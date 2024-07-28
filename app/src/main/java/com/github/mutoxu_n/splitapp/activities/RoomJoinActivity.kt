@@ -126,6 +126,7 @@ private fun Screen(
             .padding(horizontal = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        Spacer(modifier = Modifier.size(15.dp))
         OutlinedTextField(
             modifier = Modifier
                 .padding(7.dp, 0.dp)
@@ -196,12 +197,23 @@ private fun Screen(
 @Composable
 private fun Preview() {
     SplitAppTheme {
-        Surface {
-            Screen(
-                initialDisplayName = "太郎",
-                initialRoomId = "AB12C3",
-                onJoinClicked = { _, _, _ -> },
-            )
+        Scaffold(
+            topBar = {
+                OutRoomTopBar(
+                    title = "ルームに参加する",
+                    onBackClicked = {},
+                )
+            },
+            modifier = Modifier.fillMaxSize(),
+        ) { innerPadding ->
+            Surface {
+                Screen(
+                    modifier = Modifier.padding(innerPadding),
+                    initialDisplayName = "太郎",
+                    initialRoomId = "AB12C3",
+                    onJoinClicked = { _, _, _ -> },
+                )
+            }
         }
     }
 }
