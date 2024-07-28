@@ -36,7 +36,7 @@ import com.github.mutoxu_n.splitapp.ui.theme.SplitAppTheme
 fun OutRoomTopBar(
     title: String,
     onBackClicked: () -> Unit = {},
-    menu: List<String>,
+    menu: List<String> = listOf(),
     onMenuClicked: (String) -> Unit = {},
 ) {
     var menuShown by rememberSaveable { mutableStateOf(false) }
@@ -58,24 +58,26 @@ fun OutRoomTopBar(
             }
         },
         actions = {
-            IconButton(onClick = { menuShown = true }) {
-                Icon(
-                    imageVector = Icons.Default.MoreVert,
-                    contentDescription = null,
-                )
+            if(menu.isNotEmpty()) {
+                IconButton(onClick = { menuShown = true }) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = null,
+                    )
 
-                DropdownMenu(
-                    expanded = menuShown,
-                    onDismissRequest = { menuShown = false }
-                ) {
-                    menu.forEach {
-                        DropdownMenuItem(
-                            text = { Text(text = it) },
-                            onClick = {
-                                menuShown = false
-                                onMenuClicked(it)
-                            }
-                        )
+                    DropdownMenu(
+                        expanded = menuShown,
+                        onDismissRequest = { menuShown = false }
+                    ) {
+                        menu.forEach {
+                            DropdownMenuItem(
+                                text = { Text(text = it) },
+                                onClick = {
+                                    menuShown = false
+                                    onMenuClicked(it)
+                                }
+                            )
+                        }
                     }
                 }
             }

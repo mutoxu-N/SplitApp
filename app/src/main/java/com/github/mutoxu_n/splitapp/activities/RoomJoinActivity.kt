@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
+import com.github.mutoxu_n.splitapp.components.misc.OutRoomTopBar
 
 class RoomJoinActivity : ComponentActivity() {
     private var roomId: String = App.roomId ?: ""
@@ -70,6 +71,12 @@ class RoomJoinActivity : ComponentActivity() {
         setContent {
             SplitAppTheme {
                 Scaffold(
+                    topBar = {
+                        OutRoomTopBar(
+                            title = "ルームに参加する",
+                            onBackClicked = { finish() },
+                        )
+                    },
                     modifier = Modifier.fillMaxSize(),
                 ) { innerPadding ->
                     Surface {
