@@ -69,7 +69,9 @@ class RoomJoinActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SplitAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                ) { innerPadding ->
                     Surface {
                         Screen(
                             modifier = Modifier
