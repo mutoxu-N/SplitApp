@@ -57,4 +57,6 @@
     <string name="title_activity_edit_receipt">EditReceiptActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_room_join">RoomJoinActivity</string>
+    <string name="title_activity_room_create">RoomCreateActivity</string>
+    <string name="appbar_room_create">ルームを作る</string>
 </resources>

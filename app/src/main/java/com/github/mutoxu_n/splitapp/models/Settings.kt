@@ -7,4 +7,15 @@ data class Settings(
     val permissionReceiptEdit: Role,
     val onNewMemberRequest: RequestType,
     val acceptRate: Int,
-)
+) {
+    companion object {
+        val Default = Settings(
+            name = "",
+            splitUnit = SplitUnit.TEN,
+            permissionReceiptCreate = Role.OWNER,
+            permissionReceiptEdit = Role.OWNER,
+            onNewMemberRequest = RequestType.MODERATOR,
+            acceptRate = 0,
+        )
+    }
+}
