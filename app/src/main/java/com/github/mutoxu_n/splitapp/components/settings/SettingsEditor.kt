@@ -121,53 +121,54 @@ fun SettingsEditor(
         )
 
 
-
-        if (isReadOnly) {
-            DisplayRow(
-                name = stringResource(R.string.settings_accept_rate),
-                value = acceptRate,
-                suffix = "%",
-                isReadOnly = true,
-            )
-
-        } else {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(0.dp)
-            ) {
+        if(onNewMemberRequest == RequestType.VOTE) {
+            if (isReadOnly) {
                 DisplayRow(
                     name = stringResource(R.string.settings_accept_rate),
                     value = acceptRate,
                     suffix = "%",
-                    isReadOnly = false,
-                    onValueChange = {
-                        acceptRate = if(it > 100) 100 else it
-                    },
+                    isReadOnly = true,
                 )
 
-                Row(
-                    modifier = Modifier.padding(10.dp, 0.dp),
-                    verticalAlignment = Alignment.CenterVertically,
+            } else {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
-                    Text(
-                        text = "0%",
-                        textAlign = TextAlign.Start,
-                        style = MaterialTheme.typography.bodySmall,
-                    )
-
-                    Slider(
-                        modifier = Modifier.weight(1f),
-                        value = acceptRate.toFloat(),
+                    DisplayRow(
+                        name = stringResource(R.string.settings_accept_rate),
+                        value = acceptRate,
+                        suffix = "%",
+                        isReadOnly = false,
                         onValueChange = {
-                            acceptRate = it.toInt()
+                            acceptRate = if(it > 100) 100 else it
                         },
-                        valueRange = 0f..100f,
                     )
 
-                    Text(
-                        text = "100%",
-                        textAlign = TextAlign.End,
-                        style = MaterialTheme.typography.bodySmall,
-                    )
+                    Row(
+                        modifier = Modifier.padding(10.dp, 0.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = "0%",
+                            textAlign = TextAlign.Start,
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+
+                        Slider(
+                            modifier = Modifier.weight(1f),
+                            value = acceptRate.toFloat(),
+                            onValueChange = {
+                                acceptRate = it.toInt()
+                            },
+                            valueRange = 0f..100f,
+                        )
+
+                        Text(
+                            text = "100%",
+                            textAlign = TextAlign.End,
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    }
                 }
             }
         }
@@ -184,7 +185,7 @@ fun SettingsEditor(
                             permissionReceiptCreate = permissionReceiptCreate,
                             permissionReceiptEdit = permissionReceiptEdit,
                             onNewMemberRequest = onNewMemberRequest,
-                            acceptRate = acceptRate
+                            acceptRate = if(onNewMemberRequest == RequestType.VOTE) acceptRate else 0,
                         )
                     )
                 },
