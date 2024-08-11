@@ -4,12 +4,20 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -21,12 +29,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.github.mutoxu_n.splitapp.App
+import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.InRoomActivity.InfoTabIndex
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
 import com.github.mutoxu_n.splitapp.components.misc.BottomNavigation
@@ -36,6 +46,7 @@ import com.github.mutoxu_n.splitapp.components.receipts.ReceiptList
 import com.github.mutoxu_n.splitapp.components.settings.RoomIdDisplay
 import com.github.mutoxu_n.splitapp.components.settings.SettingsEditor
 import com.github.mutoxu_n.splitapp.models.Member
+import com.github.mutoxu_n.splitapp.models.PaymentDetail
 import com.github.mutoxu_n.splitapp.models.Receipt
 import com.github.mutoxu_n.splitapp.models.RequestType
 import com.github.mutoxu_n.splitapp.models.Role
@@ -121,6 +132,7 @@ class InRoomActivity : ComponentActivity() {
                                         // Info/Pay
                                         InfoTabIndex.PAY.value -> {
                                             InfoPayScreen(
+                                                paymentDetails = listOf() // TODO: 支払い情報を算出し格納する
                                             )
                                         }
                                         // Info/Settings
@@ -178,8 +190,45 @@ private fun ReceiptScreen(
 
 @Composable
 private fun InfoPayScreen(
+    paymentDetails: List<PaymentDetail>
 ) {
-    Text("InfoPayScreen")
+    LazyColumn(
+        modifier = Modifier.padding(10.dp, 10.dp),
+        verticalArrangement = Arrangement.spacedBy(5.dp)
+    ) {
+        items(paymentDetails) { item ->
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(
+                        width = 2.dp,
+                        color = MaterialTheme.colorScheme.outline,
+                        shape = MaterialTheme.shapes.medium,
+                    )
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceContainer,
+                        shape = MaterialTheme.shapes.medium,
+                    )
+                    .padding(10.dp, 5.dp)
+            ) {
+                Column {
+                    Text(
+                        text = "${item.from.name}は${item.to.name}へ " +
+                                "${stringResource(R.string.settings_currency)}${item.amount} 支払う",
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Text(
+                        text =
+                        "${item.from.name}の合計支払い金額: ${stringResource(R.string.settings_currency)}${item.total}",
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
+            }
+
+        }
+    }
 }
 
 
@@ -271,6 +320,38 @@ fun ActivityPreview() {
         onNewMemberRequest = RequestType.MODERATOR,
         splitUnit = SplitUnit.TEN,
     )
+    val paymentDetails = listOf(
+        PaymentDetail(
+            from = member1,
+            to = member2,
+            amount = 120_000,
+            total = 740000,
+        ),
+        PaymentDetail(
+            from = member2,
+            to = member1,
+            amount = 5_000,
+            total = 8000,
+        ),
+        PaymentDetail(
+            from = member1,
+            to = member2,
+            amount = 500_000,
+            total = 740000,
+        ),
+        PaymentDetail(
+            from = member2,
+            to = member1,
+            amount = 3_000,
+            total = 8000,
+        ),
+        PaymentDetail(
+            from = member1,
+            to = member2,
+            amount = 120_000,
+            total = 740000,
+        ),
+    )
     val roomName = "○○キャンプ"
     SplitAppTheme {
         val controller = rememberNavController()
@@ -337,6 +418,7 @@ fun ActivityPreview() {
                                 // Info/Pay
                                 InfoTabIndex.PAY.value -> {
                                     InfoPayScreen(
+                                        paymentDetails = paymentDetails,
                                     )
                                 }
                                 // Info/Settings
