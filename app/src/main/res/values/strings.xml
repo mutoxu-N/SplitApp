@@ -2,6 +2,12 @@
 <resources>
     <string name="app_name">Split</string>
 
+    <string name="appbar_room_create">ルームを作る</string>
+
+    <string name="bottom_nav_item_info">情報</string>
+    <string name="bottom_nav_item_receipts">レシート</string>
+    <string name="bottom_nav_item_settings">設定</string>
+
     <string name="button_cancel">キャンセル</string>
     <string name="button_confirm">完了</string>
     <string name="button_create_room">ルームを作る</string>
@@ -55,8 +61,8 @@
     <string name="term_permission">権限</string>
 
     <string name="title_activity_edit_receipt">EditReceiptActivity</string>
+    <string name="title_activity_in_room">InRoomActivity</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_room_join">RoomJoinActivity</string>
     <string name="title_activity_room_create">RoomCreateActivity</string>
-    <string name="appbar_room_create">ルームを作る</string>
+    <string name="title_activity_room_join">RoomJoinActivity</string>
 </resources>
