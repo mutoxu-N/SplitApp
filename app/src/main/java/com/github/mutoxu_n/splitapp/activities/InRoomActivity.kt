@@ -39,6 +39,7 @@ import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.InRoomActivity.InfoTabIndex
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
+import com.github.mutoxu_n.splitapp.components.members.MemberList
 import com.github.mutoxu_n.splitapp.components.misc.BottomNavigation
 import com.github.mutoxu_n.splitapp.components.misc.InRoomNavItem
 import com.github.mutoxu_n.splitapp.components.misc.InRoomTopBar
@@ -59,6 +60,8 @@ class InRoomActivity : ComponentActivity() {
     private var roomId = App.roomId ?: ""
     private var receipts by mutableStateOf(listOf<Receipt>())
     private lateinit var settings: Settings
+    private lateinit var members: List<Member>
+    private lateinit var me: Member
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -145,6 +148,14 @@ class InRoomActivity : ComponentActivity() {
                                         // Info/Members
                                         InfoTabIndex.MEMBERS.value -> {
                                             InfoMembersScreen(
+                                                role = me.role,
+                                                members = members,
+                                                onRemoveMember = {
+                                                    onRemoveMember(it)
+                                                },
+                                                onWeightChanged = {
+                                                    onWeightChanged(it)
+                                                },
                                             )
                                         }
                                     }
@@ -164,7 +175,15 @@ class InRoomActivity : ComponentActivity() {
     }
 
     private fun launchEditReceipt(receipt: Receipt) {
-        // 編集画面に遷移
+        // TODO: 編集画面に遷移
+    }
+
+    private fun onWeightChanged(member: Member) {
+        // TODO: メンバーの重みを更新
+    }
+
+    private fun onRemoveMember(member: Member) {
+        // TODO: メンバーを削除
     }
 
     enum class InfoTabIndex(val value: Int) {
@@ -252,8 +271,24 @@ private fun InfoSettingsScreen(
 
 @Composable
 private fun InfoMembersScreen(
+    role: Role,
+    members: List<Member>,
+    onWeightChanged: (Member) -> Unit = {},
+    onRemoveMember: (Member) -> Unit = {},
 ) {
-    Text("InfoMembersScreen")
+    MemberList(
+        modifier = Modifier
+            .padding(10.dp, 10.dp),
+        members = members,
+        onEditMember = {
+            onWeightChanged(it)
+        },
+        onRemoveMember = {
+            onRemoveMember(it)
+        },
+        enabled = role == Role.OWNER,
+        removable = role == Role.OWNER,
+    )
 }
 
 @Composable
@@ -431,6 +466,10 @@ fun ActivityPreview() {
                                 // Info/Members
                                 InfoTabIndex.MEMBERS.value -> {
                                     InfoMembersScreen(
+                                        role = Role.OWNER,
+                                        members = listOf(member1, member2),
+                                        onRemoveMember = {},
+                                        onWeightChanged = {},
                                     )
                                 }
                             }

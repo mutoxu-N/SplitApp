@@ -93,6 +93,7 @@ private fun MemberListItem(
                 shape = MaterialTheme.shapes.medium,
             )
             .padding(10.dp, 10.dp),
+        verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
