@@ -10,12 +10,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -28,6 +31,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,6 +43,7 @@ import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.InRoomActivity.InfoTabIndex
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
+import com.github.mutoxu_n.splitapp.components.dialogs.AttentionDialog
 import com.github.mutoxu_n.splitapp.components.members.MemberList
 import com.github.mutoxu_n.splitapp.components.misc.BottomNavigation
 import com.github.mutoxu_n.splitapp.components.misc.InRoomNavItem
@@ -56,7 +61,6 @@ import com.github.mutoxu_n.splitapp.models.SplitUnit
 import java.time.LocalDateTime
 
 class InRoomActivity : ComponentActivity() {
-    private var roomName by mutableStateOf("〇〇キャンプ")
     private var roomId = App.roomId ?: ""
     private var receipts by mutableStateOf(listOf<Receipt>())
     private lateinit var settings: Settings
@@ -74,7 +78,7 @@ class InRoomActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     topBar = {
                         InRoomTopBar(
-                            title = roomName,
+                            title = settings.name,
                         )
                     },
                     bottomBar = {
@@ -166,6 +170,14 @@ class InRoomActivity : ComponentActivity() {
                         // Settings
                         composable(InRoomNavItem.Setting.route) {
                             SettingsScreen(
+                                role = me.role,
+                                settings = settings,
+                                onSettingsChanged = {
+                                    onSettingsChanged(it)
+                                },
+                                onRemoveRoomClicked = {
+                                    onRemoveRoom()
+                                }
                             )
                         }
                     }
@@ -184,6 +196,13 @@ class InRoomActivity : ComponentActivity() {
 
     private fun onRemoveMember(member: Member) {
         // TODO: メンバーを削除
+    }
+
+    private fun onSettingsChanged(settings: Settings) {
+        // TODO: ルーム設定を更新
+    }
+
+    private fun onRemoveRoom() {
     }
 
     enum class InfoTabIndex(val value: Int) {
@@ -293,8 +312,60 @@ private fun InfoMembersScreen(
 
 @Composable
 private fun SettingsScreen(
+    role: Role,
+    settings: Settings,
+    onSettingsChanged: (Settings) -> Unit = {},
+    onRemoveRoomClicked: () -> Unit,
 ) {
-    Text("SettingScreen")
+    var confirmDialogShown by rememberSaveable { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 10.dp, end = 10.dp, start = 10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(5.dp),
+    ) {
+        Column(
+            modifier = Modifier.weight(1f),
+        ) {
+            SettingsEditor(
+                settings = settings,
+                onSettingsChange = {
+                    onSettingsChanged(it)
+                },
+                isReadOnly = role != Role.OWNER,
+            )
+        }
+
+        if(role == Role.OWNER) {
+            HorizontalDivider()
+            Button(
+                colors = ButtonDefaults.buttonColors()
+                    .copy(containerColor = MaterialTheme.colorScheme.error),
+                onClick = { confirmDialogShown = true },
+            ) {
+                Text(
+                    text = "ルームを削除する"
+                )
+            }
+            Spacer(modifier = Modifier.size(10.dp))
+        }
+    }
+
+    if(confirmDialogShown) {
+        AttentionDialog(
+            title = "ルームを削除します",
+            message = "ルーム(${settings.name})のすべてのデータを削除し、ルームを削除します。一度削除したルームは元に戻せません！",
+            onDismiss = { confirmDialogShown = false },
+            dismissText = "キャンセル",
+            onConfirm = {
+                confirmDialogShown = false
+                onRemoveRoomClicked()
+            },
+            confirmText = "削除する",
+        )
+    }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -480,6 +551,10 @@ fun ActivityPreview() {
                 // Settings
                 composable(InRoomNavItem.Setting.route) {
                     SettingsScreen(
+                        role = Role.OWNER,
+                        settings = settings,
+                        onSettingsChanged = {},
+                        onRemoveRoomClicked = {}
                     )
                 }
             }
