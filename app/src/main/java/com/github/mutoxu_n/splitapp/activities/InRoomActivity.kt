@@ -121,13 +121,11 @@ class InRoomActivity : ComponentActivity() {
                                         // Info/Pay
                                         InfoTabIndex.PAY.value -> {
                                             InfoPayScreen(
-                                                modifier = Modifier.padding(padding)
                                             )
                                         }
                                         // Info/Settings
                                         InfoTabIndex.SETTINGS.value -> {
                                             InfoSettingsScreen(
-                                                modifier = Modifier.padding(padding),
                                                 roomId = roomId,
                                                 settings = settings,
                                             )
@@ -135,7 +133,6 @@ class InRoomActivity : ComponentActivity() {
                                         // Info/Members
                                         InfoTabIndex.MEMBERS.value -> {
                                             InfoMembersScreen(
-                                                modifier = Modifier.padding(padding)
                                             )
                                         }
                                     }
@@ -181,7 +178,6 @@ private fun ReceiptScreen(
 
 @Composable
 private fun InfoPayScreen(
-    modifier: Modifier,
 ) {
     Text("InfoPayScreen")
 }
@@ -189,7 +185,6 @@ private fun InfoPayScreen(
 
 @Composable
 private fun InfoSettingsScreen(
-    modifier: Modifier,
     roomId: String,
     settings: Settings,
 ) {
@@ -208,7 +203,6 @@ private fun InfoSettingsScreen(
 
 @Composable
 private fun InfoMembersScreen(
-    modifier: Modifier,
 ) {
     Text("InfoMembersScreen")
 }
@@ -343,13 +337,11 @@ fun ActivityPreview() {
                                 // Info/Pay
                                 InfoTabIndex.PAY.value -> {
                                     InfoPayScreen(
-                                        modifier = Modifier.padding(padding)
                                     )
                                 }
                                 // Info/Settings
                                 InfoTabIndex.SETTINGS.value -> {
                                     InfoSettingsScreen(
-                                        modifier = Modifier.padding(padding),
                                         roomId = "AB12C3",
                                         settings = settings,
                                     )
@@ -357,7 +349,6 @@ fun ActivityPreview() {
                                 // Info/Members
                                 InfoTabIndex.MEMBERS.value -> {
                                     InfoMembersScreen(
-                                        modifier = Modifier.padding(padding)
                                     )
                                 }
                             }
