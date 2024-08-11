@@ -32,13 +32,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.mutoxu_n.splitapp.BuildConfig
 import com.github.mutoxu_n.splitapp.R
+import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
 import com.github.mutoxu_n.splitapp.components.misc.DoneButton
 import com.github.mutoxu_n.splitapp.components.dialogs.ListSelectDialog
 import com.github.mutoxu_n.splitapp.components.dialogs.ValueChangeDialog
 import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.Receipt
 import com.github.mutoxu_n.splitapp.models.Role
-import com.github.mutoxu_n.splitapp.ui.theme.SplitAppTheme
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 

@@ -33,9 +33,9 @@ import androidx.compose.ui.unit.dp
 import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.BuildConfig
 import com.github.mutoxu_n.splitapp.R
+import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
 import com.github.mutoxu_n.splitapp.common.Auth
 import com.github.mutoxu_n.splitapp.components.dialogs.AttentionDialog
-import com.github.mutoxu_n.splitapp.ui.theme.SplitAppTheme
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 
 class MainActivity : ComponentActivity() {
