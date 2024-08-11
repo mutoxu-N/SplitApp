@@ -5,8 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -23,20 +26,28 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.activities.InRoomActivity.InfoTabIndex
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
 import com.github.mutoxu_n.splitapp.components.misc.BottomNavigation
 import com.github.mutoxu_n.splitapp.components.misc.InRoomNavItem
 import com.github.mutoxu_n.splitapp.components.misc.InRoomTopBar
 import com.github.mutoxu_n.splitapp.components.receipts.ReceiptList
+import com.github.mutoxu_n.splitapp.components.settings.RoomIdDisplay
+import com.github.mutoxu_n.splitapp.components.settings.SettingsEditor
 import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.Receipt
+import com.github.mutoxu_n.splitapp.models.RequestType
 import com.github.mutoxu_n.splitapp.models.Role
+import com.github.mutoxu_n.splitapp.models.Settings
+import com.github.mutoxu_n.splitapp.models.SplitUnit
 import java.time.LocalDateTime
 
 class InRoomActivity : ComponentActivity() {
     private var roomName by mutableStateOf("〇〇キャンプ")
+    private var roomId = App.roomId ?: ""
     private var receipts by mutableStateOf(listOf<Receipt>())
+    private lateinit var settings: Settings
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,7 +127,9 @@ class InRoomActivity : ComponentActivity() {
                                         // Info/Settings
                                         InfoTabIndex.SETTINGS.value -> {
                                             InfoSettingsScreen(
-                                                modifier = Modifier.padding(padding)
+                                                modifier = Modifier.padding(padding),
+                                                roomId = roomId,
+                                                settings = settings,
                                             )
                                         }
                                         // Info/Members
@@ -177,8 +190,18 @@ private fun InfoPayScreen(
 @Composable
 private fun InfoSettingsScreen(
     modifier: Modifier,
+    roomId: String,
+    settings: Settings,
 ) {
-    Text("InfoSettingsScreen")
+    Column {
+        Spacer(modifier = Modifier.size(10.dp))
+        RoomIdDisplay(roomId = roomId)
+        HorizontalDivider()
+        SettingsEditor(
+            settings = settings,
+            isReadOnly = true,
+        )
+    }
 
 }
 
@@ -245,6 +268,14 @@ fun ActivityPreview() {
             reportedBy = member2,
             timestamp = date,
         )
+    )
+    val settings = Settings(
+        name = "○○キャンプ",
+        acceptRate = 50,
+        permissionReceiptEdit = Role.OWNER,
+        permissionReceiptCreate = Role.OWNER,
+        onNewMemberRequest = RequestType.MODERATOR,
+        splitUnit = SplitUnit.TEN,
     )
     val roomName = "○○キャンプ"
     SplitAppTheme {
@@ -318,7 +349,9 @@ fun ActivityPreview() {
                                 // Info/Settings
                                 InfoTabIndex.SETTINGS.value -> {
                                     InfoSettingsScreen(
-                                        modifier = Modifier.padding(padding)
+                                        modifier = Modifier.padding(padding),
+                                        roomId = "AB12C3",
+                                        settings = settings,
                                     )
                                 }
                                 // Info/Members
