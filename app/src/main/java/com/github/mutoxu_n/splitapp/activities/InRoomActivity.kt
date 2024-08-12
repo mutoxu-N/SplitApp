@@ -10,16 +10,19 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -85,7 +88,7 @@ class InRoomActivity : ComponentActivity() {
                         BottomNavigation(
                             controller = controller
                         )
-                    }
+                    },
                 ) { innerPadding ->
                     NavHost(
                         modifier = Modifier.padding(innerPadding),
@@ -98,6 +101,9 @@ class InRoomActivity : ComponentActivity() {
                                 receipts = receipts,
                                 onReceiptEditClicked = { receipt ->
                                     launchEditReceipt(receipt)
+                                },
+                                onReceiptCreate = { receipt ->
+                                    createReceipt(receipt)
                                 }
                             )
                         }
@@ -205,6 +211,10 @@ class InRoomActivity : ComponentActivity() {
     private fun onRemoveRoom() {
     }
 
+    private fun createReceipt(receipt: Receipt) {
+
+    }
+
     enum class InfoTabIndex(val value: Int) {
         PAY(0), SETTINGS(1), MEMBERS(2)
     }
@@ -215,15 +225,31 @@ class InRoomActivity : ComponentActivity() {
 private fun ReceiptScreen(
     receipts: List<Receipt>,
     onReceiptEditClicked: (Receipt) -> Unit = {},
+    onReceiptCreate: (Receipt) -> Unit = {},
 ) {
-    ReceiptList(
-        modifier = Modifier
-            .padding(top=10.dp),
-        receipts = receipts,
-        launchEditReceiptActivity = { receipt ->
-            onReceiptEditClicked(receipt)
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(onClick = { /* onReceiptCreate */ }) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = null)
+            }
         }
-    )
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            ReceiptList(
+                modifier = Modifier
+                    .padding(top = 10.dp),
+                receipts = receipts,
+                launchEditReceiptActivity = { receipt ->
+                    onReceiptEditClicked(receipt)
+                },
+                bottomSpacerSize = 75.dp,
+            )
+        }
+    }
 }
 
 @Composable
@@ -416,7 +442,7 @@ fun ActivityPreview() {
             payment = 3_000,
             reportedBy = member2,
             timestamp = date,
-        )
+        ),
     )
     val settings = Settings(
         name = "○○キャンプ",
