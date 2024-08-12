@@ -65,4 +65,5 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_room_create">RoomCreateActivity</string>
     <string name="title_activity_room_join">RoomJoinActivity</string>
+    <string name="title_activity_member_manage">MemberManageActivity</string>
 </resources>

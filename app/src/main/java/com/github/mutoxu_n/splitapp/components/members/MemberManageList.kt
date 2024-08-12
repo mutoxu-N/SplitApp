@@ -33,6 +33,7 @@ fun MemberManageList(
     modifier: Modifier = Modifier,
     members: List<Member>,
     isReadOnly: Boolean = true,
+    onMemberChanged: (Member)-> Unit = {},
 ) {
     LazyColumn(
         modifier = modifier,
@@ -42,6 +43,9 @@ fun MemberManageList(
             MemberManageListItem(
                 member = member,
                 isReadOnly = isReadOnly,
+                onMemberChanged = {
+                    onMemberChanged(it)
+                }
             )
         }
     }
@@ -51,7 +55,7 @@ fun MemberManageList(
 private fun MemberManageListItem(
     modifier: Modifier = Modifier,
     member: Member,
-    onMemberChanged: (Member)-> Unit = {},
+    onMemberChanged: (Member)-> Unit,
     isReadOnly: Boolean = true,
 ) {
     var isDialogShown by rememberSaveable { mutableStateOf(false) }

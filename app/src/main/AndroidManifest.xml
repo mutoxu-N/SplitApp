@@ -14,6 +14,11 @@
         android:theme="@style/Theme.SplitApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activities.MemberManageActivity"
+            android:exported="false"
+            android:label="@string/title_activity_member_manage"
+            android:theme="@style/Theme.SplitApp" />
+        <activity
             android:name=".activities.InRoomActivity"
             android:exported="false"
             android:label="@string/title_activity_in_room"
