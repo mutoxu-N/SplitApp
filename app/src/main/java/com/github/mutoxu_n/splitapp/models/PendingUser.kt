@@ -3,7 +3,7 @@ package com.github.mutoxu_n.splitapp.models
 import com.google.firebase.firestore.IgnoreExtraProperties
 
 @IgnoreExtraProperties
-data class PendingUsers(
+data class PendingUser(
     val id: String,
     val isApproved: Boolean? = null,
 ) {
@@ -13,8 +13,8 @@ data class PendingUsers(
     }
 
     @Throws(ClassCastException::class)
-    fun fromMap(map: Map<String, Any>): PendingUsers{
-        return PendingUsers(
+    fun fromMap(map: Map<String, Any>): PendingUser{
+        return PendingUser(
             id = map[FIELD_UID] as String,
             isApproved = map[FIELD_IS_APPROVED] as Boolean?,
         )
