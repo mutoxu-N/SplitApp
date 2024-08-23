@@ -29,7 +29,7 @@ class RoomCreateActivity : ComponentActivity() {
             launcher: ActivityResultLauncher<Intent>? = null
         ) {
             // Intent作成
-            val intent = Intent(context, RoomJoinActivity::class.java)
+            val intent = Intent(context, RoomCreateActivity::class.java)
             val args = Bundle()
             intent.putExtras(args)
 

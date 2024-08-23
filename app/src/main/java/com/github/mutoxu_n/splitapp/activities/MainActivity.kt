@@ -171,7 +171,7 @@ class MainActivity : ComponentActivity() {
 
     private fun startRoomCreateActivity() {
         Log.i(TAG, "RoomCreateActivity launched")
-        // TODO: RoomCreateActivityに遷移
+        RoomCreateActivity.launch(context = this)
     }
 }
 
