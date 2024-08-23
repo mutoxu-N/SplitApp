@@ -20,23 +20,23 @@ object Store {
     var receipts: List<Receipt>? by mutableStateOf(null)
         private set
 
-    fun updatePendingUser(pendingUser: PendingUser) {
+    suspend fun updatePendingUser(pendingUser: PendingUser) {
         this.pendingState = pendingUser
     }
 
-    fun updateSettings(settings: Settings) {
+    suspend fun updateSettings(settings: Settings) {
         this.settings = settings
     }
 
-    fun updateMembers(members: List<Member>) {
+    suspend fun updateMembers(members: List<Member>) {
         this.members = members
     }
 
-    fun updatePendingMembers(pendingMembers: List<PendingUser>) {
+    suspend fun updatePendingMembers(pendingMembers: List<PendingUser>) {
         this.pendingMembers = pendingMembers
     }
 
-    fun updateReceipts(receipts: List<Receipt>) {
+    suspend fun updateReceipts(receipts: List<Receipt>) {
         this.receipts = receipts
     }
 }
