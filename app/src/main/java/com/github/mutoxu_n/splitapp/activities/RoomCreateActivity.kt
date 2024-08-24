@@ -15,11 +15,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.lifecycleScope
 import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
+import com.github.mutoxu_n.splitapp.common.Store
 import com.github.mutoxu_n.splitapp.components.misc.OutRoomTopBar
 import com.github.mutoxu_n.splitapp.components.settings.SettingsEditor
 import com.github.mutoxu_n.splitapp.models.Settings
+import kotlinx.coroutines.launch
 
 class RoomCreateActivity : ComponentActivity() {
 
@@ -56,15 +59,19 @@ class RoomCreateActivity : ComponentActivity() {
                 ) { innerPadding ->
                     Screen(
                         modifier = Modifier.padding(innerPadding),
-                        onSettingsChange = { onCreateRoom(it) }
+                        onSettingsChange = {
+                            lifecycleScope.launch {
+                                onCreateRoom(it)
+                            }
+                        }
                     )
                 }
             }
         }
     }
 
-    private fun onCreateRoom(settings: Settings) {
-        // TODO: ルーム作成
+    private suspend fun onCreateRoom(settings: Settings) {
+        Store.updateSettings(settings)
     }
 }
 
