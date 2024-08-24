@@ -79,7 +79,7 @@ class InRoomActivity : ComponentActivity() {
             launcher: ActivityResultLauncher<Intent>? = null
         ) {
             // Intent作成
-            val intent = Intent(context, RoomJoinActivity::class.java)
+            val intent = Intent(context, InRoomActivity::class.java)
             val args = Bundle()
             intent.putExtras(args)
 
