@@ -35,14 +35,14 @@ class App: Application(), AutoCloseable {
             return true
         }
 
-        suspend fun updateRoomId(roomId: String): Boolean {
+        fun updateRoomId(roomId: String): Boolean {
             if(validateRoomID(roomId)) {
                 this.roomId = roomId
                 return true
             } else return false
         }
 
-        suspend fun updateDisplayName(displayName: String) {
+        fun updateDisplayName(displayName: String) {
             this.displayName = displayName
         }
     }
