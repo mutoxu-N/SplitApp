@@ -96,9 +96,9 @@ class RoomJoinActivity : ComponentActivity() {
     }
 
     private fun joinRoom(roomId: String, displayName: String, saveDisplayName: Boolean) {
-        App.roomId = roomId
+        App.updateRoomId(roomId)
         if(saveDisplayName)
-            App.displayName = displayName
+            App.updateDisplayName(displayName)
         startInRoomActivity()
     }
 
