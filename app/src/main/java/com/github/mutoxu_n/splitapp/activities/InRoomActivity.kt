@@ -32,6 +32,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -49,6 +50,7 @@ import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.InRoomActivity.InfoTabIndex
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
+import com.github.mutoxu_n.splitapp.common.Store
 import com.github.mutoxu_n.splitapp.components.dialogs.AttentionDialog
 import com.github.mutoxu_n.splitapp.components.members.MemberList
 import com.github.mutoxu_n.splitapp.components.misc.BottomNavigation
@@ -69,7 +71,6 @@ import java.time.LocalDateTime
 class InRoomActivity : ComponentActivity() {
     private val roomId: String? = App.roomId.value
     private var receipts by mutableStateOf(listOf<Receipt>())
-    private lateinit var settings: Settings
     private lateinit var members: List<Member>
     private lateinit var me: Member
 
@@ -96,6 +97,9 @@ class InRoomActivity : ComponentActivity() {
         setContent {
             SplitAppTheme {
                 val controller = rememberNavController()
+                val _settings: Settings? by Store.settings.collectAsState()
+                if(_settings == null) return@SplitAppTheme
+                val settings = _settings!!
 
                 if(roomId != null) {
                     Scaffold(
