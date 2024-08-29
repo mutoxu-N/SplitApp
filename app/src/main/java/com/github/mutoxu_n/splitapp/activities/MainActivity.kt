@@ -149,10 +149,10 @@ class MainActivity : ComponentActivity() {
     }
 
     init {
-        val roomId = App.roomId
-        if(roomId != null) {
+        val roomId = App.roomId.value
+        if(Auth.isLoggedIn && roomId != null) {
             // ルームIDが設定されている場合
-//            startRoomJoinActivity()
+            startRoomJoinActivity()
         }
     }
 
