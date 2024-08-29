@@ -1,42 +1,48 @@
 package com.github.mutoxu_n.splitapp.common
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.PendingUser
 import com.github.mutoxu_n.splitapp.models.Receipt
 import com.github.mutoxu_n.splitapp.models.Settings
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 
 object Store {
-    var pendingState: PendingUser? by mutableStateOf(null)
+    var pendingState: MutableStateFlow<PendingUser?> = MutableStateFlow(null)
         private set
-    var settings: Settings? by mutableStateOf(null)
+    var settings: MutableStateFlow<Settings?> = MutableStateFlow(null)
         private set
-    var members: List<Member>? by mutableStateOf(null)
+    var members: MutableStateFlow<List<Member>?> = MutableStateFlow(null)
         private set
-    var pendingMembers: List<PendingUser>? by mutableStateOf(null)
+    var pendingMembers: MutableStateFlow<List<PendingUser>?> = MutableStateFlow(null)
         private set
-    var receipts: List<Receipt>? by mutableStateOf(null)
+    var receipts: MutableStateFlow<List<Receipt>?> = MutableStateFlow(null)
         private set
 
     suspend fun updatePendingUser(pendingUser: PendingUser) {
-        this.pendingState = pendingUser
+        this.pendingState.update { pendingUser }
     }
 
     suspend fun updateSettings(settings: Settings) {
-        this.settings = settings
+        this.settings.update { settings }
+        Log.e("Store", "updateSettings: $settings")
+        App.updateRoomId("AB12C3") // TODO: APIアクセス
     }
 
     suspend fun updateMembers(members: List<Member>) {
-        this.members = members
+        this.members.update { members }
     }
 
     suspend fun updatePendingMembers(pendingMembers: List<PendingUser>) {
-        this.pendingMembers = pendingMembers
+        this.pendingMembers.update { pendingMembers }
     }
 
     suspend fun updateReceipts(receipts: List<Receipt>) {
-        this.receipts = receipts
+        this.receipts.update { receipts }
     }
 }

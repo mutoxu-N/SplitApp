@@ -37,8 +37,8 @@ import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
 import com.github.mutoxu_n.splitapp.components.misc.OutRoomTopBar
 
 class RoomJoinActivity : ComponentActivity() {
-    private var roomId: String = App.roomId ?: ""
-    private var displayName: String = App.displayName ?: ""
+    private val roomId: String? = App.roomId.value
+    private val displayName: String = App.displayName.value ?: ""
 
     init {
         if(App.validateRoomID(roomId) && displayName.isNotBlank()) {
@@ -84,7 +84,7 @@ class RoomJoinActivity : ComponentActivity() {
                             modifier = Modifier
                                 .padding(innerPadding),
                             initialDisplayName = displayName,
-                            initialRoomId = roomId,
+                            initialRoomId = roomId!!,
                             onJoinClicked = { roomId, displayName, saveDisplayName ->
                                 joinRoom(roomId, displayName, saveDisplayName)
                             },

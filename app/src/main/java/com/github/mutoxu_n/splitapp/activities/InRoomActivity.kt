@@ -67,7 +67,7 @@ import com.github.mutoxu_n.splitapp.models.SplitUnit
 import java.time.LocalDateTime
 
 class InRoomActivity : ComponentActivity() {
-    private var roomId = App.roomId ?: ""
+    private val roomId: String? = App.roomId.value
     private var receipts by mutableStateOf(listOf<Receipt>())
     private lateinit var settings: Settings
     private lateinit var members: List<Member>
@@ -97,117 +97,120 @@ class InRoomActivity : ComponentActivity() {
             SplitAppTheme {
                 val controller = rememberNavController()
 
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    topBar = {
-                        InRoomTopBar(
-                            title = settings.name,
-                        )
-                    },
-                    bottomBar = {
-                        BottomNavigation(
-                            controller = controller
-                        )
-                    },
-                ) { innerPadding ->
-                    NavHost(
-                        modifier = Modifier.padding(innerPadding),
-                        navController = controller,
-                        startDestination = InRoomNavItem.Receipt.route,
-                    ) {
-                        // Receipt
-                        composable(InRoomNavItem.Receipt.route) {
-                            ReceiptScreen(
-                                receipts = receipts,
-                                onReceiptEditClicked = { receipt ->
-                                    launchEditReceipt(receipt)
-                                },
-                                onReceiptCreate = { receipt ->
-                                    createReceipt(receipt)
-                                }
+                if(roomId != null) {
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                        topBar = {
+                            InRoomTopBar(
+                                title = settings.name,
                             )
-                        }
-
-                        // Info
-                        composable(InRoomNavItem.Info.route) {
-                            var selectedTabIndex by rememberSaveable { mutableIntStateOf(InfoTabIndex.SETTINGS.value) }
-                            Scaffold(
-                                topBar = {
-                                    TabRow(selectedTabIndex = selectedTabIndex) {
-                                        Tab(
-                                            selected = selectedTabIndex == InfoTabIndex.PAY.value,
-                                            onClick = { selectedTabIndex = InfoTabIndex.PAY.value },
-                                            text = {
-                                                Text(text = "支払い")
-                                            }
-                                        )
-                                        Tab(
-                                            selected = selectedTabIndex == InfoTabIndex.SETTINGS.value,
-                                            onClick = { selectedTabIndex = InfoTabIndex.SETTINGS.value },
-                                            text = {
-                                                Text(text = "ルーム設定")
-                                            }
-                                        )
-                                        Tab(
-                                            selected = selectedTabIndex == InfoTabIndex.MEMBERS.value,
-                                            onClick = { selectedTabIndex = InfoTabIndex.MEMBERS.value },
-                                            text = {
-                                                Text(text = "メンバー")
-                                            }
-                                        )
+                        },
+                        bottomBar = {
+                            BottomNavigation(
+                                controller = controller
+                            )
+                        },
+                    ) { innerPadding ->
+                        NavHost(
+                            modifier = Modifier.padding(innerPadding),
+                            navController = controller,
+                            startDestination = InRoomNavItem.Receipt.route,
+                        ) {
+                            // Receipt
+                            composable(InRoomNavItem.Receipt.route) {
+                                ReceiptScreen(
+                                    receipts = receipts,
+                                    onReceiptEditClicked = { receipt ->
+                                        launchEditReceipt(receipt)
+                                    },
+                                    onReceiptCreate = { receipt ->
+                                        createReceipt(receipt)
                                     }
-                                }
-                            ) { padding ->
-                                Column(
-                                    modifier = Modifier.padding(padding)
-                                ) {
-                                    when (selectedTabIndex) {
-                                        // Info/Pay
-                                        InfoTabIndex.PAY.value -> {
-                                            InfoPayScreen(
-                                                paymentDetails = listOf() // TODO: 支払い情報を算出し格納する
+                                )
+                            }
+
+                            // Info
+                            composable(InRoomNavItem.Info.route) {
+                                var selectedTabIndex by rememberSaveable { mutableIntStateOf(InfoTabIndex.SETTINGS.value) }
+                                Scaffold(
+                                    topBar = {
+                                        TabRow(selectedTabIndex = selectedTabIndex) {
+                                            Tab(
+                                                selected = selectedTabIndex == InfoTabIndex.PAY.value,
+                                                onClick = { selectedTabIndex = InfoTabIndex.PAY.value },
+                                                text = {
+                                                    Text(text = "支払い")
+                                                }
+                                            )
+                                            Tab(
+                                                selected = selectedTabIndex == InfoTabIndex.SETTINGS.value,
+                                                onClick = { selectedTabIndex = InfoTabIndex.SETTINGS.value },
+                                                text = {
+                                                    Text(text = "ルーム設定")
+                                                }
+                                            )
+                                            Tab(
+                                                selected = selectedTabIndex == InfoTabIndex.MEMBERS.value,
+                                                onClick = { selectedTabIndex = InfoTabIndex.MEMBERS.value },
+                                                text = {
+                                                    Text(text = "メンバー")
+                                                }
                                             )
                                         }
-                                        // Info/Settings
-                                        InfoTabIndex.SETTINGS.value -> {
-                                            InfoSettingsScreen(
-                                                roomId = roomId,
-                                                settings = settings,
-                                            )
-                                        }
-                                        // Info/Members
-                                        InfoTabIndex.MEMBERS.value -> {
-                                            InfoMembersScreen(
-                                                role = me.role,
-                                                members = members,
-                                                onRemoveMember = {
-                                                    onRemoveMember(it)
-                                                },
-                                                onWeightChanged = {
-                                                    onWeightChanged(it)
-                                                },
-                                            )
+                                    }
+                                ) { padding ->
+                                    Column(
+                                        modifier = Modifier.padding(padding)
+                                    ) {
+                                        when (selectedTabIndex) {
+                                            // Info/Pay
+                                            InfoTabIndex.PAY.value -> {
+                                                InfoPayScreen(
+                                                    paymentDetails = listOf() // TODO: 支払い情報を算出し格納する
+                                                )
+                                            }
+                                            // Info/Settings
+                                            InfoTabIndex.SETTINGS.value -> {
+                                                InfoSettingsScreen(
+                                                    roomId = roomId!!,
+                                                    settings = settings,
+                                                )
+                                            }
+                                            // Info/Members
+                                            InfoTabIndex.MEMBERS.value -> {
+                                                InfoMembersScreen(
+                                                    role = me.role,
+                                                    members = members,
+                                                    onRemoveMember = {
+                                                        onRemoveMember(it)
+                                                    },
+                                                    onWeightChanged = {
+                                                        onWeightChanged(it)
+                                                    },
+                                                )
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }
 
-                        // Settings
-                        composable(InRoomNavItem.Setting.route) {
-                            SettingsScreen(
-                                role = me.role,
-                                settings = settings,
-                                onSettingsChanged = {
-                                    onSettingsChanged(it)
-                                },
-                                onRemoveRoomClicked = {
-                                    onRemoveRoom()
-                                }
-                            )
+                            // Settings
+                            composable(InRoomNavItem.Setting.route) {
+                                SettingsScreen(
+                                    role = me.role,
+                                    settings = settings,
+                                    onSettingsChanged = {
+                                        onSettingsChanged(it)
+                                    },
+                                    onRemoveRoomClicked = {
+                                        onRemoveRoom()
+                                    }
+                                )
+                            }
                         }
                     }
                 }
+
             }
         }
     }

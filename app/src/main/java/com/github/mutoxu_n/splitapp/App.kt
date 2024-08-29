@@ -2,10 +2,14 @@ package com.github.mutoxu_n.splitapp
 
 import android.app.Application
 import android.content.Context
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.google.firebase.FirebaseApp
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 
 class App: Application(), AutoCloseable {
     companion object {
@@ -15,16 +19,19 @@ class App: Application(), AutoCloseable {
         private const val SHARED_PREFERENCES_FILENAME = "SplitApp"
         // ルームIDを取得・設定
         private const val SHARED_PREFERENCES_KEY_ROOM_ID = "roomId"
-        var roomId: String? by mutableStateOf(null)
+        var roomId: MutableStateFlow<String?> = MutableStateFlow(null)
             private set
 
         // 表示名を取得・設定
         private const val SHARED_PREFERENCES_KEY_DISPLAY_NAME = "displayName"
-        var displayName: String?  by mutableStateOf(null)
+        var displayName: MutableStateFlow<String?> = MutableStateFlow(null)
             private set
 
         // ルームIDのバリデーション
-        fun validateRoomID(roomId: String): Boolean {
+        fun validateRoomID(roomId: String?): Boolean {
+            // null
+            if(roomId == null) return false
+
             // 6文字
             if(roomId.length != 6) return false
 
@@ -37,13 +44,13 @@ class App: Application(), AutoCloseable {
 
         fun updateRoomId(roomId: String): Boolean {
             if(validateRoomID(roomId)) {
-                this.roomId = roomId
+                this.roomId.update { roomId }
                 return true
             } else return false
         }
 
         fun updateDisplayName(displayName: String) {
-            this.displayName = displayName
+            this.displayName.update { displayName }
         }
     }
 
@@ -55,12 +62,12 @@ class App: Application(), AutoCloseable {
             )
 
         if(sharedPref == null) {
-            roomId = null
-            displayName = null
+            roomId.update { null }
+            displayName.update { null }
 
         } else {
-            roomId = sharedPref.getString(SHARED_PREFERENCES_KEY_ROOM_ID, null)
-            displayName = sharedPref.getString(SHARED_PREFERENCES_KEY_DISPLAY_NAME, null)
+            roomId.update { sharedPref.getString(SHARED_PREFERENCES_KEY_ROOM_ID, null) }
+            displayName.update { sharedPref.getString(SHARED_PREFERENCES_KEY_DISPLAY_NAME, null) }
         }
     }
 
@@ -79,10 +86,10 @@ class App: Application(), AutoCloseable {
             ) ?: return
         val editor = sharedPref.edit()
 
-        if(roomId == null) editor.remove(SHARED_PREFERENCES_KEY_DISPLAY_NAME).apply()
-        else editor.putString(SHARED_PREFERENCES_KEY_DISPLAY_NAME, roomId).apply()
+        if(roomId.value == null) editor.remove(SHARED_PREFERENCES_KEY_DISPLAY_NAME).apply()
+        else editor.putString(SHARED_PREFERENCES_KEY_DISPLAY_NAME, roomId.value).apply()
 
-        if(displayName == null) editor.remove(SHARED_PREFERENCES_KEY_DISPLAY_NAME).apply()
-        else editor.putString(SHARED_PREFERENCES_KEY_DISPLAY_NAME, displayName).apply()
+        if(displayName.value == null) editor.remove(SHARED_PREFERENCES_KEY_DISPLAY_NAME).apply()
+        else editor.putString(SHARED_PREFERENCES_KEY_DISPLAY_NAME, displayName.value).apply()
     }
 }

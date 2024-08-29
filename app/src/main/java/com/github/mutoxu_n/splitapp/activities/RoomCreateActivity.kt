@@ -3,6 +3,7 @@ package com.github.mutoxu_n.splitapp.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -12,10 +13,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
+import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
 import com.github.mutoxu_n.splitapp.common.Store
@@ -23,10 +29,13 @@ import com.github.mutoxu_n.splitapp.components.misc.OutRoomTopBar
 import com.github.mutoxu_n.splitapp.components.settings.SettingsEditor
 import com.github.mutoxu_n.splitapp.models.Settings
 import kotlinx.coroutines.launch
+import retrofit2.http.Tag
 
 class RoomCreateActivity : ComponentActivity() {
 
     companion object {
+        private const val TAG = "RoomCreateActivity"
+
         fun launch(
             context: Context,
             launcher: ActivityResultLauncher<Intent>? = null
@@ -48,6 +57,8 @@ class RoomCreateActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SplitAppTheme {
+                val roomId: String? by App.roomId.collectAsState()
+
                 Scaffold(
                     topBar = {
                         OutRoomTopBar(
@@ -57,6 +68,10 @@ class RoomCreateActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize()
 
                 ) { innerPadding ->
+                    Log.e(TAG, "roomId: $roomId")
+                    LaunchedEffect(key1 = roomId) {
+                        if(roomId != null) startInRoomActivity()
+                    }
                     Screen(
                         modifier = Modifier.padding(innerPadding),
                         onSettingsChange = {
@@ -71,7 +86,12 @@ class RoomCreateActivity : ComponentActivity() {
     }
 
     private suspend fun onCreateRoom(settings: Settings) {
+        Log.e(TAG, "onCreateRoom: $settings")
         Store.updateSettings(settings)
+    }
+
+    private fun startInRoomActivity() {
+        InRoomActivity.launch(context = this)
     }
 }
 
