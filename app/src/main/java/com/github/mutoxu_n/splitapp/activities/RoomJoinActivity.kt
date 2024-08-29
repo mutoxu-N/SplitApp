@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
+import com.github.mutoxu_n.splitapp.components.misc.DisplayNameTextField
 import com.github.mutoxu_n.splitapp.components.misc.OutRoomTopBar
 
 class RoomJoinActivity : ComponentActivity() {
@@ -128,37 +129,10 @@ private fun Screen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.size(15.dp))
-        OutlinedTextField(
-            modifier = Modifier
-                .padding(7.dp, 0.dp)
-                .fillMaxWidth(),
-            value = displayName,
-            onValueChange = {
-                isDisplayNameError = it.isBlank()
-                displayName = it
-            },
-            isError = isDisplayNameError,
-            maxLines = 1,
-            label = { Text(text = "表示名") },
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start,
-        ) {
-            Checkbox(
-                checked = saveDisplayName,
-                onCheckedChange = { saveDisplayName = it }
-            )
-            Text(
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .clickable { saveDisplayName = !saveDisplayName },
-                text = "この名前を記録する",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
+        DisplayNameTextField(initialDisplayName = initialDisplayName) { newDisplayName, isError, newSaveDisplayName ->
+            displayName = newDisplayName
+            isDisplayNameError = isError
+            saveDisplayName = newSaveDisplayName
         }
 
         Spacer(modifier = Modifier.size(30.dp))
