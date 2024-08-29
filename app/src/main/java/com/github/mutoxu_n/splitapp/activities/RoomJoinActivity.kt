@@ -83,8 +83,8 @@ class RoomJoinActivity : ComponentActivity() {
                         Screen(
                             modifier = Modifier
                                 .padding(innerPadding),
-                            initialDisplayName = displayName!!,
-                            initialRoomId = roomId!!,
+                            initialDisplayName = displayName ?: "",
+                            initialRoomId = roomId ?: "",
                             onJoinClicked = { roomId, displayName, saveDisplayName ->
                                 joinRoom(roomId, displayName, saveDisplayName)
                             },

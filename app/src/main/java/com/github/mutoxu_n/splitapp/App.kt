@@ -66,6 +66,15 @@ class App: Application(), AutoCloseable {
 
             updateDisplayName(name)
         }
+
+        fun loadDisplayName() {
+            val sharedPref =
+                appContext?.getSharedPreferences(
+                    SHARED_PREFERENCES_FILENAME,
+                    MODE_PRIVATE
+                )
+            displayName.update { sharedPref?.getString(SHARED_PREFERENCES_KEY_ROOM_ID, null) }
+        }
     }
 
     init {

@@ -166,6 +166,7 @@ class MainActivity : ComponentActivity() {
 
     private fun startRoomJoinActivity() {
         Log.i(TAG, "RoomJoinActivity launched")
+        App.loadDisplayName()
         RoomJoinActivity.launch(context = this)
     }
 
