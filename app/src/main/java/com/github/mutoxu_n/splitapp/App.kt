@@ -52,6 +52,20 @@ class App: Application(), AutoCloseable {
         fun updateDisplayName(displayName: String) {
             this.displayName.update { displayName }
         }
+
+
+        fun saveDisplayName(name: String){
+            val sharedPref =
+                appContext?.getSharedPreferences(
+                    SHARED_PREFERENCES_FILENAME,
+                    MODE_PRIVATE,
+                ) ?: return
+            val editor = sharedPref.edit()
+            if(displayName.value == null) editor.remove(SHARED_PREFERENCES_KEY_DISPLAY_NAME).apply()
+            else editor.putString(SHARED_PREFERENCES_KEY_DISPLAY_NAME, displayName.value).apply()
+
+            updateDisplayName(name)
+        }
     }
 
     init {
@@ -88,8 +102,5 @@ class App: Application(), AutoCloseable {
 
         if(roomId.value == null) editor.remove(SHARED_PREFERENCES_KEY_DISPLAY_NAME).apply()
         else editor.putString(SHARED_PREFERENCES_KEY_DISPLAY_NAME, roomId.value).apply()
-
-        if(displayName.value == null) editor.remove(SHARED_PREFERENCES_KEY_DISPLAY_NAME).apply()
-        else editor.putString(SHARED_PREFERENCES_KEY_DISPLAY_NAME, displayName.value).apply()
     }
 }

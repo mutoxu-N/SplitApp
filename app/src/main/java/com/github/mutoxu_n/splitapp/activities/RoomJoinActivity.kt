@@ -38,10 +38,10 @@ import com.github.mutoxu_n.splitapp.components.misc.OutRoomTopBar
 
 class RoomJoinActivity : ComponentActivity() {
     private val roomId: String? = App.roomId.value
-    private val displayName: String = App.displayName.value ?: ""
+    private val displayName: String? = App.displayName.value
 
     init {
-        if(App.validateRoomID(roomId) && displayName.isNotBlank()) {
+        if(App.validateRoomID(roomId) && !displayName.isNullOrBlank()) {
             startInRoomActivity()
         }
     }
@@ -83,7 +83,7 @@ class RoomJoinActivity : ComponentActivity() {
                         Screen(
                             modifier = Modifier
                                 .padding(innerPadding),
-                            initialDisplayName = displayName,
+                            initialDisplayName = displayName!!,
                             initialRoomId = roomId!!,
                             onJoinClicked = { roomId, displayName, saveDisplayName ->
                                 joinRoom(roomId, displayName, saveDisplayName)
@@ -97,8 +97,9 @@ class RoomJoinActivity : ComponentActivity() {
 
     private fun joinRoom(roomId: String, displayName: String, saveDisplayName: Boolean) {
         App.updateRoomId(roomId)
+        App.updateDisplayName(displayName)
         if(saveDisplayName)
-            App.updateDisplayName(displayName)
+            App.saveDisplayName(displayName)
         startInRoomActivity()
     }
 
