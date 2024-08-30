@@ -26,7 +26,7 @@ fun DisplayNameTextField(
     initialDisplayName: String?,
     onValueChanged: (String, Boolean, Boolean) -> Unit,
 ) {
-    var displayName by rememberSaveable { mutableStateOf(initialDisplayName) }
+    var displayName by rememberSaveable { mutableStateOf(initialDisplayName ?: "") }
     var isDisplayNameError by rememberSaveable { mutableStateOf(initialDisplayName.isNullOrBlank()) }
     var saveDisplayName by rememberSaveable { mutableStateOf(false) }
 
