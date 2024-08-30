@@ -23,11 +23,11 @@ import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
 
 @Composable
 fun DisplayNameTextField(
-    initialDisplayName: String,
+    initialDisplayName: String?,
     onValueChanged: (String, Boolean, Boolean) -> Unit,
 ) {
     var displayName by rememberSaveable { mutableStateOf(initialDisplayName) }
-    var isDisplayNameError by rememberSaveable { mutableStateOf(false) }
+    var isDisplayNameError by rememberSaveable { mutableStateOf(initialDisplayName.isNullOrBlank()) }
     var saveDisplayName by rememberSaveable { mutableStateOf(false) }
 
     Column(
