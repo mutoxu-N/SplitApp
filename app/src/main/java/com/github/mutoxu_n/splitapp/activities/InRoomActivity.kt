@@ -3,6 +3,7 @@ package com.github.mutoxu_n.splitapp.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -28,6 +29,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -89,6 +91,10 @@ class InRoomActivity : ComponentActivity() {
             else launcher.launch(intent)
 
         }
+    }
+
+    init {
+        Store.startObserving()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -230,11 +236,13 @@ class InRoomActivity : ComponentActivity() {
                     }
 
                 } else {
-                    Column {
+                    Log.e("InRoomActivity", "roomId: $roomId, receipts: $receipts, members: $members")
+                    Column(Modifier.fillMaxSize()) {
                         Text(text = "roomId: $roomId")
                         Text(text = "receipts: $receipts")
                         Text(text = "members: $members")
                     }
+
                 }
 
             }
