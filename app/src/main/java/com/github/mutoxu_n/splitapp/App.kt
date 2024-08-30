@@ -2,13 +2,14 @@ package com.github.mutoxu_n.splitapp
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import com.github.mutoxu_n.splitapp.models.Member
 import com.google.firebase.FirebaseApp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
-class App: Application(), AutoCloseable {
+class App: Application() {
     companion object {
         private var _appContext: Context? = null
         val appContext: Context? get() = _appContext
@@ -43,9 +44,19 @@ class App: Application(), AutoCloseable {
             return true
         }
 
-        fun updateRoomId(roomId: String): Boolean {
+        fun updateRoomId(roomId: String?): Boolean {
             if(validateRoomID(roomId)) {
                 this._roomId.update { roomId }
+                val sharedPref =
+                    appContext?.getSharedPreferences(
+                        SHARED_PREFERENCES_FILENAME,
+                        MODE_PRIVATE,
+                    ) ?: return false
+
+                val editor = sharedPref.edit()
+                if(_roomId.value == null) editor.remove(SHARED_PREFERENCES_KEY_ROOM_ID).apply()
+                else editor.putString(SHARED_PREFERENCES_KEY_ROOM_ID, _roomId.value).apply()
+                editor.apply()
                 return true
             } else return false
         }
@@ -64,17 +75,9 @@ class App: Application(), AutoCloseable {
             val editor = sharedPref.edit()
             if(_displayName.value == null) editor.remove(SHARED_PREFERENCES_KEY_DISPLAY_NAME).apply()
             else editor.putString(SHARED_PREFERENCES_KEY_DISPLAY_NAME, _displayName.value).apply()
+            editor.apply()
 
             updateDisplayName(name)
-        }
-
-        fun loadDisplayName() {
-            val sharedPref =
-                appContext?.getSharedPreferences(
-                    SHARED_PREFERENCES_FILENAME,
-                    MODE_PRIVATE
-                )
-            _displayName.update { sharedPref?.getString(SHARED_PREFERENCES_KEY_ROOM_ID, null) }
         }
 
         fun updateMe(member: Member) {
@@ -82,7 +85,12 @@ class App: Application(), AutoCloseable {
         }
     }
 
-    init {
+    override fun onCreate() {
+        super.onCreate()
+        _appContext = applicationContext
+        FirebaseApp.initializeApp(applicationContext)
+
+
         val sharedPref =
             appContext?.getSharedPreferences(
                 SHARED_PREFERENCES_FILENAME,
@@ -97,24 +105,5 @@ class App: Application(), AutoCloseable {
             _roomId.update { sharedPref.getString(SHARED_PREFERENCES_KEY_ROOM_ID, null) }
             _displayName.update { sharedPref.getString(SHARED_PREFERENCES_KEY_DISPLAY_NAME, null) }
         }
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-        _appContext = applicationContext
-        FirebaseApp.initializeApp(applicationContext)
-    }
-
-    override fun close() {
-        // 値の保存
-        val sharedPref =
-            appContext?.getSharedPreferences(
-                SHARED_PREFERENCES_FILENAME,
-                MODE_PRIVATE,
-            ) ?: return
-        val editor = sharedPref.edit()
-
-        if(_roomId.value == null) editor.remove(SHARED_PREFERENCES_KEY_DISPLAY_NAME).apply()
-        else editor.putString(SHARED_PREFERENCES_KEY_DISPLAY_NAME, _roomId.value).apply()
     }
 }

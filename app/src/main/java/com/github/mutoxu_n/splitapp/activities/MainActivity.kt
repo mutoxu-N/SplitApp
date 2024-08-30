@@ -56,6 +56,12 @@ class MainActivity : ComponentActivity() {
             uid = Auth.auth.uid
         }
 
+        val roomId = App.roomId.value
+        if(Auth.isLoggedIn && roomId != null) {
+            // ルームIDが設定されている場合
+            startRoomJoinActivity()
+        }
+
         enableEdgeToEdge()
         setContent {
             SplitAppTheme {
@@ -148,13 +154,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    init {
-        val roomId = App.roomId.value
-        if(Auth.isLoggedIn && roomId != null) {
-            // ルームIDが設定されている場合
-            startRoomJoinActivity()
-        }
-    }
 
     private fun login() {
         Auth.login()
@@ -166,7 +165,6 @@ class MainActivity : ComponentActivity() {
 
     private fun startRoomJoinActivity() {
         Log.i(TAG, "RoomJoinActivity launched")
-        App.loadDisplayName()
         RoomJoinActivity.launch(context = this)
     }
 

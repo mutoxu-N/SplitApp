@@ -88,7 +88,8 @@ class RoomCreateActivity : ComponentActivity() {
                                 if(saveName)
                                     App.saveDisplayName(name)
                             }
-                        }
+                        },
+                        initialDisplayName = App.displayName.value ?: ""
                     )
                 }
             }

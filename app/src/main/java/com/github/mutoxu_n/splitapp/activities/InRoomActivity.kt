@@ -72,7 +72,7 @@ import java.time.LocalDateTime
 
 class InRoomActivity : ComponentActivity() {
     private val roomId: String? = App.roomId.value
-    private var me: Member = App.me.value!!
+    private var me: Member? = App.me.value
 
     companion object {
         fun launch(
@@ -190,7 +190,7 @@ class InRoomActivity : ComponentActivity() {
                                             // Info/Members
                                             InfoTabIndex.MEMBERS.value -> {
                                                 InfoMembersScreen(
-                                                    role = me.role,
+                                                    role = me!!.role,
                                                     members = members!!,
                                                     onRemoveMember = {
                                                         lifecycleScope.launch {
@@ -212,7 +212,7 @@ class InRoomActivity : ComponentActivity() {
                             // Settings
                             composable(InRoomNavItem.Setting.route) {
                                 SettingsScreen(
-                                    role = me.role,
+                                    role = me!!.role,
                                     settings = settings,
                                     onSettingsChanged = {
                                         lifecycleScope.launch {
@@ -227,6 +227,13 @@ class InRoomActivity : ComponentActivity() {
                                 )
                             }
                         }
+                    }
+
+                } else {
+                    Column {
+                        Text(text = "roomId: $roomId")
+                        Text(text = "receipts: $receipts")
+                        Text(text = "members: $members")
                     }
                 }
 
