@@ -13,7 +13,6 @@ import com.github.mutoxu_n.splitapp.models.MemberModel
 import com.github.mutoxu_n.splitapp.models.Settings
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import kotlinx.coroutines.flow.update
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
@@ -95,11 +94,30 @@ class API {
         }
     }
 
-    suspend fun roomJoin(roomId: String) {
+    suspend fun joinRoom(roomId: String, displayName: String) {
         if (Auth.token == null) return
+
         val service = retrofit.create(RoomServices::class.java)
-        val response = service.joinRoom(Auth.token!!, "mutoxu=N", roomId)
-        Log.e("API.roomJoin()", response.body().toString())
+        val response = service.joinRoom(Auth.token!!, roomId, displayName)
+
+        response.body()?.let {
+            try {
+                if(it["joined"]!! as Boolean) {
+                    App.updateDisplayName(displayName)
+                    App.updateMe(Member(
+                        name = (it["me"]!! as Map<*, *>)["name"] as String,
+                        uid = (it["me"]!! as Map<*, *>)["uid"]!! as String,
+                        weight = ((it["me"]!! as Map<*, *>)["weight"]!! as Double).toFloat(),
+                        role = Role.fromValue((((it["me"]!! as Map<*, *>)["weight"]!! as Double).toInt())),
+                    ))
+                    App.updateRoomId(roomId)
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return
+            }
+        }
     }
 
     suspend fun vote(roomId: String, voteFor: String, accepted: Boolean) {

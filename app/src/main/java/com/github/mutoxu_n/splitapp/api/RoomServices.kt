@@ -21,8 +21,8 @@ interface RoomServices {
     @POST("room/{room_id}/join")
     suspend fun joinRoom(
         @Header("token") token: String,
-        @Header("name") name: String,
         @Path("room_id") roomId: String,
+        @Header("name") name: String,
     ): Response<Map<String, Any>>
 
     @POST("room/{room_id}/vote")
