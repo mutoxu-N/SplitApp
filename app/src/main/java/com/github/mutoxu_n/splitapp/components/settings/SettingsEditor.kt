@@ -47,7 +47,8 @@ fun SettingsEditor(
     isReadOnly: Boolean = true,
     settings: Settings,
     onSettingsChange: (Settings) -> Unit = {},
-    saveButtonText: String = stringResource(R.string.button_save_settings)
+    saveButtonText: String = stringResource(R.string.button_save_settings),
+    isActive: Boolean = true,
 ) {
     Column(
         modifier = modifier
@@ -189,7 +190,7 @@ fun SettingsEditor(
                         )
                     )
                 },
-                enabled = !isError,
+                enabled = !isError && isActive,
                 doneButtonText = saveButtonText,
             )
 

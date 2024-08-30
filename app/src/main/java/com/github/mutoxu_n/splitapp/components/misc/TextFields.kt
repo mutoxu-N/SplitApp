@@ -30,7 +30,11 @@ fun DisplayNameTextField(
     var isDisplayNameError by rememberSaveable { mutableStateOf(false) }
     var saveDisplayName by rememberSaveable { mutableStateOf(false) }
 
-    Column {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 7.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
         OutlinedTextField(
             modifier = Modifier
                 .padding(7.dp, 0.dp)

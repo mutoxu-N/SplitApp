@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -16,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -25,6 +28,7 @@ import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
 import com.github.mutoxu_n.splitapp.common.Store
+import com.github.mutoxu_n.splitapp.components.misc.DisplayNameTextField
 import com.github.mutoxu_n.splitapp.components.misc.OutRoomTopBar
 import com.github.mutoxu_n.splitapp.components.settings.SettingsEditor
 import com.github.mutoxu_n.splitapp.models.Settings
@@ -78,6 +82,13 @@ class RoomCreateActivity : ComponentActivity() {
                             lifecycleScope.launch {
                                 onCreateRoom(it)
                             }
+                        },
+                        onDisplayNameChanged = { name, isError, saveName ->
+                            if(!isError) {
+                                App.updateDisplayName(name)
+                                if(saveName)
+                                    App.saveDisplayName(name)
+                            }
                         }
                     )
                 }
@@ -99,14 +110,22 @@ class RoomCreateActivity : ComponentActivity() {
 private fun Screen(
     modifier: Modifier = Modifier,
     onSettingsChange: (Settings) -> Unit,
+    initialDisplayName: String = "",
+    onDisplayNameChanged: (String, Boolean, Boolean) -> Unit,
 ) {
-    Box(modifier = modifier) {
+    var isDisplayNameError by remember { mutableStateOf(false) }
+    Column(modifier = modifier) {
+        DisplayNameTextField(initialDisplayName = initialDisplayName) { name, isError, saveName ->
+            onDisplayNameChanged(name, isError, saveName)
+        }
         SettingsEditor(
             settings = Settings.Default,
             onSettingsChange = {
                 onSettingsChange(it)
             },
             isReadOnly = false,
+            isActive = isDisplayNameError,
+            saveButtonText = stringResource(R.string.button_create_room)
         )
     }
 }
@@ -125,7 +144,8 @@ private fun Preview() {
         ) { innerPadding ->
             Screen(
                 modifier = Modifier.padding(innerPadding),
-                onSettingsChange = {}
+                onSettingsChange = {},
+                onDisplayNameChanged = {_, _, _ ->}
             )
         }
     }
