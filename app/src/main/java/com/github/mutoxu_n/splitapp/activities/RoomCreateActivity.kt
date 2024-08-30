@@ -76,6 +76,7 @@ class RoomCreateActivity : ComponentActivity() {
                     LaunchedEffect(key1 = roomId) {
                         if(roomId != null) startInRoomActivity()
                     }
+
                     Screen(
                         modifier = Modifier.padding(innerPadding),
                         onSettingsChange = {
@@ -117,6 +118,7 @@ private fun Screen(
     Column(modifier = modifier) {
         DisplayNameTextField(initialDisplayName = initialDisplayName) { name, isError, saveName ->
             onDisplayNameChanged(name, isError, saveName)
+            isDisplayNameError = isError
         }
         SettingsEditor(
             settings = Settings.Default,
@@ -124,7 +126,7 @@ private fun Screen(
                 onSettingsChange(it)
             },
             isReadOnly = false,
-            isActive = isDisplayNameError,
+            isActive = !isDisplayNameError,
             saveButtonText = stringResource(R.string.button_create_room)
         )
     }

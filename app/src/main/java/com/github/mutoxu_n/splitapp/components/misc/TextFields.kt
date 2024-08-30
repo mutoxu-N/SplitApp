@@ -29,6 +29,7 @@ fun DisplayNameTextField(
     var displayName by rememberSaveable { mutableStateOf(initialDisplayName ?: "") }
     var isDisplayNameError by rememberSaveable { mutableStateOf(initialDisplayName.isNullOrBlank()) }
     var saveDisplayName by rememberSaveable { mutableStateOf(false) }
+    onValueChanged(displayName, isDisplayNameError, saveDisplayName)
 
     Column(
         modifier = Modifier
@@ -43,9 +44,7 @@ fun DisplayNameTextField(
             onValueChange = {
                 isDisplayNameError = it.isBlank()
                 displayName = it
-                if(!isDisplayNameError) {
-                    onValueChanged(displayName, isDisplayNameError, saveDisplayName)
-                }
+                onValueChanged(displayName, isDisplayNameError, saveDisplayName)
             },
             isError = isDisplayNameError,
             maxLines = 1,
