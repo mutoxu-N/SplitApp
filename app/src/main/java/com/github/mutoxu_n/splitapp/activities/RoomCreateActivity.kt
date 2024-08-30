@@ -67,6 +67,7 @@ class RoomCreateActivity : ComponentActivity() {
                     topBar = {
                         OutRoomTopBar(
                             title = stringResource(R.string.appbar_room_create),
+                            onBackClicked = { finish() }
                         )
                      },
                     modifier = Modifier.fillMaxSize()
