@@ -14,8 +14,17 @@ data class Settings(
             splitUnit = SplitUnit.TEN,
             permissionReceiptCreate = Role.OWNER,
             permissionReceiptEdit = Role.OWNER,
-            onNewMemberRequest = RequestType.MODERATOR,
+            onNewMemberRequest = RequestType.ACCEPT_BY_MODS,
             acceptRate = 0,
         )
     }
+
+    fun toModel() = SettingsModel(
+        name = name,
+        splitUnit = splitUnit.value,
+        permissionReceiptCreate = permissionReceiptCreate.toIDString(),
+        permissionReceiptEdit = permissionReceiptEdit.toIDString(),
+        onNewMemberRequest = onNewMemberRequest.toIDString(),
+        acceptRate = acceptRate,
+    )
 }

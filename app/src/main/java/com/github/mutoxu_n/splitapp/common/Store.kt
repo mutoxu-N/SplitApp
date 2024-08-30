@@ -31,7 +31,6 @@ object Store {
     suspend fun updateSettings(settings: Settings) {
         this.settings.update { settings }
         Log.e("Store", "updateSettings: $settings")
-        App.updateRoomId("AB12C3") // TODO: APIアクセス
     }
 
     suspend fun updateMembers(members: List<Member>) {

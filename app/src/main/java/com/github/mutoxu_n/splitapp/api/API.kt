@@ -1,14 +1,18 @@
 package com.github.mutoxu_n.splitapp.api
 
 import android.util.Log
+import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.BuildConfig
 import com.github.mutoxu_n.splitapp.common.Auth
+import com.github.mutoxu_n.splitapp.common.Store
 import com.github.mutoxu_n.splitapp.models.ReceiptModel
 import com.github.mutoxu_n.splitapp.models.Role
 import com.github.mutoxu_n.splitapp.models.SettingsModel
 import com.github.mutoxu_n.splitapp.models.MemberModel
+import com.github.mutoxu_n.splitapp.models.Settings
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import kotlinx.coroutines.flow.update
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
@@ -56,13 +60,21 @@ class API {
         Log.e("API.reset()", response.body().toString())
     }
 
-    suspend fun roomCreate(settingsModel: SettingsModel) {
+    suspend fun createRoom(settings: Settings) {
         if (Auth.token == null) return
+        val name = App.displayName.value ?: return
 
         val service = retrofit.create(RoomServices::class.java)
+        val settingsModel = settings.toModel()
         val body = RoomCreateBody(settingsModel = settingsModel)
-        val response = service.createRoom(Auth.token!!, "mutoxu=N", body)
+        val response = service.createRoom(Auth.token!!, name, body)
         Log.e("API.roomCreate()", response.body().toString())
+
+        if(response.body() != null && response.body()!!["room_id"] != null) {
+            val b = App.updateRoomId(response.body()!!["room_id"] as String)
+            Store.updateSettings(settings)
+            // TODO: MEの設定
+        }
     }
 
     suspend fun roomJoin(roomId: String) {

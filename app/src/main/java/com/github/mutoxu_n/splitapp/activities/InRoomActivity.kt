@@ -476,7 +476,7 @@ fun ActivityPreview() {
         acceptRate = 50,
         permissionReceiptEdit = Role.OWNER,
         permissionReceiptCreate = Role.OWNER,
-        onNewMemberRequest = RequestType.MODERATOR,
+        onNewMemberRequest = RequestType.ACCEPT_BY_MODS,
         splitUnit = SplitUnit.TEN,
     )
     val paymentDetails = listOf(

@@ -8,7 +8,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -27,13 +26,12 @@ import androidx.lifecycle.lifecycleScope
 import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
-import com.github.mutoxu_n.splitapp.common.Store
+import com.github.mutoxu_n.splitapp.api.API
 import com.github.mutoxu_n.splitapp.components.misc.DisplayNameTextField
 import com.github.mutoxu_n.splitapp.components.misc.OutRoomTopBar
 import com.github.mutoxu_n.splitapp.components.settings.SettingsEditor
 import com.github.mutoxu_n.splitapp.models.Settings
 import kotlinx.coroutines.launch
-import retrofit2.http.Tag
 
 class RoomCreateActivity : ComponentActivity() {
 
@@ -73,7 +71,6 @@ class RoomCreateActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize()
 
                 ) { innerPadding ->
-                    Log.e(TAG, "roomId: $roomId")
                     LaunchedEffect(key1 = roomId) {
                         if(roomId != null) startInRoomActivity()
                     }
@@ -100,7 +97,7 @@ class RoomCreateActivity : ComponentActivity() {
 
     private suspend fun onCreateRoom(settings: Settings) {
         Log.e(TAG, "onCreateRoom: $settings")
-        Store.updateSettings(settings)
+        API().createRoom(settings)
     }
 
     private fun startInRoomActivity() {

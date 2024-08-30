@@ -14,9 +14,18 @@ enum class Role(val roleId: Int) {
             MODERATOR.roleId to (App.appContext?.getString(R.string.role_moderator) ?: MODERATOR.name),
             OWNER.roleId to (App.appContext?.getString(R.string.role_owner) ?: OWNER.name),
         )
-        fun fromString(role: String) = Role.valueOf(role.uppercase(Locale.getDefault()))
 
+        private val ID = mapOf(
+            NORMAL.roleId to "normal",
+            CREATOR.roleId to "creator",
+            MODERATOR.roleId to "moderator",
+            OWNER.roleId to "owner",
+        )
+        fun fromString(role: String) = Role.valueOf(role.uppercase(Locale.getDefault()))
     }
 
+    fun toIDString(): String {
+        return ID[roleId] ?: "ERROR"
+    }
     override fun toString() = map[roleId] ?: (App.appContext?.getString(R.string.role_unknown) ?: "ERROR")
 }
