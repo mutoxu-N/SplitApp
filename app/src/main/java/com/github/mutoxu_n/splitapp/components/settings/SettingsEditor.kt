@@ -52,7 +52,6 @@ fun SettingsEditor(
 ) {
     Column(
         modifier = modifier
-            .padding(10.dp)
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(5.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -71,7 +70,6 @@ fun SettingsEditor(
         } else {
             OutlinedTextField(
                 modifier = modifier
-                    .padding(7.dp, 0.dp)
                     .fillMaxWidth(),
                 value = roomName,
                 label = { Text(text = stringResource(id = R.string.settings_room_name)) },

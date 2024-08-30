@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.R
@@ -114,7 +115,9 @@ private fun Screen(
     onDisplayNameChanged: (String, Boolean, Boolean) -> Unit,
 ) {
     var isDisplayNameError by remember { mutableStateOf(false) }
-    Column(modifier = modifier) {
+    Column(modifier = modifier
+        .padding(20.dp)
+    ) {
         DisplayNameTextField(initialDisplayName = initialDisplayName) { name, isError, saveName ->
             onDisplayNameChanged(name, isError, saveName)
             isDisplayNameError = isError

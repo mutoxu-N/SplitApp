@@ -32,13 +32,11 @@ fun DisplayNameTextField(
     onValueChanged(displayName, isDisplayNameError, saveDisplayName)
 
     Column(
-        modifier = Modifier
-            .padding(horizontal = 7.dp),
+        modifier = Modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         OutlinedTextField(
             modifier = Modifier
-                .padding(7.dp, 0.dp)
                 .fillMaxWidth(),
             value = displayName,
             onValueChange = {

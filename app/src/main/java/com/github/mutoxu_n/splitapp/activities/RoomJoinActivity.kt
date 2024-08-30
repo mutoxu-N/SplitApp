@@ -138,7 +138,6 @@ private fun Screen(
         Spacer(modifier = Modifier.size(30.dp))
         OutlinedTextField(
             modifier = Modifier
-                .padding(7.dp, 0.dp)
                 .fillMaxWidth(),
             value = roomId,
             onValueChange = {
