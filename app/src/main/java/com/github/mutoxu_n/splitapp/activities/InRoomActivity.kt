@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -66,13 +67,12 @@ import com.github.mutoxu_n.splitapp.models.RequestType
 import com.github.mutoxu_n.splitapp.models.Role
 import com.github.mutoxu_n.splitapp.models.Settings
 import com.github.mutoxu_n.splitapp.models.SplitUnit
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 class InRoomActivity : ComponentActivity() {
     private val roomId: String? = App.roomId.value
-    private var receipts by mutableStateOf(listOf<Receipt>())
-    private lateinit var members: List<Member>
-    private lateinit var me: Member
+    private var me: Member = App.me.value!!
 
     companion object {
         fun launch(
@@ -101,7 +101,12 @@ class InRoomActivity : ComponentActivity() {
                 if(_settings == null) return@SplitAppTheme
                 val settings = _settings!!
 
-                if(roomId != null) {
+                val receipts by Store.receipts.collectAsState()
+                val members: List<Member>? by Store.members.collectAsState()
+
+                if(roomId != null
+                    && receipts != null
+                    && members != null) {
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),
                         topBar = {
@@ -123,12 +128,14 @@ class InRoomActivity : ComponentActivity() {
                             // Receipt
                             composable(InRoomNavItem.Receipt.route) {
                                 ReceiptScreen(
-                                    receipts = receipts,
+                                    receipts = receipts!!,
                                     onReceiptEditClicked = { receipt ->
                                         launchEditReceipt(receipt)
                                     },
                                     onReceiptCreate = { receipt ->
-                                        createReceipt(receipt)
+                                        lifecycleScope.launch {
+                                            createReceipt(receipt)
+                                        }
                                     }
                                 )
                             }
@@ -176,7 +183,7 @@ class InRoomActivity : ComponentActivity() {
                                             // Info/Settings
                                             InfoTabIndex.SETTINGS.value -> {
                                                 InfoSettingsScreen(
-                                                    roomId = roomId!!,
+                                                    roomId = roomId,
                                                     settings = settings,
                                                 )
                                             }
@@ -184,12 +191,16 @@ class InRoomActivity : ComponentActivity() {
                                             InfoTabIndex.MEMBERS.value -> {
                                                 InfoMembersScreen(
                                                     role = me.role,
-                                                    members = members,
+                                                    members = members!!,
                                                     onRemoveMember = {
-                                                        onRemoveMember(it)
+                                                        lifecycleScope.launch {
+                                                            onRemoveMember(it)
+                                                        }
                                                     },
                                                     onWeightChanged = {
-                                                        onWeightChanged(it)
+                                                        lifecycleScope.launch {
+                                                            onWeightChanged(it)
+                                                        }
                                                     },
                                                 )
                                             }
@@ -204,10 +215,14 @@ class InRoomActivity : ComponentActivity() {
                                     role = me.role,
                                     settings = settings,
                                     onSettingsChanged = {
-                                        onSettingsChanged(it)
+                                        lifecycleScope.launch {
+                                            onSettingsChanged(it)
+                                        }
                                     },
                                     onRemoveRoomClicked = {
-                                        onRemoveRoom()
+                                        lifecycleScope.launch {
+                                            onRemoveRoom()
+                                        }
                                     }
                                 )
                             }
@@ -223,22 +238,22 @@ class InRoomActivity : ComponentActivity() {
         // TODO: 編集画面に遷移
     }
 
-    private fun onWeightChanged(member: Member) {
+    private suspend fun onWeightChanged(member: Member) {
         // TODO: メンバーの重みを更新
     }
 
-    private fun onRemoveMember(member: Member) {
+    private suspend fun onRemoveMember(member: Member) {
         // TODO: メンバーを削除
     }
 
-    private fun onSettingsChanged(settings: Settings) {
+    private suspend fun onSettingsChanged(settings: Settings) {
         // TODO: ルーム設定を更新
     }
 
-    private fun onRemoveRoom() {
+    private suspend fun onRemoveRoom() {
     }
 
-    private fun createReceipt(receipt: Receipt) {
+    private suspend fun createReceipt(receipt: Receipt) {
 
     }
 

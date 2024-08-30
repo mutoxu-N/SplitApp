@@ -21,6 +21,7 @@ enum class Role(val roleId: Int) {
             MODERATOR.roleId to "moderator",
             OWNER.roleId to "owner",
         )
+        fun fromValue(value: Int) = entries.firstOrNull { it.roleId == value } ?: NORMAL
         fun fromString(role: String) = Role.valueOf(role.uppercase(Locale.getDefault()))
     }
 

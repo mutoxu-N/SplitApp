@@ -5,6 +5,7 @@ import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.BuildConfig
 import com.github.mutoxu_n.splitapp.common.Auth
 import com.github.mutoxu_n.splitapp.common.Store
+import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.ReceiptModel
 import com.github.mutoxu_n.splitapp.models.Role
 import com.github.mutoxu_n.splitapp.models.SettingsModel
@@ -70,10 +71,27 @@ class API {
         val response = service.createRoom(Auth.token!!, name, body)
         Log.e("API.roomCreate()", response.body().toString())
 
-        if(response.body() != null && response.body()!!["room_id"] != null) {
-            val b = App.updateRoomId(response.body()!!["room_id"] as String)
-            Store.updateSettings(settings)
-            // TODO: MEの設定
+        response.body().let {
+            try {
+                it ?: return
+
+                App.updateMe(Member(
+                    name = (it["me"]!! as Map<*, *>)["name"] as String,
+                    uid = (it["me"]!! as Map<*, *>)["uid"]!! as String,
+                    weight = ((it["me"]!! as Map<*, *>)["weight"]!! as Double).toFloat(),
+                    role = Role.fromValue((((it["me"]!! as Map<*, *>)["weight"]!! as Double).toInt())),
+                ))
+                Store.updateSettings(settings)
+                App.updateRoomId(it["room_id"] as String)
+
+            } catch (e: ClassCastException) {
+                e.printStackTrace()
+                return
+
+            } catch (e: NullPointerException) {
+                e.printStackTrace()
+                return
+            }
         }
     }
 
