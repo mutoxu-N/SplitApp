@@ -1,10 +1,8 @@
 package com.github.mutoxu_n.splitapp.common
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import com.github.mutoxu_n.splitapp.App
+import com.github.mutoxu_n.splitapp.BuildConfig
 import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.PendingUser
 import com.github.mutoxu_n.splitapp.models.Receipt
@@ -34,6 +32,13 @@ object Store {
     var receipts: MutableStateFlow<List<Receipt>?> = MutableStateFlow(null)
         private set
 
+    init {
+        // デバッグ時
+        if(BuildConfig.DEBUG) {
+            FirebaseFirestore.getInstance().useEmulator("10.0.2.2", 8080)
+        }
+    }
+
     fun updatePendingUser(pendingUser: PendingUser) {
         this.pendingState.update { pendingUser }
     }
@@ -56,6 +61,8 @@ object Store {
     }
 
     fun startObserving() {
+        stopObserving()
+
         val db = FirebaseFirestore.getInstance()
         val roomId: String = App.roomId.value ?: return
 
@@ -82,9 +89,9 @@ object Store {
             for(data in snapshot.documents) {
                 val member = Member(
                     name = data["name"] as String,
-                    uid = data["uid"] as String,
-                    weight = (data["weight"] as Long).toFloat(),
-                    role = Role.fromValue((data["role"] as Long).toInt()),
+                    uid = data["uid"] as String?,
+                    weight = (data["weight"] as Double).toFloat(),
+                    role = Role.fromString(data["role"] as String),
                 )
                 m.add(member)
             }
@@ -103,6 +110,7 @@ object Store {
 
             if (snapshot == null) {
                 receipts.update { listOf() }
+
             } else {
                 val r = mutableListOf<Receipt>()
                 for(data in snapshot.documents) {
