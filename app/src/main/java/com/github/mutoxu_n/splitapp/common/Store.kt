@@ -78,7 +78,7 @@ object Store {
                 return@addSnapshotListener
             }
 
-            if(snapshot == null) {
+            if(snapshot == null || snapshot.data == null) {
                 settings.update { null }
                 return@addSnapshotListener
             }

@@ -304,7 +304,7 @@ class InRoomActivity : ComponentActivity() {
             API().editSettings(
                 it,
                 settings.toModel(),
-                result = { b ->
+                callBack = { b ->
                     Toast.makeText(
                         this@InRoomActivity,
                         if(b) "ルーム設定の更新に成功しました" else "ルーム設定の更新に失敗しました",

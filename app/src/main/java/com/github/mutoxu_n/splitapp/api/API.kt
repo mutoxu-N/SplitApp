@@ -94,12 +94,13 @@ class API {
         }
     }
 
-    suspend fun joinRoom(roomId: String, displayName: String) {
+    suspend fun joinRoom(roomId: String, displayName: String, callBack: (Boolean) -> Unit = {}) {
         if (Auth.token == null) return
 
         val service = retrofit.create(RoomServices::class.java)
         val response = service.joinRoom(Auth.token!!, roomId, displayName)
 
+        Log.e("API.joinRoom()", response.body().toString())
         response.body()?.let {
             try {
                 if(it["joined"]!! as Boolean) {
@@ -112,6 +113,10 @@ class API {
                         role = Role.fromValue((it["me"]!! as Map<*, *>)["role"]!! as Double),
                     ))
                     App.updateRoomId(roomId)
+                    callBack(true)
+
+                } else {
+                    callBack(false)
                 }
 
             } catch (e: Exception) {
@@ -168,14 +173,14 @@ class API {
         Log.e("API.editMember()", response.body().toString())
     }
 
-    suspend fun editSettings(roomId: String, settingsModel: SettingsModel, result: (Boolean)-> Unit = {}) {
+    suspend fun editSettings(roomId: String, settingsModel: SettingsModel, callBack: (Boolean)-> Unit = {}) {
         if (Auth.token == null) return
         val service = retrofit.create(RoomServices::class.java)
         val body = EditSettingsBody(
             settingsModel = settingsModel,
         )
         val response = service.editSettings(Auth.token!!, roomId, body)
-        result(response.body()?.get("succeed") as Boolean? ?: false)
+        callBack(response.body()?.get("succeed") as Boolean? ?: false)
     }
 
     suspend fun deleteRoom(roomId: String) {

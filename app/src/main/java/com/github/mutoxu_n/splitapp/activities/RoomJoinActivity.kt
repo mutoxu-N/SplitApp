@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -41,6 +42,7 @@ import kotlinx.coroutines.launch
 
 class RoomJoinActivity : ComponentActivity() {
     private val displayName: String? = App.displayName.value
+    private var waitForInput by mutableStateOf(true)
 
     companion object {
         private const val TAG = "RoomJoinActivity"
@@ -79,7 +81,6 @@ class RoomJoinActivity : ComponentActivity() {
         setContent {
             SplitAppTheme {
                 val roomId: String? by App.roomId.collectAsState()
-                var waitForInput by rememberSaveable { mutableStateOf(true) }
 
                 LaunchedEffect(key1 = roomId, key2 = waitForInput) {
                     if(!waitForInput && roomId != null) {
@@ -105,7 +106,6 @@ class RoomJoinActivity : ComponentActivity() {
                             initialDisplayName = displayName ?: "",
                             initialRoomId = roomId ?: "",
                             onJoinClicked = { roomId, displayName, saveDisplayName ->
-                                waitForInput = false
                                 lifecycleScope.launch {
                                     joinRoom(roomId, displayName, saveDisplayName)
                                 }
@@ -123,7 +123,21 @@ class RoomJoinActivity : ComponentActivity() {
             App.saveDisplayName(displayName)
 
         App.updateRoomId(null)
-        API().joinRoom(roomId, displayName)
+        API().joinRoom(roomId, displayName) { b ->
+            if(b) {
+                waitForInput = false
+                Log.e(TAG, "joinRoom: success")
+
+            } else {
+                Toast.makeText(
+                    this@RoomJoinActivity,
+                    "ルーム(ID:$roomId)は存在しません",
+                    Toast.LENGTH_SHORT,
+                ).show()
+
+            }
+
+        }
     }
 
     private fun startInRoomActivity() {
