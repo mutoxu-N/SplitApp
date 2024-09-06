@@ -60,6 +60,7 @@ class RoomCreateActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SplitAppTheme {
+                var isInputted by remember { mutableStateOf(false) }
                 val roomId: String? by App.roomId.collectAsState()
 
                 Scaffold(
@@ -73,13 +74,14 @@ class RoomCreateActivity : ComponentActivity() {
 
                 ) { innerPadding ->
                     LaunchedEffect(key1 = roomId) {
-                        if(roomId != null) startInRoomActivity()
+                        if(isInputted && roomId != null) startInRoomActivity()
                     }
 
                     Screen(
                         modifier = Modifier.padding(innerPadding),
                         onSettingsChange = {
                             lifecycleScope.launch {
+                                isInputted = true
                                 onCreateRoom(it)
                             }
                         },

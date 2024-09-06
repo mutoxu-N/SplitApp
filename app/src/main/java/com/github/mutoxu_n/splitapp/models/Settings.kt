@@ -21,7 +21,7 @@ data class Settings(
 
     fun toModel() = SettingsModel(
         name = name,
-        splitUnit = splitUnit.value,
+        splitUnit = splitUnit.unit,
         permissionReceiptCreate = permissionReceiptCreate.toIDString(),
         permissionReceiptEdit = permissionReceiptEdit.toIDString(),
         onNewMemberRequest = onNewMemberRequest.toIDString(),

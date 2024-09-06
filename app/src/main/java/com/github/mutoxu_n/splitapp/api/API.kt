@@ -102,6 +102,7 @@ class API {
 
         response.body()?.let {
             try {
+                Log.e("API", it.toString())
                 if(it["joined"]!! as Boolean) {
                     App.updateDisplayName(displayName)
                     App.updateMe(Member(

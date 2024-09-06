@@ -34,6 +34,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -64,6 +65,7 @@ import com.github.mutoxu_n.splitapp.components.settings.RoomIdDisplay
 import com.github.mutoxu_n.splitapp.components.settings.SettingsEditor
 import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.PaymentDetail
+import com.github.mutoxu_n.splitapp.models.PendingMember
 import com.github.mutoxu_n.splitapp.models.Receipt
 import com.github.mutoxu_n.splitapp.models.RequestType
 import com.github.mutoxu_n.splitapp.models.Role
@@ -77,6 +79,7 @@ class InRoomActivity : ComponentActivity() {
     private var me: Member? = App.me.value
 
     companion object {
+        private const val TAG = "InRoomActivity"
         fun launch(
             context: Context,
             launcher: ActivityResultLauncher<Intent>? = null
@@ -109,10 +112,14 @@ class InRoomActivity : ComponentActivity() {
 
                 val receipts by Store.receipts.collectAsState()
                 val members: List<Member>? by Store.members.collectAsState()
+                val pending: List<PendingMember>? by Store.pendingMembers.collectAsState()
+                val me: Member? by App.me.collectAsState()
 
                 if(roomId != null
                     && receipts != null
-                    && members != null) {
+                    && members != null
+                    && pending != null
+                    && me != null) {
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),
                         topBar = {
@@ -236,17 +243,24 @@ class InRoomActivity : ComponentActivity() {
                     }
 
                 } else {
-                    Log.e("InRoomActivity", "roomId: $roomId, receipts: $receipts, members: $members")
                     Column(Modifier.fillMaxSize()) {
+                        Text(text = "Loading")
                         Text(text = "roomId: $roomId")
                         Text(text = "receipts: $receipts")
                         Text(text = "members: $members")
+                        Text(text = "pending: $pending")
+                        Text(text = "me: $me")
                     }
 
                 }
 
             }
         }
+    }
+
+    override fun onDestroy() {
+        Store.stopObserving()
+        super.onDestroy()
     }
 
     private fun launchEditReceipt(receipt: Receipt) {
