@@ -3,6 +3,7 @@ package com.github.mutoxu_n.splitapp.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -38,7 +39,6 @@ import com.github.mutoxu_n.splitapp.components.misc.OutRoomTopBar
 import kotlinx.coroutines.launch
 
 class RoomJoinActivity : ComponentActivity() {
-    private var waitForInput by mutableStateOf(true)
     private val displayName: String? = App.displayName.value
 
     companion object {
@@ -63,18 +63,25 @@ class RoomJoinActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if(!waitForInput && App.validateRoomID(App.roomId.value) && !displayName.isNullOrBlank()) {
-            startInRoomActivity()
-        }
+//        if(App.validateRoomID(App.roomId.value) && !displayName.isNullOrBlank()) {
+//            lifecycleScope.launch {
+//                joinRoom(
+//                    roomId = App.roomId.value!!,
+//                    displayName = displayName,
+//                    saveDisplayName = false,
+//                )
+//            }
+//        }
 
 
         enableEdgeToEdge()
         setContent {
             SplitAppTheme {
                 val roomId: String? by App.roomId.collectAsState()
+                var waitForInput by rememberSaveable { mutableStateOf(true) }
 
-                LaunchedEffect(key1 = roomId) {
-                    if(roomId != null) {
+                LaunchedEffect(key1 = roomId, key2 = waitForInput) {
+                    if(!waitForInput && roomId != null) {
                         startInRoomActivity()
                     }
                 }
@@ -101,7 +108,6 @@ class RoomJoinActivity : ComponentActivity() {
                                     joinRoom(roomId, displayName, saveDisplayName)
                                 }
                             },
-                            waitForInput = waitForInput,
                         )
                     }
                 }
@@ -114,6 +120,9 @@ class RoomJoinActivity : ComponentActivity() {
         if(saveDisplayName)
             App.saveDisplayName(displayName)
 
+        App.updateRoomId(null)
+
+        Log.e("API", "JOIN")
         API().joinRoom(roomId, displayName)
     }
 
@@ -128,7 +137,6 @@ private fun Screen(
     initialDisplayName: String,
     initialRoomId: String,
     onJoinClicked: (String, String, Boolean) -> Unit,
-    waitForInput: Boolean,
 ) {
     var displayName by rememberSaveable { mutableStateOf(initialDisplayName) }
     var isDisplayNameError by rememberSaveable { mutableStateOf(false) }
@@ -171,7 +179,7 @@ private fun Screen(
         // ルーム参加ボタン
         Button(
             onClick = { onJoinClicked(roomId, displayName, saveDisplayName) },
-            enabled = !waitForInput && !isDisplayNameError && !isRoomIdError && displayName.isNotBlank(),
+            enabled = !isDisplayNameError && !isRoomIdError && displayName.isNotBlank(),
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = 7.dp),
@@ -200,7 +208,6 @@ private fun Preview() {
                     initialDisplayName = "太郎",
                     initialRoomId = "AB12C3",
                     onJoinClicked = { _, _, _ -> },
-                    waitForInput = false,
                 )
             }
         }

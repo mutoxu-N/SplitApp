@@ -102,14 +102,14 @@ class API {
 
         response.body()?.let {
             try {
-                Log.e("API", it.toString())
                 if(it["joined"]!! as Boolean) {
                     App.updateDisplayName(displayName)
+                    val d = it["me"] as Map<*, *>
                     App.updateMe(Member(
-                        name = (it["me"]!! as Map<*, *>)["name"] as String,
-                        uid = (it["me"]!! as Map<*, *>)["uid"]!! as String,
-                        weight = ((it["me"]!! as Map<*, *>)["weight"]!! as Double).toFloat(),
-                        role = Role.fromValue((((it["me"]!! as Map<*, *>)["weight"]!! as Double).toInt())),
+                        name = d["name"] as String,
+                        uid = d["uid"] as String?,
+                        weight = (d["weight"]!! as Double).toFloat(),
+                        role = Role.fromValue(((d["weight"]!! as Double).toInt())),
                     ))
                     App.updateRoomId(roomId)
                 }
