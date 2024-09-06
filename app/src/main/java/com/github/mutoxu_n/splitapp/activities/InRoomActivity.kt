@@ -39,6 +39,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -143,111 +144,113 @@ class InRoomActivity : ComponentActivity() {
                             )
                         },
                     ) { innerPadding ->
-                        NavHost(
-                            modifier = Modifier.padding(innerPadding),
-                            navController = controller,
-                            startDestination = InRoomNavItem.Receipt.route,
-                        ) {
-                            // Receipt
-                            composable(InRoomNavItem.Receipt.route) {
-                                ReceiptScreen(
-                                    receipts = receipts!!,
-                                    onReceiptEditClicked = { receipt ->
-                                        launchEditReceipt(receipt)
-                                    },
-                                    onReceiptCreate = { receipt ->
-                                        lifecycleScope.launch {
-                                            createReceipt(receipt)
+                        key(settings) {
+                            NavHost(
+                                modifier = Modifier.padding(innerPadding),
+                                navController = controller,
+                                startDestination = InRoomNavItem.Receipt.route,
+                            ) {
+                                // Receipt
+                                composable(InRoomNavItem.Receipt.route) {
+                                    ReceiptScreen(
+                                        receipts = receipts!!,
+                                        onReceiptEditClicked = { receipt ->
+                                            launchEditReceipt(receipt)
+                                        },
+                                        onReceiptCreate = { receipt ->
+                                            lifecycleScope.launch {
+                                                createReceipt(receipt)
+                                            }
                                         }
-                                    }
-                                )
-                            }
+                                    )
+                                }
 
-                            // Info
-                            composable(InRoomNavItem.Info.route) {
-                                var selectedTabIndex by rememberSaveable { mutableIntStateOf(InfoTabIndex.SETTINGS.value) }
-                                Scaffold(
-                                    topBar = {
-                                        TabRow(selectedTabIndex = selectedTabIndex) {
-                                            Tab(
-                                                selected = selectedTabIndex == InfoTabIndex.PAY.value,
-                                                onClick = { selectedTabIndex = InfoTabIndex.PAY.value },
-                                                text = {
-                                                    Text(text = "支払い")
-                                                }
-                                            )
-                                            Tab(
-                                                selected = selectedTabIndex == InfoTabIndex.SETTINGS.value,
-                                                onClick = { selectedTabIndex = InfoTabIndex.SETTINGS.value },
-                                                text = {
-                                                    Text(text = "ルーム設定")
-                                                }
-                                            )
-                                            Tab(
-                                                selected = selectedTabIndex == InfoTabIndex.MEMBERS.value,
-                                                onClick = { selectedTabIndex = InfoTabIndex.MEMBERS.value },
-                                                text = {
-                                                    Text(text = "メンバー")
-                                                }
-                                            )
+                                // Info
+                                composable(InRoomNavItem.Info.route) {
+                                    var selectedTabIndex by rememberSaveable { mutableIntStateOf(InfoTabIndex.SETTINGS.value) }
+                                    Scaffold(
+                                        topBar = {
+                                            TabRow(selectedTabIndex = selectedTabIndex) {
+                                                Tab(
+                                                    selected = selectedTabIndex == InfoTabIndex.PAY.value,
+                                                    onClick = { selectedTabIndex = InfoTabIndex.PAY.value },
+                                                    text = {
+                                                        Text(text = "支払い")
+                                                    }
+                                                )
+                                                Tab(
+                                                    selected = selectedTabIndex == InfoTabIndex.SETTINGS.value,
+                                                    onClick = { selectedTabIndex = InfoTabIndex.SETTINGS.value },
+                                                    text = {
+                                                        Text(text = "ルーム設定")
+                                                    }
+                                                )
+                                                Tab(
+                                                    selected = selectedTabIndex == InfoTabIndex.MEMBERS.value,
+                                                    onClick = { selectedTabIndex = InfoTabIndex.MEMBERS.value },
+                                                    text = {
+                                                        Text(text = "メンバー")
+                                                    }
+                                                )
+                                            }
                                         }
-                                    }
-                                ) { padding ->
-                                    Column(
-                                        modifier = Modifier.padding(padding)
-                                    ) {
-                                        when (selectedTabIndex) {
-                                            // Info/Pay
-                                            InfoTabIndex.PAY.value -> {
-                                                InfoPayScreen(
-                                                    paymentDetails = listOf() // TODO: 支払い情報を算出し格納する
-                                                )
-                                            }
-                                            // Info/Settings
-                                            InfoTabIndex.SETTINGS.value -> {
-                                                InfoSettingsScreen(
-                                                    roomId = roomId,
-                                                    settings = settings,
-                                                )
-                                            }
-                                            // Info/Members
-                                            InfoTabIndex.MEMBERS.value -> {
-                                                InfoMembersScreen(
-                                                    role = me!!.role,
-                                                    members = members!!,
-                                                    onRemoveMember = {
-                                                        lifecycleScope.launch {
-                                                            onRemoveMember(it)
-                                                        }
-                                                    },
-                                                    onWeightChanged = {
-                                                        lifecycleScope.launch {
-                                                            onWeightChanged(it)
-                                                        }
-                                                    },
-                                                )
+                                    ) { padding ->
+                                        Column(
+                                            modifier = Modifier.padding(padding)
+                                        ) {
+                                            when (selectedTabIndex) {
+                                                // Info/Pay
+                                                InfoTabIndex.PAY.value -> {
+                                                    InfoPayScreen(
+                                                        paymentDetails = listOf() // TODO: 支払い情報を算出し格納する
+                                                    )
+                                                }
+                                                // Info/Settings
+                                                InfoTabIndex.SETTINGS.value -> {
+                                                    InfoSettingsScreen(
+                                                        roomId = roomId,
+                                                        settings = settings,
+                                                    )
+                                                }
+                                                // Info/Members
+                                                InfoTabIndex.MEMBERS.value -> {
+                                                    InfoMembersScreen(
+                                                        role = me!!.role,
+                                                        members = members!!,
+                                                        onRemoveMember = {
+                                                            lifecycleScope.launch {
+                                                                onRemoveMember(it)
+                                                            }
+                                                        },
+                                                        onWeightChanged = {
+                                                            lifecycleScope.launch {
+                                                                onWeightChanged(it)
+                                                            }
+                                                        },
+                                                    )
+                                                }
                                             }
                                         }
                                     }
                                 }
-                            }
 
-                            // Settings
-                            composable(InRoomNavItem.Setting.route) {
-                                SettingsScreen(
-                                    role = me!!.role,
-                                    settings = settings,
-                                    onSettingsChanged = {
-                                        lifecycleScope.launch {
-                                            onSettingsChanged(it)
+                                // Settings
+                                composable(InRoomNavItem.Setting.route) {
+                                    SettingsScreen(
+                                        role = me!!.role,
+                                        settings = settings,
+                                        onSettingsChanged = {
+                                            lifecycleScope.launch {
+                                                onSettingsChanged(it)
+                                            }
+                                        },
+                                        onRemoveRoomClicked = {
+                                            lifecycleScope.launch {
+                                                onRemoveRoom()
+                                            }
                                         }
-                                    },
-                                    onRemoveRoomClicked = {
-                                        lifecycleScope.launch {
-                                            onRemoveRoom()
-                                        }
-                                    }
-                                )
+                                    )
+                                }
                             }
                         }
                     }

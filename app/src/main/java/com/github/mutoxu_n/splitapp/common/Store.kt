@@ -84,7 +84,6 @@ object Store {
             }
 
             val settingsData = snapshot.data!!["settings"] as Map<*, *>
-            Log.e("Store", "settingsListener:$settingsData")
             settings.update {
                 Settings(
                     name = settingsData["name"] as String,

@@ -41,7 +41,6 @@ import kotlinx.coroutines.launch
 
 class RoomJoinActivity : ComponentActivity() {
     private val displayName: String? = App.displayName.value
-    private var updateRoomId: (String) -> Unit = {}
 
     companion object {
         private const val TAG = "RoomJoinActivity"
