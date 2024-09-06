@@ -150,7 +150,7 @@ object Store {
                                 name = it["name"] as String,
                                 uid = it["uid"] as String,
                                 weight = (it["weight"] as Long).toFloat(),
-                                role = Role.fromValue((it["role"] as Long).toInt()),
+                                role = Role.fromString(it["role"] as String),
                             )
                         },
                         payment = (data["payment"] as Long).toInt(),

@@ -3,6 +3,7 @@ package com.github.mutoxu_n.splitapp.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
 import androidx.activity.compose.setContent
@@ -75,8 +76,7 @@ import java.time.LocalDateTime
 
 class InRoomActivity : ComponentActivity() {
     private val roomId: String? = App.roomId.value
-    private var me: Member? = App.me.value
-    var leaveRoomConfirmDialogShown by mutableStateOf(false)
+    private var leaveRoomConfirmDialogShown by mutableStateOf(false)
 
     companion object {
         private const val TAG = "InRoomActivity"
@@ -111,14 +111,14 @@ class InRoomActivity : ComponentActivity() {
         setContent {
             SplitAppTheme {
                 val controller = rememberNavController()
-                val _settings: Settings? by Store.settings.collectAsState()
-                if(_settings == null) return@SplitAppTheme
-                val settings = _settings!!
+                val settings: Settings? by Store.settings.collectAsState()
+                if(settings == null) return@SplitAppTheme
 
                 val receipts by Store.receipts.collectAsState()
                 val members: List<Member>? by Store.members.collectAsState()
                 val pending: List<PendingMember>? by Store.pendingMembers.collectAsState()
                 val me: Member? by App.me.collectAsState()
+                Log.e(TAG, "me: $me")
 
                 if(roomId != null
                     && receipts != null
@@ -129,7 +129,7 @@ class InRoomActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         topBar = {
                             InRoomTopBar(
-                                title = settings.name,
+                                title = settings!!.name,
                                 onBackClicked = { leaveRoomConfirmDialogShown = true},
 
                             )
@@ -204,7 +204,8 @@ class InRoomActivity : ComponentActivity() {
                                             InfoTabIndex.SETTINGS.value -> {
                                                 InfoSettingsScreen(
                                                     roomId = roomId,
-                                                    settings = settings,
+                                                    settings = settings!!,
+                                                    me = me!!,
                                                 )
                                             }
                                             // Info/Members
@@ -234,7 +235,7 @@ class InRoomActivity : ComponentActivity() {
                                 key(settings) {
                                     SettingsScreen(
                                         role = me!!.role,
-                                        settings = settings,
+                                        settings = settings!!,
                                         onSettingsChanged = {
                                             lifecycleScope.launch {
                                                 onSettingsChanged(it)
@@ -254,7 +255,7 @@ class InRoomActivity : ComponentActivity() {
                     if(leaveRoomConfirmDialogShown) {
                         AttentionDialog(
                             title = "ルームを退出します",
-                            message = "ルーム(${settings.name})を退出します。ルームが削除されていなければ、招待コードを入力することで再入室できます。",
+                            message = "ルーム(${settings!!.name})を退出します。ルームが削除されていなければ、招待コードを入力することで再入室できます。",
                             dismissText = "キャンセル",
                             onDismiss = { leaveRoomConfirmDialogShown = false },
                             confirmText = "退出",
@@ -395,14 +396,14 @@ private fun InfoPayScreen(
 private fun InfoSettingsScreen(
     roomId: String,
     settings: Settings,
+    me: Member,
 ) {
     Column {
         Spacer(modifier = Modifier.size(10.dp))
         RoomIdDisplay(roomId = roomId)
         HorizontalDivider()
 
-        val me by App.me.collectAsState()
-        if(me != null && me!!.role == Role.OWNER) {
+        if( me.role == Role.OWNER) {
             SettingsEditor(
                 settings = settings,
                 isReadOnly = false,
@@ -665,6 +666,7 @@ fun ActivityPreview() {
                                     InfoSettingsScreen(
                                         roomId = "AB12C3",
                                         settings = settings,
+                                        me = member1,
                                     )
                                 }
                                 // Info/Members

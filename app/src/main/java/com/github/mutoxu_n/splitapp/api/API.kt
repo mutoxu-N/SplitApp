@@ -78,7 +78,7 @@ class API {
                     name = (it["me"]!! as Map<*, *>)["name"] as String,
                     uid = (it["me"]!! as Map<*, *>)["uid"]!! as String,
                     weight = ((it["me"]!! as Map<*, *>)["weight"]!! as Double).toFloat(),
-                    role = Role.fromValue((((it["me"]!! as Map<*, *>)["weight"]!! as Double).toInt())),
+                    role = Role.fromString((it["me"]!! as Map<*, *>)["role"]!! as String),
                 ))
                 Store.updateSettings(settings)
                 App.updateRoomId(it["room_id"] as String)
@@ -109,7 +109,7 @@ class API {
                         name = d["name"] as String,
                         uid = d["uid"] as String?,
                         weight = (d["weight"]!! as Double).toFloat(),
-                        role = Role.fromValue(((d["weight"]!! as Double).toInt())),
+                        role = Role.fromString(d["role"] as String),
                     ))
                     App.updateRoomId(roomId)
                 }
