@@ -168,7 +168,7 @@ class API {
         Log.e("API.editMember()", response.body().toString())
     }
 
-    suspend fun editSettings(roomId: String, settingsModel: SettingsModel) {
+    suspend fun editSettings(roomId: String, settingsModel: SettingsModel, result: (Boolean)-> Unit = {}) {
         if (Auth.token == null) return
         val service = retrofit.create(RoomServices::class.java)
         val body = EditSettingsBody(
@@ -176,6 +176,7 @@ class API {
         )
         val response = service.editSettings(Auth.token!!, roomId, body)
         Log.e("API.editMember()", response.body().toString())
+        result(response.body()?.get("succeed") as Boolean? ?: false)
     }
 
     suspend fun deleteRoom(roomId: String) {

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
 import androidx.activity.compose.setContent
@@ -54,6 +55,7 @@ import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.InRoomActivity.InfoTabIndex
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
+import com.github.mutoxu_n.splitapp.api.API
 import com.github.mutoxu_n.splitapp.common.Store
 import com.github.mutoxu_n.splitapp.components.dialogs.AttentionDialog
 import com.github.mutoxu_n.splitapp.components.members.MemberList
@@ -205,7 +207,6 @@ class InRoomActivity : ComponentActivity() {
                                                 InfoSettingsScreen(
                                                     roomId = roomId,
                                                     settings = settings!!,
-                                                    me = me!!,
                                                 )
                                             }
                                             // Info/Members
@@ -299,7 +300,19 @@ class InRoomActivity : ComponentActivity() {
     }
 
     private suspend fun onSettingsChanged(settings: Settings) {
-        // TODO: ルーム設定を更新
+        roomId?.let{
+            API().editSettings(
+                it,
+                settings.toModel(),
+                result = { b ->
+                    Toast.makeText(
+                        this@InRoomActivity,
+                        if(b) "ルーム設定の更新に成功しました" else "ルーム設定の更新に失敗しました",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                },
+            )
+        }
     }
 
     private suspend fun onRemoveRoom() {
@@ -394,7 +407,6 @@ private fun InfoPayScreen(
 private fun InfoSettingsScreen(
     roomId: String,
     settings: Settings,
-    me: Member,
 ) {
     Column(
         modifier = Modifier
@@ -457,26 +469,13 @@ private fun SettingsScreen(
         Column(
             modifier = Modifier.weight(1f),
         ) {
-            if(role == Role.OWNER) {
-                SettingsEditor(
-                    settings = settings,
-                    onSettingsChange = {
-                        onSettingsChanged(it)
-                    },
-                    isReadOnly = false,
-                )
-
-            } else {
-                key(settings) {
-                    SettingsEditor(
-                        settings = settings,
-                        onSettingsChange = {
-                            onSettingsChanged(it)
-                        },
-                        isReadOnly = true,
-                    )
-                }
-            }
+            SettingsEditor(
+                settings = settings,
+                onSettingsChange = {
+                    onSettingsChanged(it)
+                },
+                isReadOnly = role != Role.OWNER,
+            )
         }
 
         if(role == Role.OWNER) {
@@ -673,7 +672,6 @@ fun ActivityPreview() {
                                     InfoSettingsScreen(
                                         roomId = "AB12C3",
                                         settings = settings,
-                                        me = member1,
                                     )
                                 }
                                 // Info/Members
