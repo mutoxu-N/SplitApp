@@ -127,7 +127,9 @@ class RoomJoinActivity : ComponentActivity() {
     }
 
     private fun startInRoomActivity() {
-        InRoomActivity.launch(context = this@RoomJoinActivity)
+        InRoomActivity.launch(
+            context = this@RoomJoinActivity,
+        )
     }
 }
 

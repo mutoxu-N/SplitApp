@@ -1,10 +1,12 @@
 package com.github.mutoxu_n.splitapp.activities
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
@@ -77,6 +79,7 @@ import java.time.LocalDateTime
 class InRoomActivity : ComponentActivity() {
     private val roomId: String? = App.roomId.value
     private var me: Member? = App.me.value
+    var leaveRoomConfirmDialogShown by mutableStateOf(false)
 
     companion object {
         private const val TAG = "InRoomActivity"
@@ -102,6 +105,11 @@ class InRoomActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        onBackPressedDispatcher.addCallback {
+            leaveRoomConfirmDialogShown = true
+        }
+
         enableEdgeToEdge()
         setContent {
             SplitAppTheme {
@@ -125,6 +133,8 @@ class InRoomActivity : ComponentActivity() {
                         topBar = {
                             InRoomTopBar(
                                 title = settings.name,
+                                onBackClicked = { leaveRoomConfirmDialogShown = true},
+
                             )
                         },
                         bottomBar = {
@@ -240,6 +250,21 @@ class InRoomActivity : ComponentActivity() {
                                 )
                             }
                         }
+                    }
+
+                    if(leaveRoomConfirmDialogShown) {
+                        AttentionDialog(
+                            title = "ルームを退出します",
+                            message = "ルーム(${settings.name})を退出します。ルームが削除されていなければ、招待コードを入力することで再入室できます。",
+                            dismissText = "キャンセル",
+                            onDismiss = { leaveRoomConfirmDialogShown = false },
+                            confirmText = "退出",
+                            onConfirm = {
+                                leaveRoomConfirmDialogShown = false
+                                Store.stopObserving()
+                                App.updateRoomId(null)
+                                finish()
+                            })
                     }
 
                 } else {
