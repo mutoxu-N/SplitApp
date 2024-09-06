@@ -316,6 +316,10 @@ class InRoomActivity : ComponentActivity() {
     }
 
     private suspend fun onRemoveRoom() {
+        roomId?.let { API().deleteRoom(it) }
+        Store.stopObserving()
+        App.updateRoomId(null)
+        finish()
     }
 
     private suspend fun createReceipt(receipt: Receipt) {

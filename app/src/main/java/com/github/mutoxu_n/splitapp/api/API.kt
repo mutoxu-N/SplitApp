@@ -78,7 +78,7 @@ class API {
                     name = (it["me"]!! as Map<*, *>)["name"] as String,
                     uid = (it["me"]!! as Map<*, *>)["uid"]!! as String,
                     weight = ((it["me"]!! as Map<*, *>)["weight"]!! as Double).toFloat(),
-                    role = Role.fromString((it["me"]!! as Map<*, *>)["role"]!! as String),
+                    role = Role.fromValue((it["me"]!! as Map<*, *>)["role"]!! as Double),
                 ))
                 Store.updateSettings(settings)
                 App.updateRoomId(it["room_id"] as String)
@@ -109,7 +109,7 @@ class API {
                         name = d["name"] as String,
                         uid = d["uid"] as String?,
                         weight = (d["weight"]!! as Double).toFloat(),
-                        role = Role.fromString(d["role"] as String),
+                        role = Role.fromValue((it["me"]!! as Map<*, *>)["role"]!! as Double),
                     ))
                     App.updateRoomId(roomId)
                 }
@@ -175,15 +175,13 @@ class API {
             settingsModel = settingsModel,
         )
         val response = service.editSettings(Auth.token!!, roomId, body)
-        Log.e("API.editMember()", response.body().toString())
         result(response.body()?.get("succeed") as Boolean? ?: false)
     }
 
     suspend fun deleteRoom(roomId: String) {
         if (Auth.token == null) return
         val service = retrofit.create(RoomServices::class.java)
-        val response = service.deleteRoom(Auth.token!!, roomId)
-        Log.e("API.deleteRoom()", response.body().toString())
+        service.deleteRoom(Auth.token!!, roomId)
     }
 
     suspend fun addReceipt(roomId: String, receiptModel: ReceiptModel) {

@@ -117,7 +117,7 @@ object Store {
                     name = data["name"] as String,
                     uid = data["uid"] as String?,
                     weight = (data["weight"] as Double).toFloat(),
-                    role = Role.fromString(data["role"] as String),
+                    role = Role.fromValue((data["role"] as Long).toDouble()),
                 )
                 m.add(member)
             }
@@ -150,7 +150,7 @@ object Store {
                                 name = it["name"] as String,
                                 uid = it["uid"] as String,
                                 weight = (it["weight"] as Long).toFloat(),
-                                role = Role.fromString(it["role"] as String),
+                                role = Role.fromValue(it["role"] as Double),
                             )
                         },
                         payment = (data["payment"] as Long).toInt(),
