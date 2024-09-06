@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,6 +41,7 @@ import kotlinx.coroutines.launch
 
 class RoomJoinActivity : ComponentActivity() {
     private val displayName: String? = App.displayName.value
+    private var updateRoomId: (String) -> Unit = {}
 
     companion object {
         private const val TAG = "RoomJoinActivity"
@@ -82,6 +84,7 @@ class RoomJoinActivity : ComponentActivity() {
 
                 LaunchedEffect(key1 = roomId, key2 = waitForInput) {
                     if(!waitForInput && roomId != null) {
+                        waitForInput = true
                         startInRoomActivity()
                     }
                 }
@@ -121,8 +124,6 @@ class RoomJoinActivity : ComponentActivity() {
             App.saveDisplayName(displayName)
 
         App.updateRoomId(null)
-
-        Log.e("API", "JOIN")
         API().joinRoom(roomId, displayName)
     }
 
