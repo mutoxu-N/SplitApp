@@ -232,22 +232,20 @@ class InRoomActivity : ComponentActivity() {
 
                             // Settings
                             composable(InRoomNavItem.Setting.route) {
-                                key(settings) {
-                                    SettingsScreen(
-                                        role = me!!.role,
-                                        settings = settings!!,
-                                        onSettingsChanged = {
-                                            lifecycleScope.launch {
-                                                onSettingsChanged(it)
-                                            }
-                                        },
-                                        onRemoveRoomClicked = {
-                                            lifecycleScope.launch {
-                                                onRemoveRoom()
-                                            }
+                                SettingsScreen(
+                                    role = me!!.role,
+                                    settings = settings!!,
+                                    onSettingsChanged = {
+                                        lifecycleScope.launch {
+                                            onSettingsChanged(it)
                                         }
-                                    )
-                                }
+                                    },
+                                    onRemoveRoomClicked = {
+                                        lifecycleScope.launch {
+                                            onRemoveRoom()
+                                        }
+                                    }
+                                )
                             }
                         }
                     }
@@ -398,24 +396,20 @@ private fun InfoSettingsScreen(
     settings: Settings,
     me: Member,
 ) {
-    Column {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(7.dp),
+    ) {
         Spacer(modifier = Modifier.size(10.dp))
         RoomIdDisplay(roomId = roomId)
         HorizontalDivider()
 
-        if( me.role == Role.OWNER) {
+        key(settings) {
             SettingsEditor(
                 settings = settings,
-                isReadOnly = false,
+                isReadOnly = true,
             )
-
-        } else {
-            key(settings) {
-                SettingsEditor(
-                    settings = settings,
-                    isReadOnly = true,
-                )
-            }
         }
     }
 
@@ -463,13 +457,26 @@ private fun SettingsScreen(
         Column(
             modifier = Modifier.weight(1f),
         ) {
-            SettingsEditor(
-                settings = settings,
-                onSettingsChange = {
-                    onSettingsChanged(it)
-                },
-                isReadOnly = role != Role.OWNER,
-            )
+            if(role == Role.OWNER) {
+                SettingsEditor(
+                    settings = settings,
+                    onSettingsChange = {
+                        onSettingsChanged(it)
+                    },
+                    isReadOnly = false,
+                )
+
+            } else {
+                key(settings) {
+                    SettingsEditor(
+                        settings = settings,
+                        onSettingsChange = {
+                            onSettingsChanged(it)
+                        },
+                        isReadOnly = true,
+                    )
+                }
+            }
         }
 
         if(role == Role.OWNER) {
