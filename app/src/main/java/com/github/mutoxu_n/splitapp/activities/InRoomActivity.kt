@@ -1,10 +1,8 @@
 package com.github.mutoxu_n.splitapp.activities
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
 import androidx.activity.compose.setContent
@@ -31,12 +29,10 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -144,98 +140,98 @@ class InRoomActivity : ComponentActivity() {
                             )
                         },
                     ) { innerPadding ->
-                        key(settings) {
-                            NavHost(
-                                modifier = Modifier.padding(innerPadding),
-                                navController = controller,
-                                startDestination = InRoomNavItem.Receipt.route,
-                            ) {
-                                // Receipt
-                                composable(InRoomNavItem.Receipt.route) {
-                                    ReceiptScreen(
-                                        receipts = receipts!!,
-                                        onReceiptEditClicked = { receipt ->
-                                            launchEditReceipt(receipt)
-                                        },
-                                        onReceiptCreate = { receipt ->
-                                            lifecycleScope.launch {
-                                                createReceipt(receipt)
-                                            }
+                        NavHost(
+                            modifier = Modifier.padding(innerPadding),
+                            navController = controller,
+                            startDestination = InRoomNavItem.Receipt.route,
+                        ) {
+                            // Receipt
+                            composable(InRoomNavItem.Receipt.route) {
+                                ReceiptScreen(
+                                    receipts = receipts!!,
+                                    onReceiptEditClicked = { receipt ->
+                                        launchEditReceipt(receipt)
+                                    },
+                                    onReceiptCreate = { receipt ->
+                                        lifecycleScope.launch {
+                                            createReceipt(receipt)
                                         }
-                                    )
-                                }
+                                    }
+                                )
+                            }
 
-                                // Info
-                                composable(InRoomNavItem.Info.route) {
-                                    var selectedTabIndex by rememberSaveable { mutableIntStateOf(InfoTabIndex.SETTINGS.value) }
-                                    Scaffold(
-                                        topBar = {
-                                            TabRow(selectedTabIndex = selectedTabIndex) {
-                                                Tab(
-                                                    selected = selectedTabIndex == InfoTabIndex.PAY.value,
-                                                    onClick = { selectedTabIndex = InfoTabIndex.PAY.value },
-                                                    text = {
-                                                        Text(text = "支払い")
-                                                    }
-                                                )
-                                                Tab(
-                                                    selected = selectedTabIndex == InfoTabIndex.SETTINGS.value,
-                                                    onClick = { selectedTabIndex = InfoTabIndex.SETTINGS.value },
-                                                    text = {
-                                                        Text(text = "ルーム設定")
-                                                    }
-                                                )
-                                                Tab(
-                                                    selected = selectedTabIndex == InfoTabIndex.MEMBERS.value,
-                                                    onClick = { selectedTabIndex = InfoTabIndex.MEMBERS.value },
-                                                    text = {
-                                                        Text(text = "メンバー")
-                                                    }
+                            // Info
+                            composable(InRoomNavItem.Info.route) {
+                                var selectedTabIndex by rememberSaveable { mutableIntStateOf(InfoTabIndex.SETTINGS.value) }
+                                Scaffold(
+                                    topBar = {
+                                        TabRow(selectedTabIndex = selectedTabIndex) {
+                                            Tab(
+                                                selected = selectedTabIndex == InfoTabIndex.PAY.value,
+                                                onClick = { selectedTabIndex = InfoTabIndex.PAY.value },
+                                                text = {
+                                                    Text(text = "支払い")
+                                                }
+                                            )
+                                            Tab(
+                                                selected = selectedTabIndex == InfoTabIndex.SETTINGS.value,
+                                                onClick = { selectedTabIndex = InfoTabIndex.SETTINGS.value },
+                                                text = {
+                                                    Text(text = "ルーム設定")
+                                                }
+                                            )
+                                            Tab(
+                                                selected = selectedTabIndex == InfoTabIndex.MEMBERS.value,
+                                                onClick = { selectedTabIndex = InfoTabIndex.MEMBERS.value },
+                                                text = {
+                                                    Text(text = "メンバー")
+                                                }
+                                            )
+                                        }
+                                    }
+                                ) { padding ->
+                                    Column(
+                                        modifier = Modifier.padding(padding)
+                                    ) {
+                                        when (selectedTabIndex) {
+                                            // Info/Pay
+                                            InfoTabIndex.PAY.value -> {
+                                                InfoPayScreen(
+                                                    paymentDetails = listOf() // TODO: 支払い情報を算出し格納する
                                                 )
                                             }
-                                        }
-                                    ) { padding ->
-                                        Column(
-                                            modifier = Modifier.padding(padding)
-                                        ) {
-                                            when (selectedTabIndex) {
-                                                // Info/Pay
-                                                InfoTabIndex.PAY.value -> {
-                                                    InfoPayScreen(
-                                                        paymentDetails = listOf() // TODO: 支払い情報を算出し格納する
-                                                    )
-                                                }
-                                                // Info/Settings
-                                                InfoTabIndex.SETTINGS.value -> {
-                                                    InfoSettingsScreen(
-                                                        roomId = roomId,
-                                                        settings = settings,
-                                                    )
-                                                }
-                                                // Info/Members
-                                                InfoTabIndex.MEMBERS.value -> {
-                                                    InfoMembersScreen(
-                                                        role = me!!.role,
-                                                        members = members!!,
-                                                        onRemoveMember = {
-                                                            lifecycleScope.launch {
-                                                                onRemoveMember(it)
-                                                            }
-                                                        },
-                                                        onWeightChanged = {
-                                                            lifecycleScope.launch {
-                                                                onWeightChanged(it)
-                                                            }
-                                                        },
-                                                    )
-                                                }
+                                            // Info/Settings
+                                            InfoTabIndex.SETTINGS.value -> {
+                                                InfoSettingsScreen(
+                                                    roomId = roomId,
+                                                    settings = settings,
+                                                )
+                                            }
+                                            // Info/Members
+                                            InfoTabIndex.MEMBERS.value -> {
+                                                InfoMembersScreen(
+                                                    role = me!!.role,
+                                                    members = members!!,
+                                                    onRemoveMember = {
+                                                        lifecycleScope.launch {
+                                                            onRemoveMember(it)
+                                                        }
+                                                    },
+                                                    onWeightChanged = {
+                                                        lifecycleScope.launch {
+                                                            onWeightChanged(it)
+                                                        }
+                                                    },
+                                                )
                                             }
                                         }
                                     }
                                 }
+                            }
 
-                                // Settings
-                                composable(InRoomNavItem.Setting.route) {
+                            // Settings
+                            composable(InRoomNavItem.Setting.route) {
+                                key(settings) {
                                     SettingsScreen(
                                         role = me!!.role,
                                         settings = settings,
@@ -404,10 +400,22 @@ private fun InfoSettingsScreen(
         Spacer(modifier = Modifier.size(10.dp))
         RoomIdDisplay(roomId = roomId)
         HorizontalDivider()
-        SettingsEditor(
-            settings = settings,
-            isReadOnly = true,
-        )
+
+        val me by App.me.collectAsState()
+        if(me != null && me!!.role == Role.OWNER) {
+            SettingsEditor(
+                settings = settings,
+                isReadOnly = false,
+            )
+
+        } else {
+            key(settings) {
+                SettingsEditor(
+                    settings = settings,
+                    isReadOnly = true,
+                )
+            }
+        }
     }
 
 }
