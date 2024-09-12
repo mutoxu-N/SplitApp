@@ -76,7 +76,7 @@ class API {
 
                 App.updateMe(Member(
                     name = (it["me"]!! as Map<*, *>)["name"] as String,
-                    uid = (it["me"]!! as Map<*, *>)["uid"]!! as String,
+                    uid = (it["me"]!! as Map<*, *>)["id"]!! as String,
                     weight = ((it["me"]!! as Map<*, *>)["weight"]!! as Double).toFloat(),
                     role = Role.fromValue((it["me"]!! as Map<*, *>)["role"]!! as Double),
                 ))
@@ -108,7 +108,7 @@ class API {
                     val d = it["me"] as Map<*, *>
                     App.updateMe(Member(
                         name = d["name"] as String,
-                        uid = d["uid"] as String?,
+                        uid = d["id"] as String?,
                         weight = (d["weight"]!! as Double).toFloat(),
                         role = Role.fromValue((it["me"]!! as Map<*, *>)["role"]!! as Double),
                     ))

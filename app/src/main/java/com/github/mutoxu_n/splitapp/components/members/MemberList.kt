@@ -30,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
 import com.github.mutoxu_n.splitapp.models.Member
@@ -45,6 +46,7 @@ fun MemberList(
     enabled: Boolean = true,
     removable: Boolean = false,
 ) {
+    val me = App.me.value ?: return
     LazyColumn(
         modifier = modifier
             .fillMaxSize(),
@@ -63,7 +65,7 @@ fun MemberList(
                     onRemoveMember(it)
                 },
                 enabled = enabled,
-                removable = removable,
+                removable = removable && m.uid != me.uid,
             )
         }
     }
