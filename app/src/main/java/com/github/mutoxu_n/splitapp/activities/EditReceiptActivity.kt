@@ -3,6 +3,7 @@ package com.github.mutoxu_n.splitapp.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -113,7 +114,9 @@ class EditReceiptActivity : ComponentActivity() {
             buyers = initBuyers.map { name -> members.find { it.name == name } ?: members[0] },
             payment = initPayment,
             reportedBy = members.find { it.name == initReported } ?: members[0],
-            timestamp = timestamp?.let { java.time.LocalDateTime.parse(it) } ?: java.time.LocalDateTime.now(),
+            timestamp = timestamp?.let {
+                if(it.isBlank()) null else java.time.LocalDateTime.parse(it)
+            } ?: java.time.LocalDateTime.now(),
         )
 
         setContent {
@@ -128,7 +131,13 @@ class EditReceiptActivity : ComponentActivity() {
                             receipt = receipt,
                             onValueChanged = {
                                 lifecycleScope.launch {
-                                    createReceipt(it)
+                                    if(intent.getBooleanExtra(INTENT_IS_EDIT, false)) {
+                                        editReceipt(it)
+
+                                    } else {
+                                        createReceipt(it)
+                                    }
+
                                 }
                             },
                             members = members,
@@ -148,6 +157,11 @@ class EditReceiptActivity : ComponentActivity() {
     }
 
     private suspend fun editReceipt(receipt: Receipt) {
+        apiError = false
+        App.roomId.value?.let {
+            API().editReceipt(it, receipt.toModel())
+            { res -> if (res) finish() else apiError = true }
+        }
 
     }
 }

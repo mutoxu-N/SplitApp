@@ -146,6 +146,7 @@ object Store {
                 for(data in snapshot.documents) {
                     val ts = (data["timestamp"] as Timestamp)
                     r.add(ReceiptModel(
+                        id = data["id"] as String,
                         stuff = data["stuff"] as String,
                         paid = data["paid"] as String,
                         buyers = data["buyers"] as List<String>,

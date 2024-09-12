@@ -288,7 +288,7 @@ class InRoomActivity : ComponentActivity() {
     }
 
     private fun launchEditReceipt(receipt: Receipt) {
-        // TODO: 編集画面に遷移
+        EditReceiptActivity.launch(this@InRoomActivity, receipt)
     }
 
     private suspend fun onWeightChanged(member: Member) {

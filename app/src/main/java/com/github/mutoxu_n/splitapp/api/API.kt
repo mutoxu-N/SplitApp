@@ -197,14 +197,15 @@ class API {
         Log.e("API.createReceipt()", response.body().toString())
     }
 
-    suspend fun editReceipt(roomId: String, receiptId: String, receiptModel: ReceiptModel) {
+    suspend fun editReceipt(roomId: String, receiptModel: ReceiptModel, callBack: (Boolean)-> Unit = {}) {
         if (Auth.token == null) return
         val service = retrofit.create(RoomServices::class.java)
         val body = EditReceiptBody(
-            receiptId = receiptId,
+            receiptId = receiptModel.id,
             receiptModel = receiptModel,
         )
         val response = service.editReceipt(Auth.token!!, roomId, body)
+        callBack(response.body()?.get("succeed") as Boolean? ?: false)
         Log.e("API.editReceipt()", response.body().toString())
     }
 }
