@@ -7,10 +7,12 @@ import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.PendingMember
 import com.github.mutoxu_n.splitapp.models.PendingUser
 import com.github.mutoxu_n.splitapp.models.Receipt
+import com.github.mutoxu_n.splitapp.models.ReceiptModel
 import com.github.mutoxu_n.splitapp.models.RequestType
 import com.github.mutoxu_n.splitapp.models.Role
 import com.github.mutoxu_n.splitapp.models.Settings
 import com.github.mutoxu_n.splitapp.models.SplitUnit
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +34,7 @@ object Store {
     var pendingMembers: MutableStateFlow<List<PendingMember>?> = MutableStateFlow(null)
         private set
     private var receiptsListener: ListenerRegistration? = null
-    var receipts: MutableStateFlow<List<Receipt>?> = MutableStateFlow(null)
+    var receipts: MutableStateFlow<List<ReceiptModel>?> = MutableStateFlow(null)
         private set
 
     init {
@@ -59,7 +61,7 @@ object Store {
         this.pendingMembers.update { pendingMembers }
     }
 
-    fun updateReceipts(receipts: List<Receipt>) {
+    fun updateReceipts(receipts: List<ReceiptModel>) {
         this.receipts.update { receipts }
     }
 
@@ -115,7 +117,7 @@ object Store {
             for(data in snapshot.documents) {
                 val member = Member(
                     name = data["name"] as String,
-                    uid = data["uid"] as String?,
+                    uid = data["id"] as String?,
                     weight = (data["weight"] as Double).toFloat(),
                     role = Role.fromValue((data["role"] as Long).toDouble()),
                 )
@@ -140,17 +142,17 @@ object Store {
                 receipts.update { listOf() }
 
             } else {
-                val r = mutableListOf<Receipt>()
+                val r = mutableListOf<ReceiptModel>()
                 for(data in snapshot.documents) {
-                    r.add(Receipt(
+                    val ts = (data["timestamp"] as Timestamp)
+                    r.add(ReceiptModel(
                         stuff = data["stuff"] as String,
-                        paid = members.value?.find { it.uid == data["paid"] } ?: Member.Empty,
-                        buyers = members.value?.filter {
-                            (data["buyers"] as List<*>).contains(it.name)
-                        } ?: listOf(),
+                        paid = data["paid"] as String,
+                        buyers = data["buyers"] as List<String>,
                         payment = (data["payment"] as Long).toInt(),
-                        reportedBy = members.value?.find { it.uid == data["paid"] } ?: Member.Empty,
-                        timestamp = LocalDateTime.ofEpochSecond((data["timestamp"] as com.google.firebase.Timestamp).toDate().time, 0, ZoneOffset.UTC),
+                        reportedBy = data["reported_by"] as String,
+                        timestamp = LocalDateTime
+                            .ofEpochSecond(ts.seconds, ts.nanoseconds, ZoneOffset.UTC).toString(),
                     ))
                 }
                 receipts.update { r }

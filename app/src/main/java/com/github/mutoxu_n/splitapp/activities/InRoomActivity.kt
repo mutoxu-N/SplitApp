@@ -150,7 +150,7 @@ class InRoomActivity : ComponentActivity() {
                             // Receipt
                             composable(InRoomNavItem.Receipt.route) {
                                 ReceiptScreen(
-                                    receipts = receipts!!,
+                                    receipts = receipts!!.mapNotNull { it.toReceipt() }.toList(),
                                     onReceiptEditClicked = { receipt ->
                                         launchEditReceipt(receipt)
                                     },

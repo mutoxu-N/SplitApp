@@ -1,7 +1,11 @@
 package com.github.mutoxu_n.splitapp.models
 
+import android.util.Log
+import com.github.mutoxu_n.splitapp.App
+import com.github.mutoxu_n.splitapp.common.Store
 import com.google.firebase.firestore.IgnoreExtraProperties
 import com.squareup.moshi.Json
+import java.time.LocalDateTime
 
 @IgnoreExtraProperties
 data class ReceiptModel(
@@ -35,5 +39,18 @@ data class ReceiptModel(
                 timestamp = map[FIELD_TIMESTAMP].toString(),
             )
         }
+    }
+
+    fun toReceipt(): Receipt? {
+        val members = Store.members.value ?: return null
+        return Receipt(
+            id = id,
+            stuff = stuff,
+            paid = members.find { it.name == paid } ?: return null,
+            buyers = members.filter { buyers.contains(it.name) },
+            payment = payment,
+            reportedBy = members.find { it.uid == reportedBy } ?: return null,
+            timestamp = LocalDateTime.parse(timestamp),
+        )
     }
 }
