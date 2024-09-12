@@ -132,7 +132,7 @@ object Store {
         }
 
         receipts.update { listOf() }
-        receiptsListener = db.collection("rooms").document(roomId).collection("receipts").addSnapshotListener { snapshot, e ->
+        receiptsListener = db.collection("rooms").document(roomId).collection("receipts").orderBy("timestamp").addSnapshotListener { snapshot, e ->
             if (e != null) {
                 Log.w("Store", "listen:error", e)
                 return@addSnapshotListener
