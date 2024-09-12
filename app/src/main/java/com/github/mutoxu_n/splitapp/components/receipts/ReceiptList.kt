@@ -54,6 +54,9 @@ fun ReceiptList(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
+        item {
+            Spacer(modifier = Modifier.size(5.dp))
+        }
         items(receipts) { receipt ->
             key(receipt.id) {
                 ReceiptListItem(

@@ -67,7 +67,7 @@ fun ReceiptDetailDisplay(
     val df = DateTimeFormatter.ofPattern(stringResource(R.string.format_datetime))
 
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(5.dp),
         horizontalAlignment = Alignment.CenterHorizontally

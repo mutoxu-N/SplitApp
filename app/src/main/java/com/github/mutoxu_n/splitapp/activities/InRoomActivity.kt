@@ -344,15 +344,14 @@ private fun ReceiptScreen(
                 Icon(imageVector = Icons.Default.Add, contentDescription = null)
             }
         }
-    ) { innerPadding ->
+    ) { _ ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(0.dp),
         ) {
             ReceiptList(
-                modifier = Modifier
-                    .padding(top = 10.dp),
+                modifier = Modifier,
                 receipts = receipts,
                 launchEditReceiptActivity = { receipt ->
                     onReceiptEditClicked(receipt)
