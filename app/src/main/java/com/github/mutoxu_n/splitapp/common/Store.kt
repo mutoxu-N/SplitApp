@@ -15,6 +15,7 @@ import com.github.mutoxu_n.splitapp.models.SplitUnit
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import java.time.LocalDateTime
@@ -101,7 +102,7 @@ object Store {
         }
 
         members.update { listOf() }
-        membersListener = db.collection("rooms").document(roomId).collection("members").addSnapshotListener { snapshot, e ->
+        membersListener = db.collection("rooms").document(roomId).collection("members").orderBy("role", Query.Direction.DESCENDING).addSnapshotListener { snapshot, e ->
             if(e != null) {
                 Log.w("Store", "listen:error", e)
                 return@addSnapshotListener
