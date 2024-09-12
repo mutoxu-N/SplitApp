@@ -18,4 +18,13 @@ data class Member(
             role = Role.NORMAL,
         )
     }
+
+    fun toModel(): MemberModel {
+        return MemberModel(
+            name = name,
+            uid = uid.toString(),
+            weight = weight.toDouble(),
+            role = role.roleId,
+        )
+    }
 }

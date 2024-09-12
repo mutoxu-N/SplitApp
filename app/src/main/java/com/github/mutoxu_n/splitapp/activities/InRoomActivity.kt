@@ -292,7 +292,13 @@ class InRoomActivity : ComponentActivity() {
     }
 
     private suspend fun onWeightChanged(member: Member) {
-        // TODO: メンバーの重みを更新
+        roomId?.let{
+            API().editMember(
+                it,
+                member.name,
+                member.toModel(),
+            )
+        }
     }
 
     private suspend fun onRemoveMember(member: Member) {
