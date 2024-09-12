@@ -2,6 +2,7 @@
 
 package com.github.mutoxu_n.splitapp.components.receipts
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,7 +13,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -20,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -50,8 +56,12 @@ fun ReceiptDetailDisplay(
     onValueChanged: (Receipt) -> Unit,
     members: List<Member>,
 ) {
+    var isStuffInputDialogShown by rememberSaveable { mutableStateOf(false) }
+    var stuff by remember { mutableStateOf(receipt.stuff) }
+    var isStuffError by rememberSaveable { mutableStateOf(receipt.stuff.isBlank()) }
     var paid by rememberSaveable { mutableStateOf(receipt.paid) }
     var payment by rememberSaveable { mutableIntStateOf(receipt.payment) }
+    var isPaymentError by rememberSaveable { mutableStateOf(receipt.payment <= 0) }
     var buyers by rememberSaveable { mutableStateOf(receipt.buyers) }
 
     val df = DateTimeFormatter.ofPattern(stringResource(R.string.format_datetime))
@@ -62,12 +72,21 @@ fun ReceiptDetailDisplay(
         verticalArrangement = Arrangement.spacedBy(5.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            modifier = modifier,
-            text = receipt.stuff,
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onSurface,
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            IconButton(onClick = {}) {}
+            Text(
+                modifier = modifier,
+                text = stuff,
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            IconButton(onClick = {
+                isStuffInputDialogShown = true
+            }) { Icon(imageVector = Icons.Default.Edit, contentDescription = null) }
+        }
         HorizontalDivider(
             modifier = modifier
                 .padding(5.dp, 0.dp),
@@ -77,14 +96,18 @@ fun ReceiptDetailDisplay(
             name = stringResource(R.string.receipt_paid),
             isReadOnly = false,
             value = paid,
-            onValueChanged = { paid = it }
+            onValueChanged = { paid = it },
+            entries = members, // 全ユーザー
         )
         DisplayRow(
             name = stringResource(R.string.receipt_payment),
             isReadOnly = false,
             value = payment,
             prefix = stringResource(id = R.string.settings_currency),
-            onValueChanged = { payment = it }
+            onValueChanged = {
+                payment = it
+                isPaymentError = payment <= 0
+            }
         )
 
         Column {
@@ -130,15 +153,30 @@ fun ReceiptDetailDisplay(
 
         HorizontalDivider()
         DoneButton(
+            enabled = !isStuffError && !isPaymentError,
             doneButtonText = stringResource(R.string.button_save_receipt),
             onConfirmed = {
                 onValueChanged(receipt.copy(
+                    stuff = stuff,
                     paid = paid,
                     payment = payment,
                     buyers = buyers
                 ))
             }
         )
+
+        if(isStuffInputDialogShown) {
+            ValueChangeDialog(
+                title = stringResource(R.string.receipt_stuff),
+                value = stuff,
+                onDismiss = { isStuffInputDialogShown = false },
+                onConfirm = { newStuff ->
+                    stuff = newStuff
+                    isStuffError = newStuff.isBlank()
+                    isStuffInputDialogShown = false
+                }
+            )
+        }
     }
 }
 

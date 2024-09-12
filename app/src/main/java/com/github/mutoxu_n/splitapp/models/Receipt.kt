@@ -13,4 +13,13 @@ data class Receipt(
     val payment: Int,
     val reportedBy: Member,
     var timestamp: LocalDateTime,
-): Parcelable
+): Parcelable {
+    
+    fun toModel() = ReceiptModel(
+        id = id,
+        stuff = stuff,
+        paid = paid.name,
+        buyers = buyers.map { it.name },
+        payment = payment,
+    )
+}

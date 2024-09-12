@@ -154,9 +154,9 @@ class InRoomActivity : ComponentActivity() {
                                     onReceiptEditClicked = { receipt ->
                                         launchEditReceipt(receipt)
                                     },
-                                    onReceiptCreate = { receipt ->
+                                    onReceiptCreate = {
                                         lifecycleScope.launch {
-                                            createReceipt(receipt)
+                                            createReceipt()
                                         }
                                     }
                                 )
@@ -322,8 +322,8 @@ class InRoomActivity : ComponentActivity() {
         finish()
     }
 
-    private suspend fun createReceipt(receipt: Receipt) {
-
+    private fun createReceipt() {
+        roomId?.let { EditReceiptActivity.launch(this@InRoomActivity, it) }
     }
 
     enum class InfoTabIndex(val value: Int) {
@@ -336,11 +336,11 @@ class InRoomActivity : ComponentActivity() {
 private fun ReceiptScreen(
     receipts: List<Receipt>,
     onReceiptEditClicked: (Receipt) -> Unit = {},
-    onReceiptCreate: (Receipt) -> Unit = {},
+    onReceiptCreate: () -> Unit = {},
 ) {
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { /* onReceiptCreate */ }) {
+            FloatingActionButton(onClick = { onReceiptCreate() }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = null)
             }
         }

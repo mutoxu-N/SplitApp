@@ -189,11 +189,11 @@ class API {
         service.deleteRoom(Auth.token!!, roomId)
     }
 
-    suspend fun addReceipt(roomId: String, receiptModel: ReceiptModel) {
+    suspend fun createReceipt(roomId: String, receiptModel: ReceiptModel) {
         if (Auth.token == null) return
         val service = retrofit.create(RoomServices::class.java)
         val response = service.addReceipt(Auth.token!!, roomId, receiptModel)
-        Log.e("API.addReceipt()", response.body().toString())
+        Log.e("API.createReceipt()", response.body().toString())
     }
 
     suspend fun editReceipt(roomId: String, receiptId: String, receiptModel: ReceiptModel) {

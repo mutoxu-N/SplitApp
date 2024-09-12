@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
+import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.RequestType
 import com.github.mutoxu_n.splitapp.models.Role
 import com.github.mutoxu_n.splitapp.models.SplitUnit
@@ -138,6 +139,39 @@ fun <T> ValueChangeDialog(
                                     text = { Text(text = role.toString()) },
                                     onClick = {
                                         newValue = role
+                                        isExpanded = false
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+
+                is Member -> {
+                    ExposedDropdownMenuBox(
+                        expanded = isExpanded,
+                        onExpandedChange = {
+                            isExpanded = !isExpanded
+                        }
+                    ) {
+                        OutlinedTextField(
+                            modifier = Modifier.menuAnchor(),
+                            readOnly = true,
+                            value = (newValue as Member).name,
+                            onValueChange = {},
+                            isError = isError,
+                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)}
+                        )
+
+                        ExposedDropdownMenu(
+                            expanded = isExpanded,
+                            onDismissRequest = { isExpanded = false }
+                        ) {
+                            entries.forEach { member ->
+                                DropdownMenuItem(
+                                    text = { Text(text = (member as Member).name) },
+                                    onClick = {
+                                        newValue = member
                                         isExpanded = false
                                     }
                                 )

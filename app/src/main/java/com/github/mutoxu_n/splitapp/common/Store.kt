@@ -144,17 +144,12 @@ object Store {
                 for(data in snapshot.documents) {
                     r.add(Receipt(
                         stuff = data["stuff"] as String,
-                        paid = data["paid"] as Member,
-                        buyers = (data["buyers"] as List<Map<*, *>>).map {
-                            Member(
-                                name = it["name"] as String,
-                                uid = it["uid"] as String,
-                                weight = (it["weight"] as Long).toFloat(),
-                                role = Role.fromValue(it["role"] as Double),
-                            )
-                        },
+                        paid = members.value?.find { it.uid == data["paid"] } ?: Member.Empty,
+                        buyers = members.value?.filter {
+                            (data["buyers"] as List<*>).contains(it.name)
+                        } ?: listOf(),
                         payment = (data["payment"] as Long).toInt(),
-                        reportedBy = members.value!!.find { it.uid == data["reported_by"] }!!,
+                        reportedBy = members.value?.find { it.uid == data["paid"] } ?: Member.Empty,
                         timestamp = LocalDateTime.ofEpochSecond((data["timestamp"] as com.google.firebase.Timestamp).toDate().time, 0, ZoneOffset.UTC),
                     ))
                 }

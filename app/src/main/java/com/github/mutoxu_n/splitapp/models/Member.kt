@@ -9,4 +9,13 @@ data class Member(
     val uid: String?,
     val weight: Float,
     val role: Role,
-): Parcelable
+): Parcelable {
+    companion object {
+        val Empty = Member(
+            name = "ERROR",
+            uid = null,
+            weight = 0f,
+            role = Role.NORMAL,
+        )
+    }
+}
