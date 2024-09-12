@@ -323,7 +323,7 @@ class InRoomActivity : ComponentActivity() {
     }
 
     private fun createReceipt() {
-        roomId?.let { EditReceiptActivity.launch(this@InRoomActivity, it) }
+        roomId?.let { EditReceiptActivity.launch(this@InRoomActivity) }
     }
 
     enum class InfoTabIndex(val value: Int) {

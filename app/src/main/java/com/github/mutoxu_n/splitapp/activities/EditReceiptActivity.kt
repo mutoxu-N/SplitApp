@@ -12,9 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -28,6 +26,7 @@ import com.github.mutoxu_n.splitapp.models.Receipt
 import kotlinx.coroutines.launch
 
 class EditReceiptActivity : ComponentActivity() {
+    private var apiError: Boolean by mutableStateOf(false)
 
     companion object {
         private const val TAG = "EditReceiptActivity"
@@ -42,7 +41,6 @@ class EditReceiptActivity : ComponentActivity() {
 
         fun launch(
             context: Context,
-            roomId: String,
             receipt: Receipt? = null,
             launcher: ActivityResultLauncher<Intent>? = null
         ) {
@@ -120,7 +118,6 @@ class EditReceiptActivity : ComponentActivity() {
 
         setContent {
             SplitAppTheme {
-
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column(
                         modifier = Modifier
@@ -143,7 +140,11 @@ class EditReceiptActivity : ComponentActivity() {
     }
 
     private suspend fun createReceipt(receipt: Receipt) {
-        App.roomId.value?.let { API().createReceipt(it, receipt.toModel()) }
+        apiError = false
+        App.roomId.value?.let {
+            API().createReceipt(it, receipt.toModel())
+                { res -> if (res) finish() else apiError = true }
+        }
     }
 
     private suspend fun editReceipt(receipt: Receipt) {
