@@ -67,4 +67,6 @@
     <string name="title_activity_room_create">RoomCreateActivity</string>
     <string name="title_activity_room_join">RoomJoinActivity</string>
     <string name="title_activity_member_manage">MemberManageActivity</string>
+    <string name="topbar_title_edit_receipt">レシートの編集</string>
+    <string name="topbar_title_create_receipt">レシートの作成</string>
 </resources>

@@ -16,12 +16,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.github.mutoxu_n.splitapp.App
+import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
 import com.github.mutoxu_n.splitapp.api.API
 import com.github.mutoxu_n.splitapp.common.Store
+import com.github.mutoxu_n.splitapp.components.misc.InRoomTopBar
 import com.github.mutoxu_n.splitapp.components.receipts.ReceiptDetailDisplay
 import com.github.mutoxu_n.splitapp.models.Receipt
 import kotlinx.coroutines.launch
@@ -80,6 +83,7 @@ class EditReceiptActivity : ComponentActivity() {
             return
         }
 
+        val isEdit = intent.getBooleanExtra(INTENT_IS_EDIT, false)
         val initId: String
         val initStuff: String
         val initPaid: String
@@ -88,7 +92,7 @@ class EditReceiptActivity : ComponentActivity() {
         val initReported: String
         val timestamp: String?
 
-        if(intent.getBooleanExtra(INTENT_IS_EDIT, false)) {
+        if(isEdit) {
             initId = intent.getStringExtra(INTENT_RECEIPT_ID) ?: "null"
             initStuff = intent.getStringExtra(INTENT_RECEIPT_STUFF) ?: ""
             initPaid = intent.getStringExtra(INTENT_RECEIPT_PAID) ?: ""
@@ -121,7 +125,15 @@ class EditReceiptActivity : ComponentActivity() {
 
         setContent {
             SplitAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    topBar = {
+                        InRoomTopBar(
+                            title = if(isEdit) stringResource(R.string.topbar_title_edit_receipt) else stringResource(R.string.topbar_title_create_receipt),
+                            onBackClicked = { finish() }
+                        )
+                    }
+                ) { innerPadding ->
                     Column(
                         modifier = Modifier
                             .padding(innerPadding)
@@ -131,7 +143,7 @@ class EditReceiptActivity : ComponentActivity() {
                             receipt = receipt,
                             onValueChanged = {
                                 lifecycleScope.launch {
-                                    if(intent.getBooleanExtra(INTENT_IS_EDIT, false)) {
+                                    if(isEdit) {
                                         editReceipt(it)
 
                                     } else {
