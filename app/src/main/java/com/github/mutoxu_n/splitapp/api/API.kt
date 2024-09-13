@@ -103,13 +103,6 @@ class API {
             try {
                 if(it["joined"]!! as Boolean) {
                     App.updateDisplayName(displayName)
-                    val d = it["me"] as Map<*, *>
-//                    App.updateMe(Member(
-//                        name = d["name"] as String,
-//                        uid = d["id"] as String?,
-//                        weight = (d["weight"]!! as Double).toFloat(),
-//                        role = Role.fromValue((it["me"]!! as Map<*, *>)["role"]!! as Double),
-//                    ))
                     App.updateRoomId(roomId)
                     callBack(true)
 
