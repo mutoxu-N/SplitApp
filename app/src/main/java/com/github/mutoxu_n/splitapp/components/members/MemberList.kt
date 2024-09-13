@@ -42,7 +42,7 @@ fun MemberList(
     modifier: Modifier = Modifier,
     members: List<Member>,
     onEditMember: (Member) -> Unit,
-    onRemoveMember: (Member) -> Unit = {},
+    onDeleteGuest: (Member) -> Unit = {},
     enabled: Boolean = true,
     removable: Boolean = false,
 ) {
@@ -62,10 +62,10 @@ fun MemberList(
                     onEditMember(it)
                 },
                 onRemoveMember = {
-                    onRemoveMember(it)
+                    onDeleteGuest(it)
                 },
                 enabled = enabled,
-                removable = removable && m.uid != me.uid,
+                removable = removable && m.uid == null,
             )
         }
     }
@@ -182,7 +182,7 @@ private fun MemberListEnabledPreview() {
                     members.removeIf { m -> m.name == it.name }
                     members.add(it)
                 },
-                onRemoveMember = {
+                onDeleteGuest = {
                     members.remove(it)
                 },
                 removable = true,
@@ -225,7 +225,7 @@ private fun MemberListValueChangePreview() {
                     members.removeIf { m -> m.name == it.name }
                     members.add(it)
                 },
-                onRemoveMember = {
+                onDeleteGuest = {
                     members.remove(it)
                 },
                 enabled = true,
@@ -269,7 +269,7 @@ private fun MemberListReadOnlyPreview() {
                     members.removeIf { m -> m.name == it.name }
                     members.add(it)
                 },
-                onRemoveMember = {
+                onDeleteGuest = {
                     members.remove(it)
                 },
                 enabled = false,

@@ -12,9 +12,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +25,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
+import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
+import androidx.compose.material.icons.automirrored.filled.ArrowRightAlt
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -44,6 +49,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -214,9 +220,9 @@ class InRoomActivity : ComponentActivity() {
                                                 InfoMembersScreen(
                                                     role = me!!.role,
                                                     members = members!!,
-                                                    onRemoveMember = {
+                                                    onDeleteGuest = {
                                                         lifecycleScope.launch {
-                                                            onRemoveMember(it)
+                                                            onDeleteGuest(it)
                                                         }
                                                     },
                                                     onWeightChanged = {
@@ -241,9 +247,9 @@ class InRoomActivity : ComponentActivity() {
                                             onSettingsChanged(it)
                                         }
                                     },
-                                    onRemoveRoomClicked = {
+                                    onDeleteRoomClicked = {
                                         lifecycleScope.launch {
-                                            onRemoveRoom()
+                                            onDeleteRoom()
                                         }
                                     }
                                 )
@@ -301,8 +307,10 @@ class InRoomActivity : ComponentActivity() {
         }
     }
 
-    private suspend fun onRemoveMember(member: Member) {
-        // TODO: メンバーを削除
+    private suspend fun onDeleteGuest(member: Member) {
+        roomId?.let {
+            API().deleteGuest(it, member.name)
+        }
     }
 
     private suspend fun onSettingsChanged(settings: Settings) {
@@ -321,7 +329,7 @@ class InRoomActivity : ComponentActivity() {
         }
     }
 
-    private suspend fun onRemoveRoom() {
+    private suspend fun onDeleteRoom() {
         roomId?.let { API().deleteRoom(it) }
         Store.stopObserving()
         App.updateRoomId(null)
@@ -442,7 +450,7 @@ private fun InfoMembersScreen(
     role: Role,
     members: List<Member>,
     onWeightChanged: (Member) -> Unit = {},
-    onRemoveMember: (Member) -> Unit = {},
+    onDeleteGuest: (Member) -> Unit = {},
 ) {
     MemberList(
         modifier = Modifier
@@ -451,11 +459,11 @@ private fun InfoMembersScreen(
         onEditMember = {
             onWeightChanged(it)
         },
-        onRemoveMember = {
-            onRemoveMember(it)
+        onDeleteGuest = {
+            onDeleteGuest(it)
         },
         enabled = role == Role.OWNER,
-        removable = role == Role.OWNER,
+        removable = false,
     )
 }
 
@@ -464,7 +472,7 @@ private fun SettingsScreen(
     role: Role,
     settings: Settings,
     onSettingsChanged: (Settings) -> Unit = {},
-    onRemoveRoomClicked: () -> Unit,
+    onDeleteRoomClicked: () -> Unit,
 ) {
     var confirmDialogShown by rememberSaveable { mutableStateOf(false) }
 
@@ -485,7 +493,14 @@ private fun SettingsScreen(
                 },
                 isReadOnly = role != Role.OWNER,
             )
+
+            Spacer(modifier = Modifier.size(20.dp))
+            val context = LocalContext.current
+            SettingsRow(title = "メンバー管理") {
+                MemberManageActivity.launch(context)
+            }
         }
+
 
         if(role == Role.OWNER) {
             HorizontalDivider()
@@ -510,16 +525,38 @@ private fun SettingsScreen(
             dismissText = "キャンセル",
             onConfirm = {
                 confirmDialogShown = false
-                onRemoveRoomClicked()
+                onDeleteRoomClicked()
             },
             confirmText = "削除する",
         )
     }
 }
 
+@Composable
+private fun SettingsRow(
+    title: String,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 7.dp)
+            .clickable { onClick() },
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Text(
+            modifier = Modifier.weight(1f),
+            text = title,
+            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.titleMedium,
+        )
+        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos, contentDescription = null)
+    }
+}
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun ActivityPreview() {
+private fun ActivityPreview() {
     val date = LocalDateTime.of(1000, 1, 1, 0, 0, 0)
     val member1 = Member(
         name = "Taro",
@@ -688,7 +725,7 @@ fun ActivityPreview() {
                                     InfoMembersScreen(
                                         role = Role.OWNER,
                                         members = listOf(member1, member2),
-                                        onRemoveMember = {},
+                                        onDeleteGuest = {},
                                         onWeightChanged = {},
                                     )
                                 }
@@ -703,10 +740,19 @@ fun ActivityPreview() {
                         role = Role.OWNER,
                         settings = settings,
                         onSettingsChanged = {},
-                        onRemoveRoomClicked = {}
+                        onDeleteRoomClicked = {}
                     )
                 }
             }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SettingsRowPreview() {
+    SplitAppTheme {
+        SettingsRow(title = "テスト") {
         }
     }
 }

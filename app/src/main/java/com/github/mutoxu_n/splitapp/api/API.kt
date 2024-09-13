@@ -148,17 +148,20 @@ class API {
         Log.e("API.vote()", response.body().toString())
     }
 
-    suspend fun createGuest(roomId: String, name: String) {
+    suspend fun createGuest(roomId: String, name: String, callBack: (Boolean) -> Unit = {}) {
         if (Auth.token == null) return
         val service = retrofit.create(RoomServices::class.java)
-        val memberModel = MemberModel(
-            name = name,
-            uid = "",
-            weight = 1.0,
-            role = Role.NORMAL.roleId,
-        )
-        val response = service.createGuest(Auth.token!!, roomId, memberModel)
+        val response = service.createGuest(Auth.token!!, roomId, name)
+        callBack(response.body()?.get("succeed") as Boolean? ?: false)
         Log.e("API.createGuest()", response.body().toString())
+    }
+
+    suspend fun deleteGuest(roomId: String, name: String, callBack: (Boolean) -> Unit = {}) {
+        if (Auth.token == null) return
+        val service = retrofit.create(RoomServices::class.java)
+        val response = service.deleteGuest(Auth.token!!, roomId, name)
+        callBack(response.body()?.get("succeed") as Boolean? ?: false)
+        Log.e("API.deleteGuest()", response.body().toString())
     }
 
 

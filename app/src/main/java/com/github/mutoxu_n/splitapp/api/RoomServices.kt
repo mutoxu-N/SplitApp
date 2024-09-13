@@ -40,11 +40,18 @@ interface RoomServices {
         @Body body: AcceptBody,
     ): Response<Map<String, Any>>
 
-    @POST("room/{room_id}/create_guest")
+    @POST("room/{room_id}/guest/create")
     suspend fun createGuest(
         @Header("token") token: String,
         @Path("room_id") roomId: String,
-        @Body body: MemberModel,
+        @Body body: String,
+    ): Response<Map<String, Any>>
+
+    @POST("room/{room_id}/guest/delete")
+    suspend fun deleteGuest(
+        @Header("token") token: String,
+        @Path("room_id") roomId: String,
+        @Body body: String,
     ): Response<Map<String, Any>>
 
     @POST("room/{room_id}/member/edit")
