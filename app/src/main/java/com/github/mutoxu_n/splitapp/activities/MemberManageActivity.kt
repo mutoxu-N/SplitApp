@@ -62,6 +62,7 @@ class MemberManageActivity : ComponentActivity() {
                     topBar = {
                         InRoomTopBar(
                             title = "メンバーの管理",
+                            onBackClicked = { finish() }
                         )
                     },
                 ) { innerPadding ->
