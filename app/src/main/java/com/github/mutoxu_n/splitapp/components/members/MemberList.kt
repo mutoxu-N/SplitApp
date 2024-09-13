@@ -19,10 +19,10 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -31,10 +31,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
-import com.github.mutoxu_n.splitapp.common.Store
+import com.github.mutoxu_n.splitapp.components.dialogs.AttentionDialog
 import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.Role
 import java.util.Locale
@@ -48,7 +47,6 @@ fun MemberList(
     enabled: Boolean = true,
     removable: Boolean = false,
 ) {
-    val me by Store.me.collectAsState()
     LazyColumn(
         modifier = modifier
             .fillMaxSize(),
@@ -63,7 +61,7 @@ fun MemberList(
                 onWeightChanged = {
                     onEditMember(it)
                 },
-                onRemoveMember = {
+                onDeleteGuest = {
                     onDeleteGuest(it)
                 },
                 enabled = enabled,
@@ -78,10 +76,11 @@ private fun MemberListItem(
     modifier: Modifier = Modifier,
     member: Member,
     onWeightChanged: (Member) -> Unit,
-    onRemoveMember: (Member) -> Unit,
+    onDeleteGuest: (Member) -> Unit,
     enabled: Boolean = true,
     removable: Boolean,
 ) {
+    var isDialogShown by remember { mutableStateOf(false) }
     var moving by remember { mutableFloatStateOf(member.weight) }
 
     Column(
@@ -112,7 +111,7 @@ private fun MemberListItem(
             )
             if(removable) {
                 OutlinedIconButton(onClick = {
-                    onRemoveMember(member)
+                    isDialogShown = true
                 }) {
                     Icon(
                         imageVector = Icons.Default.Delete,
@@ -147,6 +146,19 @@ private fun MemberListItem(
                 textAlign = TextAlign.End,
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.bodyMedium,
+            )
+        }
+
+        if(isDialogShown) {
+            AttentionDialog(
+                title = "ゲストの削除",
+                message = "ゲスト ${member.name} を削除します。",
+                onDismiss = { isDialogShown = false },
+                confirmText = "削除する",
+                onConfirm = {
+                    isDialogShown = false
+                    onDeleteGuest(member)
+                }
             )
         }
     }

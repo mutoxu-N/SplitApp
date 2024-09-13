@@ -9,22 +9,32 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
+import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
+import com.github.mutoxu_n.splitapp.api.API
 import com.github.mutoxu_n.splitapp.common.Store
+import com.github.mutoxu_n.splitapp.components.dialogs.ValueChangeDialog
 import com.github.mutoxu_n.splitapp.components.members.MemberManageList
 import com.github.mutoxu_n.splitapp.components.misc.InRoomTopBar
 import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.Role
+import kotlinx.coroutines.launch
 
 class MemberManageActivity : ComponentActivity() {
     companion object {
@@ -50,6 +60,7 @@ class MemberManageActivity : ComponentActivity() {
 
         setContent {
             val members by Store.members.collectAsState()
+            var guestCreateDialogShown by rememberSaveable { mutableStateOf(false) }
 
             var isError = false
             if(members == null) { Text(text = "メンバーの読み込みに失敗しました"); isError=true }
@@ -65,15 +76,39 @@ class MemberManageActivity : ComponentActivity() {
                             onBackClicked = { finish() }
                         )
                     },
+                    floatingActionButton = {
+                        FloatingActionButton(onClick = { guestCreateDialogShown = true }) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = null
+                            )
+                        }
+                    }
                 ) { innerPadding ->
                     MemberManageList(
                         modifier = Modifier
                             .padding(innerPadding)
-                            .padding(start=7.dp, end=7.dp, top=5.dp),
+                            .padding(start = 7.dp, end = 7.dp, top = 5.dp),
                         members = members!!,
                         isReadOnly = false,
                         onMemberChanged = {
-                            updateMember(it)
+                            lifecycleScope.launch {
+                                updateMember(it)
+                            }
+                        }
+                    )
+                }
+
+                if(guestCreateDialogShown) {
+                    ValueChangeDialog(
+                        title = "ゲストメンバーの作成",
+                        value = "",
+                        onDismiss = { guestCreateDialogShown = false },
+                        onConfirm =  {
+                            guestCreateDialogShown = false
+                            lifecycleScope.launch {
+                                createGuest(it)
+                            }
                         }
                     )
                 }
@@ -81,8 +116,18 @@ class MemberManageActivity : ComponentActivity() {
         }
     }
 
-    private fun updateMember(member: Member) {
-        // TODO: メンバーを更新する
+    private suspend fun updateMember(member: Member) {
+        val roomId = App.roomId.value ?: return
+        API().editMember(roomId, member.name, member.toModel())
+    }
+
+    private suspend fun createGuest(name: String) {
+        val roomId = App.roomId.value ?: return
+
+        API().createGuest(
+            roomId = roomId,
+            name = name
+        )
     }
 }
 

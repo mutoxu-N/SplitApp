@@ -151,7 +151,10 @@ class API {
     suspend fun createGuest(roomId: String, name: String, callBack: (Boolean) -> Unit = {}) {
         if (Auth.token == null) return
         val service = retrofit.create(RoomServices::class.java)
-        val response = service.createGuest(Auth.token!!, roomId, name)
+        val body = GuestCreateBody(
+            name = name,
+        )
+        val response = service.createGuest(Auth.token!!, roomId, body)
         callBack(response.body()?.get("succeed") as Boolean? ?: false)
         Log.e("API.createGuest()", response.body().toString())
     }
@@ -159,7 +162,10 @@ class API {
     suspend fun deleteGuest(roomId: String, name: String, callBack: (Boolean) -> Unit = {}) {
         if (Auth.token == null) return
         val service = retrofit.create(RoomServices::class.java)
-        val response = service.deleteGuest(Auth.token!!, roomId, name)
+        val body = GuestDeleteBody(
+            name = name,
+        )
+        val response = service.deleteGuest(Auth.token!!, roomId, body)
         callBack(response.body()?.get("succeed") as Boolean? ?: false)
         Log.e("API.deleteGuest()", response.body().toString())
     }

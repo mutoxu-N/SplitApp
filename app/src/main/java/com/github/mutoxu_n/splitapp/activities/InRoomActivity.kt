@@ -463,7 +463,7 @@ private fun InfoMembersScreen(
             onDeleteGuest(it)
         },
         enabled = role == Role.OWNER,
-        removable = false,
+        removable = role == Role.OWNER,
     )
 }
 

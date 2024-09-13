@@ -6,6 +6,7 @@ import com.github.mutoxu_n.splitapp.models.MemberModel
 import com.squareup.moshi.Json
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.Field
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -44,14 +45,14 @@ interface RoomServices {
     suspend fun createGuest(
         @Header("token") token: String,
         @Path("room_id") roomId: String,
-        @Body body: String,
+        @Body body: GuestCreateBody,
     ): Response<Map<String, Any>>
 
     @POST("room/{room_id}/guest/delete")
     suspend fun deleteGuest(
         @Header("token") token: String,
         @Path("room_id") roomId: String,
-        @Body body: String,
+        @Body body: GuestDeleteBody,
     ): Response<Map<String, Any>>
 
     @POST("room/{room_id}/member/edit")
@@ -115,4 +116,12 @@ data class EditSettingsBody(
 data class EditReceiptBody(
     @Json(name = "receipt_id") var receiptId: String,
     @Json(name = "receipt") var receiptModel: ReceiptModel,
+)
+
+data class GuestCreateBody(
+    @Json(name = "name") var name: String,
+)
+
+data class GuestDeleteBody(
+    @Json(name = "name") var name: String,
 )
