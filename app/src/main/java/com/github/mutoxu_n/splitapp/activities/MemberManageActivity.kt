@@ -91,11 +91,17 @@ class MemberManageActivity : ComponentActivity() {
                             .padding(start = 7.dp, end = 7.dp, top = 5.dp),
                         members = members!!,
                         isReadOnly = false,
-                        onMemberChanged = {
+                        onMemberChanged = { old, new ->
                             lifecycleScope.launch {
-                                updateMember(it)
+                                updateMember(old, new)
                             }
-                        }
+                        },
+                        onDeleteGuest = {
+                            lifecycleScope.launch {
+                                deleteGuest(it.name)
+                            }
+                        },
+                        bottomSpacerSize = 75.dp
                     )
                 }
 
@@ -116,9 +122,18 @@ class MemberManageActivity : ComponentActivity() {
         }
     }
 
-    private suspend fun updateMember(member: Member) {
+    private suspend fun updateMember(oldName: String, member: Member) {
         val roomId = App.roomId.value ?: return
-        API().editMember(roomId, member.name, member.toModel())
+        API().editMember(roomId, oldName, member.toModel())
+    }
+
+    private suspend fun deleteGuest(name: String) {
+        val roomId = App.roomId.value ?: return
+
+        API().deleteGuest(
+            roomId = roomId,
+            name = name
+        )
     }
 
     private suspend fun createGuest(name: String) {

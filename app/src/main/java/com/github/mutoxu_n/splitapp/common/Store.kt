@@ -120,7 +120,7 @@ object Store {
             for(data in snapshot.documents) {
                 val member = Member(
                     name = data["name"] as String,
-                    uid = data["id"] as String?,
+                    uid = (data["id"] as String?)?.let { if(it == "null") null else it },
                     weight = (data["weight"] as Double).toFloat(),
                     role = Role.fromValue((data["role"] as Long).toDouble()),
                 )
@@ -173,16 +173,17 @@ object Store {
                 return@addSnapshotListener
             }
 
+            meListener?.remove()
+
             val name = (snapshot["users"] as Map<*, *>)[Auth.auth.uid] as String
             displayName.update { name }
-
             meListener = db.collection("rooms").document(roomId).collection("members").document(name).addSnapshotListener { snapshot, e ->
                 if(e != null) {
                     Log.w("Store", "listen:error", e)
                     return@addSnapshotListener
                 }
 
-                if(snapshot == null) {
+                if(snapshot == null || snapshot.data == null) {
                     me.update { null }
                     return@addSnapshotListener
                 }
@@ -191,7 +192,7 @@ object Store {
                 me.update {
                     Member(
                         name = data["name"] as String,
-                        uid = data["id"] as String?,
+                        uid = (data["id"] as String?)?.let { if(it == "null") null else it },
                         weight = (data["weight"] as Double).toFloat(),
                         role = Role.fromValue((data["role"] as Long).toDouble()),
                     )
@@ -211,5 +212,9 @@ object Store {
         pendingMembers.update { null }
         receiptsListener?.remove()
         receipts.update { null }
+        displayNameListener?.remove()
+        displayName.update { null }
+        meListener?.remove()
+        me.update { null }
     }
 }

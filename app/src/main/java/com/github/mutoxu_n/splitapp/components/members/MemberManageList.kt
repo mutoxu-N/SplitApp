@@ -6,11 +6,18 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.components.dialogs.AttentionDialog
@@ -34,7 +42,9 @@ fun MemberManageList(
     modifier: Modifier = Modifier,
     members: List<Member>,
     isReadOnly: Boolean = true,
-    onMemberChanged: (Member)-> Unit = {},
+    onMemberChanged: (String, Member)-> Unit = {_, _ ->},
+    onDeleteGuest: (Member) -> Unit = {},
+    bottomSpacerSize: Dp = 0.dp
 ) {
     LazyColumn(
         modifier = modifier,
@@ -44,10 +54,17 @@ fun MemberManageList(
             MemberManageListItem(
                 member = member,
                 isReadOnly = isReadOnly,
-                onMemberChanged = {
-                    onMemberChanged(it)
-                }
+                onMemberChanged = { old, new ->
+                    onMemberChanged(old, new)
+                },
+                onDeleteGuest = {
+                    onDeleteGuest(it)
+                },
             )
+        }
+
+        item {
+            Spacer(modifier = Modifier.size(bottomSpacerSize))
         }
     }
 }
@@ -56,13 +73,16 @@ fun MemberManageList(
 private fun MemberManageListItem(
     modifier: Modifier = Modifier,
     member: Member,
-    onMemberChanged: (Member)-> Unit,
+    onMemberChanged: (String, Member)-> Unit,
+    onDeleteGuest: (Member) -> Unit,
     isReadOnly: Boolean = true,
 ) {
-    var isDialogShown by rememberSaveable { mutableStateOf(false) }
+    var isRoleDialogShown by rememberSaveable { mutableStateOf(false) }
+    var isNameDialogShown by rememberSaveable { mutableStateOf(false) }
+    var isDeleteDialogShown by rememberSaveable { mutableStateOf(false) }
     var isOwner by rememberSaveable { mutableStateOf(false) }
 
-    Column(
+    Row(
         modifier = modifier
             .fillMaxWidth()
             .border(
@@ -76,53 +96,94 @@ private fun MemberManageListItem(
             )
             .padding(10.dp, 10.dp)
     ) {
-        Text(
-            text = member.name,
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface,
-        )
-
-        Row {
+        Column(
+            modifier = modifier
+                .weight(1f),
+            verticalArrangement = Arrangement.spacedBy(5.dp)
+        ) {
             Text(
-                text = stringResource(R.string.member_role) + ": ",
-                style = MaterialTheme.typography.bodyMedium,
+                text = member.name,
+                style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
             )
 
-            Text(
-                modifier =
-                    if(isReadOnly)
+            Row {
+                Text(
+                    text = stringResource(R.string.member_role) + ": ",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+
+                Text(
+                    modifier =
+                    if(isReadOnly || member.uid == null)
                         modifier
                     else
                         modifier
-                        .clickable {
-                            isDialogShown = true
-                        },
-                text = member.role.toString(),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                textDecoration =
-                    if(isReadOnly) TextDecoration.None
+                            .clickable {
+                                isRoleDialogShown = true
+                            },
+                    text = member.role.toString(),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    textDecoration =
+                    if(isReadOnly || member.uid == null) TextDecoration.None
                     else TextDecoration.Underline,
-            )
+                )
+            }
+        }
+
+        if(!isReadOnly) {
+            Row {
+                OutlinedIconButton(onClick = { isNameDialogShown = true }) {
+                    Icon(imageVector = Icons.Default.Edit, contentDescription = null)
+                }
+                OutlinedIconButton(onClick = { isDeleteDialogShown = true }) {
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+                }
+            }
         }
     }
-
-    if(isDialogShown) {
+    if(isRoleDialogShown) {
         ValueChangeDialog(
             title = stringResource(R.string.member_role),
             value = member.role,
-            onDismiss = { isDialogShown = false },
+            onDismiss = { isRoleDialogShown = false },
             onConfirm = { role ->
-                isDialogShown = false
+                isRoleDialogShown = false
                 if(role == Role.OWNER || member.role == Role.OWNER) {
                     isOwner = true
 
                 } else {
-                    onMemberChanged(member.copy(role = role))
+                    onMemberChanged(member.name, member.copy(role = role))
                 }
             },
             entries = Role.generalEntries,
+        )
+    }
+
+    if(isNameDialogShown) {
+        ValueChangeDialog(
+            title = "メンバー名の変更",
+            value = member.name,
+            onDismiss = { isNameDialogShown = false },
+            onConfirm = {
+                isNameDialogShown = false
+                onMemberChanged(member.name, member.copy(name = it))
+            }
+        )
+    }
+
+    if(isDeleteDialogShown) {
+        AttentionDialog(
+            title = "ゲストの削除",
+            message = "ゲスト ${member.name} を削除します。",
+            onDismiss = { isDeleteDialogShown = false },
+            confirmText = "削除する",
+            onConfirm = {
+                isDeleteDialogShown = false
+                onDeleteGuest(member)
+            }
         )
     }
 
@@ -143,7 +204,7 @@ private fun MemberManageListItem(
                 message = "オーナー権限を ${member.name} に譲渡します。この操作が完了すると、再度オーナー権限を得るまで一部の操作にアクセスできなくなります。",
                 onDismiss = { isOwner=false },
                 onConfirm = {
-                    onMemberChanged(member.copy(role = Role.OWNER))
+                    onMemberChanged(member.name, member.copy(role = Role.OWNER))
                     isOwner = false
                 }
             )

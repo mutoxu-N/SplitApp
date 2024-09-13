@@ -5,9 +5,7 @@ import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.BuildConfig
 import com.github.mutoxu_n.splitapp.common.Auth
 import com.github.mutoxu_n.splitapp.common.Store
-import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.ReceiptModel
-import com.github.mutoxu_n.splitapp.models.Role
 import com.github.mutoxu_n.splitapp.models.SettingsModel
 import com.github.mutoxu_n.splitapp.models.MemberModel
 import com.github.mutoxu_n.splitapp.models.Settings
@@ -171,11 +169,11 @@ class API {
     }
 
 
-    suspend fun editMember(roomId: String, name: String, new: MemberModel) {
+    suspend fun editMember(roomId: String, oldName: String, new: MemberModel) {
         if (Auth.token == null) return
         val service = retrofit.create(RoomServices::class.java)
         val body = EditMemberBody(
-            oldName = name,
+            oldName = oldName,
             newMemberModel = new,
         )
         val response = service.editMember(Auth.token!!, roomId, body)
