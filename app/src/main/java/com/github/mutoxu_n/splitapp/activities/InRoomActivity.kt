@@ -125,7 +125,7 @@ class InRoomActivity : ComponentActivity() {
                 val receipts by Store.receipts.collectAsState()
                 val members: List<Member>? by Store.members.collectAsState()
                 val pending: List<PendingMember>? by Store.pendingMembers.collectAsState()
-                val me: Member? by App.me.collectAsState()
+                val me: Member? by Store.me.collectAsState()
                 Log.e(TAG, "me: $me")
 
                 if(roomId != null
@@ -494,10 +494,12 @@ private fun SettingsScreen(
                 isReadOnly = role != Role.OWNER,
             )
 
-            Spacer(modifier = Modifier.size(20.dp))
-            val context = LocalContext.current
-            SettingsRow(title = "メンバー管理") {
-                MemberManageActivity.launch(context)
+            if(role == Role.OWNER) {
+                Spacer(modifier = Modifier.size(20.dp))
+                val context = LocalContext.current
+                SettingsRow(title = "メンバー管理") {
+                    MemberManageActivity.launch(context)
+                }
             }
         }
 

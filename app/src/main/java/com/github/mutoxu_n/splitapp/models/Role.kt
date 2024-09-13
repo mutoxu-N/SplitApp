@@ -26,6 +26,8 @@ enum class Role(val roleId: Int) {
             return entries.find { it.roleId == r } ?: NORMAL
         }
         fun fromString(role: String) = Role.valueOf(role.uppercase(Locale.getDefault()))
+
+        val generalEntries = listOf(NORMAL, CREATOR, MODERATOR)
     }
 
     fun toIDString(): String {

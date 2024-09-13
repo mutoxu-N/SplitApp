@@ -74,12 +74,12 @@ class API {
             try {
                 it ?: return
 
-                App.updateMe(Member(
-                    name = (it["me"]!! as Map<*, *>)["name"] as String,
-                    uid = (it["me"]!! as Map<*, *>)["id"]!! as String,
-                    weight = ((it["me"]!! as Map<*, *>)["weight"]!! as Double).toFloat(),
-                    role = Role.fromValue((it["me"]!! as Map<*, *>)["role"]!! as Double),
-                ))
+//                App.updateMe(Member(
+//                    name = (it["me"]!! as Map<*, *>)["name"] as String,
+//                    uid = (it["me"]!! as Map<*, *>)["id"]!! as String,
+//                    weight = ((it["me"]!! as Map<*, *>)["weight"]!! as Double).toFloat(),
+//                    role = Role.fromValue((it["me"]!! as Map<*, *>)["role"]!! as Double),
+//                ))
                 Store.updateSettings(settings)
                 App.updateRoomId(it["room_id"] as String)
 
@@ -106,12 +106,12 @@ class API {
                 if(it["joined"]!! as Boolean) {
                     App.updateDisplayName(displayName)
                     val d = it["me"] as Map<*, *>
-                    App.updateMe(Member(
-                        name = d["name"] as String,
-                        uid = d["id"] as String?,
-                        weight = (d["weight"]!! as Double).toFloat(),
-                        role = Role.fromValue((it["me"]!! as Map<*, *>)["role"]!! as Double),
-                    ))
+//                    App.updateMe(Member(
+//                        name = d["name"] as String,
+//                        uid = d["id"] as String?,
+//                        weight = (d["weight"]!! as Double).toFloat(),
+//                        role = Role.fromValue((it["me"]!! as Map<*, *>)["role"]!! as Double),
+//                    ))
                     App.updateRoomId(roomId)
                     callBack(true)
 

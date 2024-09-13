@@ -19,6 +19,7 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
+import com.github.mutoxu_n.splitapp.common.Store
 import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.Role
 import java.util.Locale
@@ -46,7 +48,7 @@ fun MemberList(
     enabled: Boolean = true,
     removable: Boolean = false,
 ) {
-    val me = App.me.value ?: return
+    val me by Store.me.collectAsState()
     LazyColumn(
         modifier = modifier
             .fillMaxSize(),

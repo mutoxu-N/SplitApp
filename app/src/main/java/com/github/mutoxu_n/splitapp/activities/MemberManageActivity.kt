@@ -10,7 +10,9 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -18,15 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
+import com.github.mutoxu_n.splitapp.common.Store
 import com.github.mutoxu_n.splitapp.components.members.MemberManageList
 import com.github.mutoxu_n.splitapp.components.misc.InRoomTopBar
 import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.Role
 
 class MemberManageActivity : ComponentActivity() {
-    private lateinit var roomName: String
-    private var members by mutableStateOf(listOf<Member>())
-
     companion object {
         fun launch(
             context: Context,
@@ -47,20 +47,29 @@ class MemberManageActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
+            val members by Store.members.collectAsState()
+
+            var isError = false
+            if(members == null) { Text(text = "メンバーの読み込みに失敗しました"); isError=true }
+            if(isError) return@setContent
+
+
             SplitAppTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     topBar = {
                         InRoomTopBar(
-                            title = roomName,
+                            title = "メンバーの管理",
                         )
                     },
                 ) { innerPadding ->
                     MemberManageList(
                         modifier = Modifier
-                            .padding(innerPadding),
-                        members = members,
+                            .padding(innerPadding)
+                            .padding(start=7.dp, end=7.dp, top=5.dp),
+                        members = members!!,
                         isReadOnly = false,
                         onMemberChanged = {
                             updateMember(it)

@@ -25,10 +25,6 @@ class App: Application() {
         private var _displayName: MutableStateFlow<String?> = MutableStateFlow(null)
         val displayName: StateFlow<String?> get() = _displayName
 
-        // 自己メンバー情報の保存
-        private var _me: MutableStateFlow<Member?> = MutableStateFlow(null)
-        val me: StateFlow<Member?> get() = _me
-
         // ルームIDのバリデーション
         fun validateRoomID(roomId: String?): Boolean {
             // null
@@ -78,10 +74,6 @@ class App: Application() {
             editor.apply()
 
             updateDisplayName(name)
-        }
-
-        fun updateMe(member: Member) {
-            _me.update { member }
         }
     }
 

@@ -37,6 +37,10 @@ object Store {
     private var receiptsListener: ListenerRegistration? = null
     var receipts: MutableStateFlow<List<ReceiptModel>?> = MutableStateFlow(null)
         private set
+    private var displayNameListener: ListenerRegistration? = null
+    var displayName: MutableStateFlow<String?> = MutableStateFlow(null)
+    private var meListener: ListenerRegistration? = null
+    var me: MutableStateFlow<Member?> = MutableStateFlow(null)
 
     init {
         // デバッグ時
@@ -96,8 +100,6 @@ object Store {
                     onNewMemberRequest = RequestType.fromString(settingsData["on_new_member_request"] as String),
                     splitUnit = SplitUnit.fromUnit((settingsData["split_unit"] as Long).toInt()),
                 )
-
-
             }
         }
 
@@ -158,6 +160,42 @@ object Store {
                     ))
                 }
                 receipts.update { r }
+            }
+        }
+
+        displayNameListener = db.collection("rooms").document(roomId).addSnapshotListener { snapshot, e ->
+            if(e != null) {
+                Log.w("Store", "listen:error", e)
+                return@addSnapshotListener
+            }
+            if(snapshot == null) {
+                displayName.update { null }
+                return@addSnapshotListener
+            }
+
+            val name = (snapshot["users"] as Map<*, *>)[Auth.auth.uid] as String
+            displayName.update { name }
+
+            meListener = db.collection("rooms").document(roomId).collection("members").document(name).addSnapshotListener { snapshot, e ->
+                if(e != null) {
+                    Log.w("Store", "listen:error", e)
+                    return@addSnapshotListener
+                }
+
+                if(snapshot == null) {
+                    me.update { null }
+                    return@addSnapshotListener
+                }
+
+                val data = snapshot.data as Map<*, *>
+                me.update {
+                    Member(
+                        name = data["name"] as String,
+                        uid = data["id"] as String?,
+                        weight = (data["weight"] as Double).toFloat(),
+                        role = Role.fromValue((data["role"] as Long).toDouble()),
+                    )
+                }
             }
         }
     }

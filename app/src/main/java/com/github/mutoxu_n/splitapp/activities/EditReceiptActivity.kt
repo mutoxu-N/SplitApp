@@ -107,7 +107,7 @@ class EditReceiptActivity : ComponentActivity() {
             initPaid = ""
             initBuyers = listOf()
             initPayment = 0
-            initReported = App.me.value?.name ?: ""
+            initReported = Store.me.value?.name ?: ""
             timestamp = null
         }
 

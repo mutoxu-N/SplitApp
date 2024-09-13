@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.mutoxu_n.splitapp.R
+import com.github.mutoxu_n.splitapp.components.dialogs.AttentionDialog
 import com.github.mutoxu_n.splitapp.components.dialogs.ValueChangeDialog
 import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.Role
@@ -59,6 +60,7 @@ private fun MemberManageListItem(
     isReadOnly: Boolean = true,
 ) {
     var isDialogShown by rememberSaveable { mutableStateOf(false) }
+    var isOwner by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -111,11 +113,41 @@ private fun MemberManageListItem(
             title = stringResource(R.string.member_role),
             value = member.role,
             onDismiss = { isDialogShown = false },
-            onConfirm = {
+            onConfirm = { role ->
                 isDialogShown = false
-                onMemberChanged(member.copy(role = it))
-            }
+                if(role == Role.OWNER || member.role == Role.OWNER) {
+                    isOwner = true
+
+                } else {
+                    onMemberChanged(member.copy(role = role))
+                }
+            },
+            entries = Role.generalEntries,
         )
+    }
+
+    if(isOwner) {
+        if(member.role == Role.OWNER) {
+            AttentionDialog(
+                title = "オーナーを変更できません",
+                message = "自分自身のオーナー権限をはく奪することはできません。他のメンバーの役職をオーナーに設定することで、オーナー権限を譲渡できます。",
+                dismissText = null,
+                onDismiss = { isOwner=false },
+                confirmText = "閉じる",
+                onConfirm = { isOwner = false }
+            )
+
+        } else {
+            AttentionDialog(
+                title = "オーナーを変更します",
+                message = "オーナー権限を ${member.name} に譲渡します。この操作が完了すると、再度オーナー権限を得るまで一部の操作にアクセスできなくなります。",
+                onDismiss = { isOwner=false },
+                onConfirm = {
+                    onMemberChanged(member.copy(role = Role.OWNER))
+                    isOwner = false
+                }
+            )
+        }
     }
 }
 
