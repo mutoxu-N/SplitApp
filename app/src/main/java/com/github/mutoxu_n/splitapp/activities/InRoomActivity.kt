@@ -125,14 +125,11 @@ class InRoomActivity : ComponentActivity() {
                 val receipts by Store.receipts.collectAsState()
                 val members: List<Member>? by Store.members.collectAsState()
                 val pending: List<PendingMember>? by Store.pendingMembers.collectAsState()
-                val me: Member? by Store.me.collectAsState()
-                Log.e(TAG, "me: $me")
 
                 if(roomId != null
                     && receipts != null
                     && members != null
-                    && pending != null
-                    && me != null) {
+                    && pending != null) {
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),
                         topBar = {
@@ -218,7 +215,6 @@ class InRoomActivity : ComponentActivity() {
                                             // Info/Members
                                             InfoTabIndex.MEMBERS.value -> {
                                                 InfoMembersScreen(
-                                                    role = me!!.role,
                                                     members = members!!,
                                                     onDeleteGuest = {
                                                         lifecycleScope.launch {
@@ -240,7 +236,6 @@ class InRoomActivity : ComponentActivity() {
                             // Settings
                             composable(InRoomNavItem.Setting.route) {
                                 SettingsScreen(
-                                    role = me!!.role,
                                     settings = settings!!,
                                     onSettingsChanged = {
                                         lifecycleScope.launch {
@@ -279,7 +274,6 @@ class InRoomActivity : ComponentActivity() {
                         Text(text = "receipts: $receipts")
                         Text(text = "members: $members")
                         Text(text = "pending: $pending")
-                        Text(text = "me: $me")
                     }
 
                 }
@@ -447,11 +441,14 @@ private fun InfoSettingsScreen(
 
 @Composable
 private fun InfoMembersScreen(
-    role: Role,
     members: List<Member>,
     onWeightChanged: (Member) -> Unit = {},
     onDeleteGuest: (Member) -> Unit = {},
 ) {
+    val me: Member? by Store.me.collectAsState()
+    me ?: return
+
+    val isOwner = me!!.role == Role.OWNER
     MemberList(
         modifier = Modifier
             .padding(10.dp, 10.dp),
@@ -462,18 +459,20 @@ private fun InfoMembersScreen(
         onDeleteGuest = {
             onDeleteGuest(it)
         },
-        enabled = role == Role.OWNER,
-        removable = role == Role.OWNER,
+        enabled = isOwner,
+        removable = isOwner,
     )
 }
 
 @Composable
 private fun SettingsScreen(
-    role: Role,
     settings: Settings,
     onSettingsChanged: (Settings) -> Unit = {},
     onDeleteRoomClicked: () -> Unit,
 ) {
+    val me: Member? by Store.me.collectAsState()
+    val role = me?.role ?: return
+
     var confirmDialogShown by rememberSaveable { mutableStateOf(false) }
 
     Column(
@@ -725,7 +724,6 @@ private fun ActivityPreview() {
                                 // Info/Members
                                 InfoTabIndex.MEMBERS.value -> {
                                     InfoMembersScreen(
-                                        role = Role.OWNER,
                                         members = listOf(member1, member2),
                                         onDeleteGuest = {},
                                         onWeightChanged = {},
@@ -739,7 +737,6 @@ private fun ActivityPreview() {
                 // Settings
                 composable(InRoomNavItem.Setting.route) {
                     SettingsScreen(
-                        role = Role.OWNER,
                         settings = settings,
                         onSettingsChanged = {},
                         onDeleteRoomClicked = {}
