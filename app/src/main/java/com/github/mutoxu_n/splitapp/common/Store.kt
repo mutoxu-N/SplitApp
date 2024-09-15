@@ -113,7 +113,6 @@ object Store {
             if(snapshot == null) {
                 members.update { listOf() }
                 return@addSnapshotListener
-
             }
 
             val m = mutableListOf<Member>()
@@ -121,7 +120,7 @@ object Store {
                 val member = Member(
                     name = data["name"] as String,
                     uid = (data["id"] as String?)?.let { if(it == "null") null else it },
-                    weight = (data["weight"] as Double).toFloat(),
+                    weight = data["weight"].toString().toFloat(),
                     role = Role.fromValue((data["role"] as Long).toDouble()),
                 )
                 m.add(member)
@@ -193,7 +192,7 @@ object Store {
                     Member(
                         name = data["name"] as String,
                         uid = (data["id"] as String?)?.let { if(it == "null") null else it },
-                        weight = (data["weight"] as Double).toFloat(),
+                        weight = data["weight"].toString().toFloat(),
                         role = Role.fromValue((data["role"] as Long).toDouble()),
                     )
                 }

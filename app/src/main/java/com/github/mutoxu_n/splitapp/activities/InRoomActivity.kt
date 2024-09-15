@@ -215,7 +215,6 @@ class InRoomActivity : ComponentActivity() {
                                             // Info/Members
                                             InfoTabIndex.MEMBERS.value -> {
                                                 InfoMembersScreen(
-                                                    members = members!!,
                                                     onDeleteGuest = {
                                                         lifecycleScope.launch {
                                                             onDeleteGuest(it)
@@ -441,7 +440,6 @@ private fun InfoSettingsScreen(
 
 @Composable
 private fun InfoMembersScreen(
-    members: List<Member>,
     onWeightChanged: (Member) -> Unit = {},
     onDeleteGuest: (Member) -> Unit = {},
 ) {
@@ -452,7 +450,6 @@ private fun InfoMembersScreen(
     MemberList(
         modifier = Modifier
             .padding(10.dp, 10.dp),
-        members = members,
         onEditMember = {
             onWeightChanged(it)
         },
@@ -724,7 +721,6 @@ private fun ActivityPreview() {
                                 // Info/Members
                                 InfoTabIndex.MEMBERS.value -> {
                                     InfoMembersScreen(
-                                        members = listOf(member1, member2),
                                         onDeleteGuest = {},
                                         onWeightChanged = {},
                                     )

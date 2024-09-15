@@ -1,5 +1,6 @@
 package com.github.mutoxu_n.splitapp.components.members
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -19,7 +20,9 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -33,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
+import com.github.mutoxu_n.splitapp.common.Store
 import com.github.mutoxu_n.splitapp.components.dialogs.AttentionDialog
 import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.Role
@@ -41,32 +45,33 @@ import java.util.Locale
 @Composable
 fun MemberList(
     modifier: Modifier = Modifier,
-    members: List<Member>,
     onEditMember: (Member) -> Unit,
     onDeleteGuest: (Member) -> Unit = {},
     enabled: Boolean = true,
     removable: Boolean = false,
 ) {
+    val members by Store.members.collectAsState()
+    members ?: return
+
     LazyColumn(
         modifier = modifier
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
-        items(
-            members.sortedBy { it.name } .sortedByDescending { Role.entries.indexOf(it.role) },
-            key = { it.name },
-        ) { m ->
-            MemberListItem(
-                member = m,
-                onWeightChanged = {
-                    onEditMember(it)
-                },
-                onDeleteGuest = {
-                    onDeleteGuest(it)
-                },
-                enabled = enabled,
-                removable = removable && m.uid == null,
-            )
+        items(members!!) { m ->
+            key(m) {
+                MemberListItem(
+                    member = m,
+                    onWeightChanged = {
+                        onEditMember(it)
+                    },
+                    onDeleteGuest = {
+                        onDeleteGuest(it)
+                    },
+                    enabled = enabled,
+                    removable = removable && m.uid == null,
+                )
+            }
         }
     }
 }
@@ -191,7 +196,6 @@ private fun MemberListEnabledPreview() {
         Surface {
             val members = remember { mutableStateListOf(member1, member2, member3) }
             MemberList(
-                members = members,
                 onEditMember = {
                     members.removeIf { m -> m.name == it.name }
                     members.add(it)
@@ -234,7 +238,6 @@ private fun MemberListValueChangePreview() {
         Surface {
             val members = remember { mutableStateListOf(member1, member2, member3) }
             MemberList(
-                members = members,
                 onEditMember = {
                     members.removeIf { m -> m.name == it.name }
                     members.add(it)
@@ -278,7 +281,6 @@ private fun MemberListReadOnlyPreview() {
         Surface {
             val members = remember { mutableStateListOf(member1, member2, member3) }
             MemberList(
-                members = members,
                 onEditMember = {
                     members.removeIf { m -> m.name == it.name }
                     members.add(it)
