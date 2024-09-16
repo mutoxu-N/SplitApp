@@ -14,7 +14,7 @@ data class Member(
         val Empty = Member(
             name = "ERROR",
             uid = null,
-            weight = 0f,
+            weight = 1f,
             role = Role.NORMAL,
         )
     }
