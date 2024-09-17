@@ -269,7 +269,7 @@ private fun PaymentListPreview() {
                 ),
             )
 
-            val (totals, remains) = calcPaidAndRemains(receipts, members)
+            val (paid, remains) = calcPaidAndRemains(receipts, members)
             val transactions = calcTransactions(members, remains, 50)
 
             LazyColumn(
@@ -282,7 +282,7 @@ private fun PaymentListPreview() {
                         memA,
                         member,
                         members,
-                        totals[index],
+                        paid[index],
                         remains[index],
                         transactions[index],
                     )
