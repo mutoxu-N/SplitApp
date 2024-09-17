@@ -2,8 +2,6 @@ package com.github.mutoxu_n.splitapp
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
-import com.github.mutoxu_n.splitapp.models.Member
 import com.google.firebase.FirebaseApp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

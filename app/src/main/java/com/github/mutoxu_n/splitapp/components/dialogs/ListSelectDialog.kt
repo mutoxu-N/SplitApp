@@ -87,12 +87,7 @@ fun<T> ListSelectDialog(
                                 name = "全員",
                                 onClicked = {
                                     everyone = it
-                                    if(it) {
-                                        newValue = listOf()
-
-                                    } else {
-                                        newValue = candidates.toList()
-                                    }
+                                    newValue = if(it) listOf() else candidates.toList()
                                 },
                                 selected = everyone,
                                 enabled = true,

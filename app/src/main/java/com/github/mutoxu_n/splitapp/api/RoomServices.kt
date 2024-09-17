@@ -1,12 +1,11 @@
 package com.github.mutoxu_n.splitapp.api
 
+import com.github.mutoxu_n.splitapp.models.MemberModel
 import com.github.mutoxu_n.splitapp.models.ReceiptModel
 import com.github.mutoxu_n.splitapp.models.SettingsModel
-import com.github.mutoxu_n.splitapp.models.MemberModel
 import com.squareup.moshi.Json
 import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.Field
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path

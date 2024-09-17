@@ -2,7 +2,6 @@
 
 package com.github.mutoxu_n.splitapp.components.receipts
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,9 +38,9 @@ import androidx.compose.ui.unit.dp
 import com.github.mutoxu_n.splitapp.BuildConfig
 import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
-import com.github.mutoxu_n.splitapp.components.misc.DoneButton
 import com.github.mutoxu_n.splitapp.components.dialogs.ListSelectDialog
 import com.github.mutoxu_n.splitapp.components.dialogs.ValueChangeDialog
+import com.github.mutoxu_n.splitapp.components.misc.DoneButton
 import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.Receipt
 import com.github.mutoxu_n.splitapp.models.Role

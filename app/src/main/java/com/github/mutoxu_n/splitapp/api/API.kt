@@ -4,11 +4,10 @@ import android.util.Log
 import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.BuildConfig
 import com.github.mutoxu_n.splitapp.common.Auth
-import com.github.mutoxu_n.splitapp.common.Store
-import com.github.mutoxu_n.splitapp.models.ReceiptModel
-import com.github.mutoxu_n.splitapp.models.SettingsModel
 import com.github.mutoxu_n.splitapp.models.MemberModel
+import com.github.mutoxu_n.splitapp.models.ReceiptModel
 import com.github.mutoxu_n.splitapp.models.Settings
+import com.github.mutoxu_n.splitapp.models.SettingsModel
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
@@ -26,38 +25,6 @@ class API {
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
 
-    suspend fun hello(param: String): Hello? {
-        val service = retrofit.create(TestService::class.java)
-        val response = service.hello(param = param)
-        Log.e("API.hello()", response.toString())
-        return response.body()
-    }
-
-    suspend fun write(hello: Hello): Hello? {
-        if (Auth.token == null) return null
-
-        val service = retrofit.create(TestService::class.java)
-        val response = service.write(Auth.token!!, hello)
-        Log.e("API.write()", response.toString())
-        return response.body()
-    }
-
-    suspend fun test() {
-        if (Auth.token == null) return
-
-        val service = retrofit.create(TestService::class.java)
-        val response = service.test(Auth.token!!)
-        Log.e("API.test()", response.toString())
-    }
-
-    suspend fun reset() {
-        if (Auth.token == null) return
-
-        val service = retrofit.create(TestService::class.java)
-        val response = service.reset(Auth.token!!)
-        Log.e("API.reset()", response.body().toString())
-    }
-
     suspend fun createRoom(settings: Settings) {
         if (Auth.token == null) return
         val name = App.displayName.value ?: return
@@ -67,29 +34,6 @@ class API {
         val body = RoomCreateBody(settingsModel = settingsModel)
         val response = service.createRoom(Auth.token!!, name, body)
         Log.e("API.roomCreate()", response.body().toString())
-
-        response.body().let {
-            try {
-                it ?: return
-
-//                App.updateMe(Member(
-//                    name = (it["me"]!! as Map<*, *>)["name"] as String,
-//                    uid = (it["me"]!! as Map<*, *>)["id"]!! as String,
-//                    weight = ((it["me"]!! as Map<*, *>)["weight"]!! as Double).toFloat(),
-//                    role = Role.fromValue((it["me"]!! as Map<*, *>)["role"]!! as Double),
-//                ))
-                Store.updateSettings(settings)
-                App.updateRoomId(it["room_id"] as String)
-
-            } catch (e: ClassCastException) {
-                e.printStackTrace()
-                return
-
-            } catch (e: NullPointerException) {
-                e.printStackTrace()
-                return
-            }
-        }
     }
 
     suspend fun joinRoom(roomId: String, displayName: String, callBack: (Boolean) -> Unit = {}) {

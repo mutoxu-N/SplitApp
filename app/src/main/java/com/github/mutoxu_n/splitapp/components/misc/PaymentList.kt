@@ -13,8 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -23,9 +21,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
-import com.github.mutoxu_n.splitapp.common.Store
 import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.Receipt
+import com.github.mutoxu_n.splitapp.models.Settings
 import java.time.LocalDateTime
 import java.util.PriorityQueue
 
@@ -34,21 +32,17 @@ private data class RemainPayment(val index: Int, var amount: Int)
 
 
 @Composable
-fun PaymentList() {
-    val me by Store.me.collectAsState()
-    val settings by Store.settings.collectAsState()
-    val receipts by Store.receipts.collectAsState()
-    val members by Store.members.collectAsState()
-
-    if(receipts == null || members == null || settings == null || me == null) {
-        return
-    }
-
-    val (totals, remains) = calcTotalsAndRemains(receipts!!.mapNotNull { it.toReceipt() }, members!!)
+fun PaymentList(
+    me: Member?,
+    members: List<Member>,
+    receipts: List<Receipt>,
+    settings: Settings,
+) {
+    val (totals, remains) = calcTotalsAndRemains(receipts, members)
     val transactions = calcTransactions(
-        members!!,
+        members,
         remains,
-        settings!!.splitUnit.unit
+        settings.splitUnit.unit
     )
 
     LazyColumn(
@@ -56,11 +50,11 @@ fun PaymentList() {
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
-        itemsIndexed(members!!) { index, member ->
+        itemsIndexed(members) { index, member ->
             PaymentListItem(
-                me!!,
+                me,
                 member,
-                members!!,
+                members,
                 totals[index],
                 remains[index],
                 transactions[index],

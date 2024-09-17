@@ -6,7 +6,6 @@ import com.github.mutoxu_n.splitapp.BuildConfig
 import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.PendingMember
 import com.github.mutoxu_n.splitapp.models.PendingUser
-import com.github.mutoxu_n.splitapp.models.Receipt
 import com.github.mutoxu_n.splitapp.models.ReceiptModel
 import com.github.mutoxu_n.splitapp.models.RequestType
 import com.github.mutoxu_n.splitapp.models.Role
@@ -47,27 +46,6 @@ object Store {
         if(BuildConfig.DEBUG) {
             FirebaseFirestore.getInstance().useEmulator("10.0.2.2", 8080)
         }
-    }
-
-    fun updatePendingUser(pendingUser: PendingUser) {
-        this.pendingUsers.update { pendingUser }
-    }
-
-    fun updateSettings(settings: Settings) {
-        this.settings.update { settings }
-        Log.e("Store", "updateSettings: $settings")
-    }
-
-    fun updateMembers(members: List<Member>) {
-        this.members.update { members }
-    }
-
-    fun updatePendingMembers(pendingMembers: List<PendingMember>) {
-        this.pendingMembers.update { pendingMembers }
-    }
-
-    fun updateReceipts(receipts: List<ReceiptModel>) {
-        this.receipts.update { receipts }
     }
 
     fun startObserving() {
@@ -176,13 +154,13 @@ object Store {
 
             val name = (snapshot["users"] as Map<*, *>)[Auth.auth.uid] as String
             displayName.update { name }
-            meListener = db.collection("rooms").document(roomId).collection("members").document(name).addSnapshotListener { snapshot, e ->
-                if(e != null) {
-                    Log.w("Store", "listen:error", e)
+            meListener = db.collection("rooms").document(roomId).collection("members").document(name).addSnapshotListener { snapshot2, e2 ->
+                if(e2 != null) {
+                    Log.w("Store", "listen:error", e2)
                     return@addSnapshotListener
                 }
 
-                if(snapshot == null || snapshot.data == null) {
+                if(snapshot2 == null || snapshot.data == null) {
                     me.update { null }
                     return@addSnapshotListener
                 }

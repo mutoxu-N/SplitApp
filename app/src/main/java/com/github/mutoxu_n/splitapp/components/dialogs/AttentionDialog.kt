@@ -41,7 +41,7 @@ fun AttentionDialog(
                 }
             }
         },
-        title = { Text(text = title,) },
+        title = { Text(text = title) },
         text = { Text(text = message) },
     )
 }

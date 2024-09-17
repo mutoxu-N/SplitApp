@@ -1,7 +1,5 @@
 package com.github.mutoxu_n.splitapp.models
 
-import android.util.Log
-import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.common.Store
 import com.google.firebase.firestore.IgnoreExtraProperties
 import com.squareup.moshi.Json

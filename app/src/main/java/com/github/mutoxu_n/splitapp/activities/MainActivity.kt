@@ -30,16 +30,13 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.lifecycleScope
 import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.BuildConfig
 import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
-import com.github.mutoxu_n.splitapp.api.API
 import com.github.mutoxu_n.splitapp.common.Auth
 import com.github.mutoxu_n.splitapp.components.dialogs.AttentionDialog
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     private var uid: String? by mutableStateOf(null)

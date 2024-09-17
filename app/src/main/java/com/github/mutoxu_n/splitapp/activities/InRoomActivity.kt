@@ -1,17 +1,15 @@
 package com.github.mutoxu_n.splitapp.activities
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,12 +20,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
-import androidx.compose.material.icons.automirrored.filled.ArrowRightAlt
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -50,7 +44,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
@@ -58,7 +51,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.github.mutoxu_n.splitapp.App
-import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.InRoomActivity.InfoTabIndex
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
 import com.github.mutoxu_n.splitapp.api.API
@@ -68,11 +60,11 @@ import com.github.mutoxu_n.splitapp.components.members.MemberList
 import com.github.mutoxu_n.splitapp.components.misc.BottomNavigation
 import com.github.mutoxu_n.splitapp.components.misc.InRoomNavItem
 import com.github.mutoxu_n.splitapp.components.misc.InRoomTopBar
+import com.github.mutoxu_n.splitapp.components.misc.PaymentList
 import com.github.mutoxu_n.splitapp.components.receipts.ReceiptList
 import com.github.mutoxu_n.splitapp.components.settings.RoomIdDisplay
 import com.github.mutoxu_n.splitapp.components.settings.SettingsEditor
 import com.github.mutoxu_n.splitapp.models.Member
-import com.github.mutoxu_n.splitapp.models.PaymentDetail
 import com.github.mutoxu_n.splitapp.models.PendingMember
 import com.github.mutoxu_n.splitapp.models.Receipt
 import com.github.mutoxu_n.splitapp.models.RequestType
@@ -126,157 +118,152 @@ class InRoomActivity : ComponentActivity() {
                 val members: List<Member>? by Store.members.collectAsState()
                 val pending: List<PendingMember>? by Store.pendingMembers.collectAsState()
 
-                if(roomId != null
-                    && receipts != null
-                    && members != null
-                    && pending != null) {
-                    Scaffold(
-                        modifier = Modifier.fillMaxSize(),
-                        topBar = {
-                            InRoomTopBar(
-                                title = settings!!.name,
-                                onBackClicked = { leaveRoomConfirmDialogShown = true},
+                if(
+                    roomId == null ||
+                    receipts == null ||
+                    members == null ||
+                    pending == null
+                ) return@SplitAppTheme
 
-                            )
-                        },
-                        bottomBar = {
-                            BottomNavigation(
-                                controller = controller
-                            )
-                        },
-                    ) { innerPadding ->
-                        NavHost(
-                            modifier = Modifier.padding(innerPadding),
-                            navController = controller,
-                            startDestination = InRoomNavItem.Receipt.route,
-                        ) {
-                            // Receipt
-                            composable(InRoomNavItem.Receipt.route) {
-                                ReceiptScreen(
-                                    receipts = receipts!!.mapNotNull { it.toReceipt() }.toList(),
-                                    onReceiptEditClicked = { receipt ->
-                                        launchEditReceipt(receipt)
-                                    },
-                                    onReceiptCreate = {
-                                        lifecycleScope.launch {
-                                            createReceipt()
-                                        }
-                                    }
-                                )
-                            }
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    topBar = {
+                        InRoomTopBar(
+                            title = settings!!.name,
+                            onBackClicked = { leaveRoomConfirmDialogShown = true},
 
-                            // Info
-                            composable(InRoomNavItem.Info.route) {
-                                var selectedTabIndex by rememberSaveable { mutableIntStateOf(InfoTabIndex.SETTINGS.value) }
-                                Scaffold(
-                                    topBar = {
-                                        TabRow(selectedTabIndex = selectedTabIndex) {
-                                            Tab(
-                                                selected = selectedTabIndex == InfoTabIndex.PAY.value,
-                                                onClick = { selectedTabIndex = InfoTabIndex.PAY.value },
-                                                text = {
-                                                    Text(text = "支払い")
-                                                }
-                                            )
-                                            Tab(
-                                                selected = selectedTabIndex == InfoTabIndex.SETTINGS.value,
-                                                onClick = { selectedTabIndex = InfoTabIndex.SETTINGS.value },
-                                                text = {
-                                                    Text(text = "ルーム設定")
-                                                }
-                                            )
-                                            Tab(
-                                                selected = selectedTabIndex == InfoTabIndex.MEMBERS.value,
-                                                onClick = { selectedTabIndex = InfoTabIndex.MEMBERS.value },
-                                                text = {
-                                                    Text(text = "メンバー")
-                                                }
+                        )
+                    },
+                    bottomBar = {
+                        BottomNavigation(
+                            controller = controller
+                        )
+                    },
+                ) { innerPadding ->
+                    NavHost(
+                        modifier = Modifier.padding(innerPadding),
+                        navController = controller,
+                        startDestination = InRoomNavItem.Receipt.route,
+                    ) {
+                        // Receipt
+                        composable(InRoomNavItem.Receipt.route) {
+                            ReceiptScreen(
+                                receipts = receipts!!.mapNotNull { it.toReceipt() }.toList(),
+                                onReceiptEditClicked = { receipt ->
+                                    launchEditReceipt(receipt)
+                                },
+                                onReceiptCreate = {
+                                    lifecycleScope.launch {
+                                        createReceipt()
+                                    }
+                                }
+                            )
+                        }
+
+                        // Info
+                        composable(InRoomNavItem.Info.route) {
+                            var selectedTabIndex by rememberSaveable { mutableIntStateOf(InfoTabIndex.SETTINGS.value) }
+                            Scaffold(
+                                topBar = {
+                                    TabRow(selectedTabIndex = selectedTabIndex) {
+                                        Tab(
+                                            selected = selectedTabIndex == InfoTabIndex.PAY.value,
+                                            onClick = { selectedTabIndex = InfoTabIndex.PAY.value },
+                                            text = {
+                                                Text(text = "支払い")
+                                            }
+                                        )
+                                        Tab(
+                                            selected = selectedTabIndex == InfoTabIndex.SETTINGS.value,
+                                            onClick = { selectedTabIndex = InfoTabIndex.SETTINGS.value },
+                                            text = {
+                                                Text(text = "ルーム設定")
+                                            }
+                                        )
+                                        Tab(
+                                            selected = selectedTabIndex == InfoTabIndex.MEMBERS.value,
+                                            onClick = { selectedTabIndex = InfoTabIndex.MEMBERS.value },
+                                            text = {
+                                                Text(text = "メンバー")
+                                            }
+                                        )
+                                    }
+                                }
+                            ) { padding ->
+                                Column(
+                                    modifier = Modifier.padding(padding)
+                                ) {
+                                    val me by Store.me.collectAsState()
+                                    when (selectedTabIndex) {
+                                        // Info/Pay
+                                        InfoTabIndex.PAY.value -> {
+                                            InfoPayScreen(
+                                                me = me,
+                                                members = members!!,
+                                                receipts = receipts!!.mapNotNull { it.toReceipt() }.toList(),
+                                                settings = settings!!,
                                             )
                                         }
-                                    }
-                                ) { padding ->
-                                    Column(
-                                        modifier = Modifier.padding(padding)
-                                    ) {
-                                        when (selectedTabIndex) {
-                                            // Info/Pay
-                                            InfoTabIndex.PAY.value -> {
-                                                InfoPayScreen(
-                                                    paymentDetails = listOf() // TODO: 支払い情報を算出し格納する
-                                                )
-                                            }
-                                            // Info/Settings
-                                            InfoTabIndex.SETTINGS.value -> {
-                                                InfoSettingsScreen(
-                                                    roomId = roomId,
-                                                    settings = settings!!,
-                                                )
-                                            }
-                                            // Info/Members
-                                            InfoTabIndex.MEMBERS.value -> {
-                                                InfoMembersScreen(
-                                                    onDeleteGuest = {
-                                                        lifecycleScope.launch {
-                                                            onDeleteGuest(it)
-                                                        }
-                                                    },
-                                                    onWeightChanged = {
-                                                        lifecycleScope.launch {
-                                                            onWeightChanged(it)
-                                                        }
-                                                    },
-                                                )
-                                            }
+                                        // Info/Settings
+                                        InfoTabIndex.SETTINGS.value -> {
+                                            InfoSettingsScreen(
+                                                roomId = roomId,
+                                                settings = settings!!,
+                                            )
+                                        }
+                                        // Info/Members
+                                        InfoTabIndex.MEMBERS.value -> {
+                                            InfoMembersScreen(
+                                                onDeleteGuest = {
+                                                    lifecycleScope.launch {
+                                                        onDeleteGuest(it)
+                                                    }
+                                                },
+                                                onWeightChanged = {
+                                                    lifecycleScope.launch {
+                                                        onWeightChanged(it)
+                                                    }
+                                                },
+                                            )
                                         }
                                     }
                                 }
                             }
+                        }
 
-                            // Settings
-                            composable(InRoomNavItem.Setting.route) {
-                                SettingsScreen(
-                                    settings = settings!!,
-                                    onSettingsChanged = {
-                                        lifecycleScope.launch {
-                                            onSettingsChanged(it)
-                                        }
-                                    },
-                                    onDeleteRoomClicked = {
-                                        lifecycleScope.launch {
-                                            onDeleteRoom()
-                                        }
+                        // Settings
+                        composable(InRoomNavItem.Setting.route) {
+                            SettingsScreen(
+                                settings = settings!!,
+                                onSettingsChanged = {
+                                    lifecycleScope.launch {
+                                        onSettingsChanged(it)
                                     }
-                                )
-                            }
+                                },
+                                onDeleteRoomClicked = {
+                                    lifecycleScope.launch {
+                                        onDeleteRoom()
+                                    }
+                                }
+                            )
                         }
                     }
-
-                    if(leaveRoomConfirmDialogShown) {
-                        AttentionDialog(
-                            title = "ルームを退出します",
-                            message = "ルーム(${settings!!.name})を退出します。ルームが削除されていなければ、招待コードを入力することで再入室できます。",
-                            dismissText = "キャンセル",
-                            onDismiss = { leaveRoomConfirmDialogShown = false },
-                            confirmText = "退出",
-                            onConfirm = {
-                                leaveRoomConfirmDialogShown = false
-                                Store.stopObserving()
-                                App.updateRoomId(null)
-                                finish()
-                            })
-                    }
-
-                } else {
-                    Column(Modifier.fillMaxSize()) {
-                        Text(text = "Loading")
-                        Text(text = "roomId: $roomId")
-                        Text(text = "receipts: $receipts")
-                        Text(text = "members: $members")
-                        Text(text = "pending: $pending")
-                    }
-
                 }
 
+                if(leaveRoomConfirmDialogShown) {
+                    AttentionDialog(
+                        title = "ルームを退出します",
+                        message = "ルーム(${settings!!.name})を退出します。ルームが削除されていなければ、招待コードを入力することで再入室できます。",
+                        dismissText = "キャンセル",
+                        onDismiss = { leaveRoomConfirmDialogShown = false },
+                        confirmText = "退出",
+                        onConfirm = {
+                            leaveRoomConfirmDialogShown = false
+                            Store.stopObserving()
+                            App.updateRoomId(null)
+                            finish()
+                        })
+                }
             }
         }
     }
@@ -339,6 +326,7 @@ class InRoomActivity : ComponentActivity() {
 }
 
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 private fun ReceiptScreen(
     receipts: List<Receipt>,
@@ -371,44 +359,22 @@ private fun ReceiptScreen(
 
 @Composable
 private fun InfoPayScreen(
-    paymentDetails: List<PaymentDetail>
+    me: Member?,
+    members: List<Member>,
+    receipts: List<Receipt>,
+    settings: Settings,
 ) {
-    LazyColumn(
-        modifier = Modifier.padding(10.dp, 10.dp),
-        verticalArrangement = Arrangement.spacedBy(5.dp)
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 7.dp)
     ) {
-        items(paymentDetails) { item ->
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .border(
-                        width = 2.dp,
-                        color = MaterialTheme.colorScheme.outline,
-                        shape = MaterialTheme.shapes.medium,
-                    )
-                    .background(
-                        color = MaterialTheme.colorScheme.surfaceContainer,
-                        shape = MaterialTheme.shapes.medium,
-                    )
-                    .padding(10.dp, 5.dp)
-            ) {
-                Column {
-                    Text(
-                        text = "${item.from.name}は${item.to.name}へ " +
-                                "${stringResource(R.string.settings_currency)}${item.amount} 支払う",
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.titleMedium,
-                    )
-                    Text(
-                        text =
-                        "${item.from.name}の合計支払い金額: ${stringResource(R.string.settings_currency)}${item.total}",
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                }
-            }
-
-        }
+        PaymentList(
+            me = me,
+            members = members,
+            receipts = receipts,
+            settings = settings,
+        )
     }
 }
 
@@ -610,38 +576,6 @@ private fun ActivityPreview() {
         onNewMemberRequest = RequestType.ACCEPT_BY_MODS,
         splitUnit = SplitUnit.TEN,
     )
-    val paymentDetails = listOf(
-        PaymentDetail(
-            from = member1,
-            to = member2,
-            amount = 120_000,
-            total = 740000,
-        ),
-        PaymentDetail(
-            from = member2,
-            to = member1,
-            amount = 5_000,
-            total = 8000,
-        ),
-        PaymentDetail(
-            from = member1,
-            to = member2,
-            amount = 500_000,
-            total = 740000,
-        ),
-        PaymentDetail(
-            from = member2,
-            to = member1,
-            amount = 3_000,
-            total = 8000,
-        ),
-        PaymentDetail(
-            from = member1,
-            to = member2,
-            amount = 120_000,
-            total = 740000,
-        ),
-    )
     val roomName = "○○キャンプ"
     SplitAppTheme {
         val controller = rememberNavController()
@@ -708,7 +642,10 @@ private fun ActivityPreview() {
                                 // Info/Pay
                                 InfoTabIndex.PAY.value -> {
                                     InfoPayScreen(
-                                        paymentDetails = paymentDetails,
+                                        me = member1,
+                                        members = listOf(member1, member2),
+                                        receipts = receipts,
+                                        settings = settings,
                                     )
                                 }
                                 // Info/Settings
