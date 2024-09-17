@@ -6,6 +6,7 @@ import com.github.mutoxu_n.splitapp.BuildConfig
 import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.PendingMember
 import com.github.mutoxu_n.splitapp.models.PendingUser
+import com.github.mutoxu_n.splitapp.models.Receipt
 import com.github.mutoxu_n.splitapp.models.ReceiptModel
 import com.github.mutoxu_n.splitapp.models.RequestType
 import com.github.mutoxu_n.splitapp.models.Role
@@ -37,7 +38,7 @@ object Store {
     var receipts: MutableStateFlow<List<ReceiptModel>?> = MutableStateFlow(null)
         private set
     private var displayNameListener: ListenerRegistration? = null
-    var displayName: MutableStateFlow<String?> = MutableStateFlow(null)
+    private var displayName: MutableStateFlow<String?> = MutableStateFlow(null)
     private var meListener: ListenerRegistration? = null
     var me: MutableStateFlow<Member?> = MutableStateFlow(null)
 

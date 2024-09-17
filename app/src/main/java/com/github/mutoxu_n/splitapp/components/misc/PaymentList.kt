@@ -38,7 +38,7 @@ fun PaymentList(
     receipts: List<Receipt>,
     settings: Settings,
 ) {
-    val (totals, remains) = calcTotalsAndRemains(receipts, members)
+    val (paid, remains) = calcPaidAndRemains(receipts, members)
     val transactions = calcTransactions(
         members,
         remains,
@@ -47,7 +47,8 @@ fun PaymentList(
 
     LazyColumn(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(10.dp, 0.dp),
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
         itemsIndexed(members) { index, member ->
@@ -55,7 +56,7 @@ fun PaymentList(
                 me,
                 member,
                 members,
-                totals[index],
+                paid[index],
                 remains[index],
                 transactions[index],
             )
@@ -159,7 +160,7 @@ private fun PaymentListItem(
     }
 }
 
-private fun calcTotalsAndRemains(
+private fun calcPaidAndRemains(
     receipts: List<Receipt>,
     members: List<Member>,
 ): Pair<List<Int>, List<Int>> {
@@ -268,7 +269,7 @@ private fun PaymentListPreview() {
                 ),
             )
 
-            val (totals, remains) = calcTotalsAndRemains(receipts, members)
+            val (totals, remains) = calcPaidAndRemains(receipts, members)
             val transactions = calcTransactions(members, remains, 50)
 
             LazyColumn(
