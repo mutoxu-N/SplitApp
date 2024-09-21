@@ -174,14 +174,24 @@ private fun calcPaidAndRemains(
     for(r in receipts) {
         // 合計重み
         var sum = .0
-        for(m in r.buyers) sum += m.weight
+        if(r.buyers.isEmpty())
+            for(m in members) sum += m.weight
+        else
+            for(m in r.buyers) sum += m.weight
 
         // 金額計算
         val payment = r.payment.toDouble()
         totalDouble[memberMap[r.paid.name]!!] += payment
         remainDouble[memberMap[r.paid.name]!!] -= payment
-        for(m in r.buyers)
-            remainDouble[memberMap[m.name]!!] += payment * m.weight / sum
+        if(r.buyers.isEmpty()) {
+            // 全員
+            for(m in members)
+                remainDouble[memberMap[m.name]!!] += payment * m.weight / sum
+
+        } else {
+            for(m in r.buyers)
+                remainDouble[memberMap[m.name]!!] += payment * m.weight / sum
+        }
     }
     return Pair(totalDouble.map { (it+0.5).toInt() }, remainDouble.map { (it+0.5).toInt() })
 }
