@@ -34,6 +34,7 @@ class API {
         val body = RoomCreateBody(settingsModel = settingsModel)
         val response = service.createRoom(Auth.token!!, name, body)
         Log.e("API.roomCreate()", response.body().toString())
+        App.updateRoomId(response.body()!!["room_id"] as String?)
     }
 
     suspend fun joinRoom(roomId: String, displayName: String, callBack: (Boolean) -> Unit = {}) {

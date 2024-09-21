@@ -82,6 +82,7 @@ class RoomJoinActivity : ComponentActivity() {
                 val roomId: String? by App.roomId.collectAsState()
 
                 LaunchedEffect(key1 = roomId, key2 = waitForInput) {
+                    Log.e(TAG, "roomId=$roomId, waitForInput=$waitForInput")
                     if(!waitForInput && roomId != null) {
                         waitForInput = true
                         startInRoomActivity()

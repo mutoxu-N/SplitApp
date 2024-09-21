@@ -67,6 +67,7 @@ import com.github.mutoxu_n.splitapp.components.settings.SettingsEditor
 import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.PendingMember
 import com.github.mutoxu_n.splitapp.models.Receipt
+import com.github.mutoxu_n.splitapp.models.ReceiptModel
 import com.github.mutoxu_n.splitapp.models.RequestType
 import com.github.mutoxu_n.splitapp.models.Role
 import com.github.mutoxu_n.splitapp.models.Settings
@@ -112,14 +113,13 @@ class InRoomActivity : ComponentActivity() {
             SplitAppTheme {
                 val controller = rememberNavController()
                 val settings: Settings? by Store.settings.collectAsState()
-                if(settings == null) return@SplitAppTheme
-
-                val receipts by Store.receipts.collectAsState()
+                val receipts: List<ReceiptModel>? by Store.receipts.collectAsState()
                 val members: List<Member>? by Store.members.collectAsState()
                 val pending: List<PendingMember>? by Store.pendingMembers.collectAsState()
 
                 if(
                     roomId == null ||
+                    settings == null ||
                     receipts == null ||
                     members == null ||
                     pending == null
