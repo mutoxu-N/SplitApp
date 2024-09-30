@@ -5,8 +5,7 @@ import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.BuildConfig
 import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.PendingMember
-import com.github.mutoxu_n.splitapp.models.PendingUser
-import com.github.mutoxu_n.splitapp.models.Receipt
+import com.github.mutoxu_n.splitapp.models.PendingState
 import com.github.mutoxu_n.splitapp.models.ReceiptModel
 import com.github.mutoxu_n.splitapp.models.RequestType
 import com.github.mutoxu_n.splitapp.models.Role
@@ -23,7 +22,7 @@ import java.time.ZoneOffset
 
 object Store {
     private var pendingListener: ListenerRegistration? = null
-    var pendingUsers: MutableStateFlow<PendingUser?> = MutableStateFlow(null)
+    var pendingState: MutableStateFlow<PendingState?> = MutableStateFlow(null)
         private set
     private var settingsListener: ListenerRegistration? = null
     var settings: MutableStateFlow<Settings?> = MutableStateFlow(null)
@@ -49,14 +48,42 @@ object Store {
         }
     }
 
+    fun startPendingObserving() {
+        stopPendingObserving()
+        val db = FirebaseFirestore.getInstance()
+
+        pendingListener = db.collection("pending_users").document(Auth.auth.uid!!).addSnapshotListener { snapshot, e ->
+            if(e != null) {
+                pendingState.update { null }
+                Log.w("Store", "listen:error", e)
+                return@addSnapshotListener
+            }
+
+            if (snapshot == null || snapshot.data == null) {
+                pendingState.update { null }
+                return@addSnapshotListener
+            }
+
+            val data = snapshot.data!!
+            pendingState.update {
+                PendingState(
+                    id = data["id"] as String,
+                    isApproved = data["is_approved"] as Boolean?,
+                )
+            }
+        }
+    }
+
+    fun stopPendingObserving() {
+        pendingListener?.remove()
+        pendingState.update { null }
+    }
+
     fun startObserving() {
         stopObserving()
 
         val db = FirebaseFirestore.getInstance()
         val roomId: String = App.roomId.value ?: return
-
-        pendingListener = db.collection("pending_users").addSnapshotListener { snapshot, e ->
-        }
 
         settingsListener = db.collection("rooms").document(roomId).addSnapshotListener { snapshot, e ->
             if(e != null) {
@@ -110,6 +137,34 @@ object Store {
 
         pendingMembers.update { listOf() }
         pendingMembersListener = db.collection("rooms").document(roomId).collection("pending").addSnapshotListener { snapshot, e ->
+            if(e != null) {
+                Log.w("Store", "listen:error", e)
+                return@addSnapshotListener
+            }
+
+            if(snapshot == null) {
+                pendingMembers.update { listOf() }
+                return@addSnapshotListener
+            }
+
+            val m = mutableListOf<PendingMember>()
+            for(data in snapshot.documents) {
+                val member = PendingMember(
+                    name = data["name"] as String,
+                    uid = data["id"] as String,
+                    isAccepted = data["is_accepted"] as Boolean,
+                    approval = (data["approval"] as Long).toInt(),
+                    required = (data["required"] as Long).toInt(),
+                    size = (data["size"] as Long).toInt(),
+                    voted = data["voted"] as List<String>,
+                )
+
+                if(me.value?.uid !in member.voted) {
+                    m.add(member)
+                }
+            }
+            pendingMembers.update { m }
+
         }
 
         receipts.update { listOf() }
@@ -146,7 +201,7 @@ object Store {
                 Log.w("Store", "listen:error", e)
                 return@addSnapshotListener
             }
-            if(snapshot == null) {
+            if(snapshot?.data == null) {
                 displayName.update { null }
                 return@addSnapshotListener
             }
@@ -166,7 +221,7 @@ object Store {
                     return@addSnapshotListener
                 }
 
-                val data = snapshot.data as Map<*, *>
+                val data = (snapshot2.data as Map<*, *>?) ?: return@addSnapshotListener
                 me.update {
                     Member(
                         name = data["name"] as String,

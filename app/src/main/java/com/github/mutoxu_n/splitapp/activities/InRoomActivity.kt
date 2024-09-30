@@ -66,6 +66,7 @@ import com.github.mutoxu_n.splitapp.components.settings.RoomIdDisplay
 import com.github.mutoxu_n.splitapp.components.settings.SettingsEditor
 import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.PendingMember
+import com.github.mutoxu_n.splitapp.models.PendingState
 import com.github.mutoxu_n.splitapp.models.Receipt
 import com.github.mutoxu_n.splitapp.models.ReceiptModel
 import com.github.mutoxu_n.splitapp.models.RequestType
@@ -98,6 +99,7 @@ class InRoomActivity : ComponentActivity() {
     }
 
     init {
+        Store.stopPendingObserving()
         Store.startObserving()
     }
 
@@ -123,7 +125,10 @@ class InRoomActivity : ComponentActivity() {
                     receipts == null ||
                     members == null ||
                     pending == null
-                ) return@SplitAppTheme
+                ) {
+                    Text(text = "roomId: $roomId, settings: $settings, receipts: $receipts, members: $members, pending: $pending")
+                    return@SplitAppTheme
+                }
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -248,6 +253,47 @@ class InRoomActivity : ComponentActivity() {
                             )
                         }
                     }
+
+                    // 投票画面
+                    if(pending!!.isNotEmpty()) {
+                        val me by Store.me.collectAsState()
+                        var showDialog = false
+                        me?.role?.let{ role ->
+                            when(settings!!.onNewMemberRequest) {
+                                RequestType.ACCEPT_BY_MODS -> {
+                                    if(role.roleId >= Role.MODERATOR.roleId) showDialog = true
+                                }
+
+                                RequestType.ACCEPT_BY_OWNER -> {
+                                    if(role == Role.OWNER) showDialog = true
+                                }
+
+                                RequestType.VOTE -> showDialog = true
+                                RequestType.ALWAYS -> {}
+                            }
+
+                            if(showDialog) {
+                                val target = pending!!.first()
+                                AttentionDialog(
+                                    title = "投票",
+                                    message = "${target.name} がルームへの参加を希望しています。承認しますか？",
+                                    dismissText = "拒否",
+                                    onDismiss = {
+                                        lifecycleScope.launch {
+                                            API().accept(roomId, target.uid, false)
+                                        }
+                                    },
+                                    confirmText = "承認",
+                                    onConfirm = {
+                                        lifecycleScope.launch {
+                                            API().accept(roomId, target.uid, true)
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                    }
+
                 }
 
                 if(leaveRoomConfirmDialogShown) {

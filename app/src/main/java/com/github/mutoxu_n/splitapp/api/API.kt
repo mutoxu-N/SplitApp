@@ -37,7 +37,7 @@ class API {
         App.updateRoomId(response.body()!!["room_id"] as String?)
     }
 
-    suspend fun joinRoom(roomId: String, displayName: String, callBack: (Boolean) -> Unit = {}) {
+    suspend fun joinRoom(roomId: String, displayName: String, callBack: (Boolean, Boolean) -> Unit = {_, _ ->}) {
         if (Auth.token == null) return
 
         val service = retrofit.create(RoomServices::class.java)
@@ -49,10 +49,15 @@ class API {
                 if(it["joined"]!! as Boolean) {
                     App.updateDisplayName(displayName)
                     App.updateRoomId(roomId)
-                    callBack(true)
+                    callBack(true, false)
+
+                } else if(it["pending"]!! as Boolean) {
+                    App.updateDisplayName(displayName)
+                    App.updateRoomId(roomId)
+                    callBack(false, true)
 
                 } else {
-                    callBack(false)
+                    callBack(false, false)
                 }
 
             } catch (e: Exception) {

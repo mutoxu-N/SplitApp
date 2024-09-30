@@ -35,8 +35,11 @@ import androidx.lifecycle.lifecycleScope
 import com.github.mutoxu_n.splitapp.App
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
 import com.github.mutoxu_n.splitapp.api.API
+import com.github.mutoxu_n.splitapp.common.Store
+import com.github.mutoxu_n.splitapp.components.dialogs.AttentionDialog
 import com.github.mutoxu_n.splitapp.components.misc.DisplayNameTextField
 import com.github.mutoxu_n.splitapp.components.misc.OutRoomTopBar
+import com.github.mutoxu_n.splitapp.models.PendingState
 import kotlinx.coroutines.launch
 
 class RoomJoinActivity : ComponentActivity() {
@@ -62,24 +65,18 @@ class RoomJoinActivity : ComponentActivity() {
         }
     }
 
+    init {
+        Store.startPendingObserving()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-//        if(App.validateRoomID(App.roomId.value) && !displayName.isNullOrBlank()) {
-//            lifecycleScope.launch {
-//                joinRoom(
-//                    roomId = App.roomId.value!!,
-//                    displayName = displayName,
-//                    saveDisplayName = false,
-//                )
-//            }
-//        }
-
 
         enableEdgeToEdge()
         setContent {
             SplitAppTheme {
                 val roomId: String? by App.roomId.collectAsState()
+                val pendingState: PendingState? by Store.pendingState.collectAsState()
 
                 LaunchedEffect(key1 = roomId, key2 = waitForInput) {
                     Log.e(TAG, "roomId=$roomId, waitForInput=$waitForInput")
@@ -113,6 +110,40 @@ class RoomJoinActivity : ComponentActivity() {
                         )
                     }
                 }
+
+                Log.e(TAG, pendingState.toString())
+                pendingState?.let {
+                    when(it.isApproved) {
+                        true -> {
+                            Store.stopPendingObserving()
+                            startInRoomActivity()
+                        }
+
+                        false -> {
+                            AttentionDialog(
+                                title = "承認待ち",
+                                message = "ルームへの参加が拒否されました",
+                                onDismiss = {
+                                    // TODO: キャンセルボタン
+                                },
+                                confirmText = null,
+                                onConfirm = {}
+                            )
+                        }
+
+                        null -> {
+                            AttentionDialog(
+                                title = "承認待ち",
+                                message = "ルームへの参加許可を待機しています",
+                                onDismiss = {
+                                    // TODO: キャンセルボタン
+                                },
+                                confirmText = null,
+                                onConfirm = {}
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -123,12 +154,12 @@ class RoomJoinActivity : ComponentActivity() {
             App.saveDisplayName(displayName)
 
         App.updateRoomId(null)
-        API().joinRoom(roomId, displayName) { b ->
-            if(b) {
+        API().joinRoom(roomId, displayName) { joined, pending ->
+            if(joined) {
                 waitForInput = false
                 Log.e(TAG, "joinRoom: success")
 
-            } else {
+            } else if(!pending) {
                 Toast.makeText(
                     this@RoomJoinActivity,
                     "ルーム(ID:$roomId)は存在しません",
@@ -136,7 +167,6 @@ class RoomJoinActivity : ComponentActivity() {
                 ).show()
 
             }
-
         }
     }
 
