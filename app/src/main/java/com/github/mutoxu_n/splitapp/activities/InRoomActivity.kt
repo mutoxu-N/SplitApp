@@ -310,6 +310,17 @@ class InRoomActivity : ComponentActivity() {
                             finish()
                         })
                 }
+
+                val me by Store.me.collectAsState()
+                if(me != null && members!!.map { it.name }.contains(me!!.name)) {
+                    AttentionDialog(
+                        title = "ルームから退出します。",
+                        message = "メンバー ${me!!.name} はルームから削除されたため、ルームを退出します。",
+                        dismissText = null,
+                        onDismiss = {},
+                        onConfirm = { finish() }
+                    )
+                }
             }
         }
     }
