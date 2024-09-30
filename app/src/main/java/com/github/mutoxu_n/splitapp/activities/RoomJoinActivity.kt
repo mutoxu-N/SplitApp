@@ -25,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -73,6 +74,7 @@ class RoomJoinActivity : ComponentActivity() {
         setContent {
             SplitAppTheme {
                 val roomId: String? by App.roomId.collectAsState()
+                var inputRoomId: String? by rememberSaveable { mutableStateOf(roomId) }
                 val pendingState: PendingState? by Store.pendingState.collectAsState()
 
                 LaunchedEffect(key1 = roomId, key2 = waitForInput) {
@@ -100,6 +102,7 @@ class RoomJoinActivity : ComponentActivity() {
                             initialRoomId = roomId ?: "",
                             onJoinClicked = { roomId, displayName, saveDisplayName ->
                                 lifecycleScope.launch {
+                                    inputRoomId = roomId
                                     joinRoom(roomId, displayName, saveDisplayName)
                                 }
                             },
@@ -111,9 +114,9 @@ class RoomJoinActivity : ComponentActivity() {
                 pendingState?.let {
                     when(it.isApproved) {
                         true -> {
-                            waitForInput = true
+                            waitForInput = false
                             Store.stopPendingObserving()
-                            startInRoomActivity()
+                            App.updateRoomId(inputRoomId)
                         }
 
                         false -> {
@@ -163,7 +166,7 @@ class RoomJoinActivity : ComponentActivity() {
         App.updateRoomId(null)
         API().joinRoom(roomId, displayName) { joined, pending ->
             if(joined) {
-                waitForInput = true
+                waitForInput = false
                 Log.e(TAG, "joinRoom: success")
 
             } else if(!pending) {
@@ -173,7 +176,6 @@ class RoomJoinActivity : ComponentActivity() {
                     "ルーム(ID:$roomId)は存在しません",
                     Toast.LENGTH_SHORT,
                 ).show()
-
             }
         }
     }

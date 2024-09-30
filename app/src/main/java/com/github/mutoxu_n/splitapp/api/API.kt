@@ -52,8 +52,6 @@ class API {
                     callBack(true, false)
 
                 } else if(it["pending"]!! as Boolean) {
-                    App.updateDisplayName(displayName)
-                    App.updateRoomId(roomId)
                     callBack(false, true)
 
                 } else {
