@@ -65,13 +65,9 @@ class RoomJoinActivity : ComponentActivity() {
         }
     }
 
-    init {
-        waitForInput = true
-        Store.startPendingObserving()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Store.startPendingObserving()
 
         enableEdgeToEdge()
         setContent {
@@ -107,6 +103,7 @@ class RoomJoinActivity : ComponentActivity() {
                                     joinRoom(roomId, displayName, saveDisplayName)
                                 }
                             },
+                            waitForInput = waitForInput,
                         )
                     }
                 }
@@ -195,6 +192,7 @@ private fun Screen(
     initialDisplayName: String,
     initialRoomId: String,
     onJoinClicked: (String, String, Boolean) -> Unit,
+    waitForInput: Boolean
 ) {
     var displayName by rememberSaveable { mutableStateOf(initialDisplayName) }
     var isDisplayNameError by rememberSaveable { mutableStateOf(false) }
@@ -237,7 +235,7 @@ private fun Screen(
         // ルーム参加ボタン
         Button(
             onClick = { onJoinClicked(roomId, displayName, saveDisplayName) },
-            enabled = !isDisplayNameError && !isRoomIdError && displayName.isNotBlank(),
+            enabled = waitForInput && !isDisplayNameError && !isRoomIdError && displayName.isNotBlank(),
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = 7.dp),
@@ -266,6 +264,7 @@ private fun Preview() {
                     initialDisplayName = "太郎",
                     initialRoomId = "AB12C3",
                     onJoinClicked = { _, _, _ -> },
+                    true,
                 )
             }
         }

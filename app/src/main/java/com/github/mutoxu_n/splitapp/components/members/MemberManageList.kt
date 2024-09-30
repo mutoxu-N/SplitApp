@@ -138,8 +138,10 @@ private fun MemberManageListItem(
                 OutlinedIconButton(onClick = { isNameDialogShown = true }) {
                     Icon(imageVector = Icons.Default.Edit, contentDescription = null)
                 }
-                OutlinedIconButton(onClick = { isDeleteDialogShown = true }) {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+                if(member.uid == null) {
+                    OutlinedIconButton(onClick = { isDeleteDialogShown = true }) {
+                        Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+                    }
                 }
             }
         }
