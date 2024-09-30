@@ -12,6 +12,7 @@ enum class RequestType {
             ALWAYS to (App.appContext?.getString(R.string.request_type_always) ?: ALWAYS.name),
             VOTE to (App.appContext?.getString(R.string.request_type_vote) ?: VOTE.name),
             ACCEPT_BY_MODS to (App.appContext?.getString(R.string.request_type_moderator) ?: ACCEPT_BY_MODS.name),
+            ACCEPT_BY_OWNER to (App.appContext?.getString(R.string.request_type_owner) ?: ACCEPT_BY_OWNER.name),
         )
         private val ID = mapOf(
             ALWAYS to "always",

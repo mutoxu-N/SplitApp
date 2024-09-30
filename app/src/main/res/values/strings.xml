@@ -69,4 +69,5 @@
     <string name="title_activity_member_manage">MemberManageActivity</string>
     <string name="topbar_title_edit_receipt">レシートの編集</string>
     <string name="topbar_title_create_receipt">レシートの作成</string>
+    <string name="request_type_owner">オーナーが承認</string>
 </resources>
