@@ -15,7 +15,7 @@ data class Settings(
             permissionReceiptCreate = Role.OWNER,
             permissionReceiptEdit = Role.OWNER,
             onNewMemberRequest = RequestType.ACCEPT_BY_MODS,
-            acceptRate = 0,
+            acceptRate = 100,
         )
     }
 

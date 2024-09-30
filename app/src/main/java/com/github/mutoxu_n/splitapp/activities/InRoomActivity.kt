@@ -290,13 +290,19 @@ class InRoomActivity : ComponentActivity() {
                                     dismissText = "拒否",
                                     onDismiss = {
                                         lifecycleScope.launch {
-                                            API().accept(roomId, target.uid, false)
+                                            when(settings!!.onNewMemberRequest) {
+                                                RequestType.VOTE -> API().vote(roomId, target.uid, false)
+                                                else -> API().accept(roomId, target.uid, false)
+                                            }
                                         }
                                     },
                                     confirmText = "承認",
                                     onConfirm = {
                                         lifecycleScope.launch {
-                                            API().accept(roomId, target.uid, true)
+                                            when(settings!!.onNewMemberRequest) {
+                                                RequestType.VOTE -> API().vote(roomId, target.uid, true)
+                                                else -> API().accept(roomId, target.uid, true)
+                                            }
                                         }
                                     }
                                 )

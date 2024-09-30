@@ -166,7 +166,7 @@ class RoomJoinActivity : ComponentActivity() {
         App.updateRoomId(null)
         API().joinRoom(roomId, displayName) { joined, pending ->
             if(joined) {
-                waitForInput = false
+                waitForInput = true
                 Log.e(TAG, "joinRoom: success")
 
             } else if(!pending) {
