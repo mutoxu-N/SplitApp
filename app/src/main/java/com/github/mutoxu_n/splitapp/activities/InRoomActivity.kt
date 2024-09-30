@@ -320,6 +320,19 @@ class InRoomActivity : ComponentActivity() {
                         onDismiss = {},
                         onConfirm = { finish() }
                     )
+                    return@SplitAppTheme
+                }
+
+                val roomName by Store.room.collectAsState()
+                if(roomName == null) {
+                    AttentionDialog(
+                        title = "ルームから退出します。",
+                        message = "ルーム($roomName)は削除されたため、ホーム画面に戻ります。",
+                        dismissText = null,
+                        onDismiss = {},
+                        onConfirm = { finish() }
+                    )
+                    return@SplitAppTheme
                 }
             }
         }
