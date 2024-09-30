@@ -327,7 +327,7 @@ class InRoomActivity : ComponentActivity() {
                 if(roomName == null) {
                     AttentionDialog(
                         title = "ルームから退出します。",
-                        message = "ルーム($roomName)は削除されたため、ホーム画面に戻ります。",
+                        message = "このルームは削除されたため、終了します。",
                         dismissText = null,
                         onDismiss = {},
                         onConfirm = { finish() }
