@@ -25,6 +25,12 @@ interface RoomServices {
         @Header("name") name: String,
     ): Response<Map<String, Any>>
 
+    @POST("room/{room_id}/cancel")
+    suspend fun cancel(
+        @Header("token") token: String,
+        @Path("room_id") roomId: String,
+    ): Response<Map<String, Any>>
+
     @POST("room/{room_id}/vote")
     suspend fun vote(
         @Header("token") token: String,

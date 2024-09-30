@@ -125,7 +125,11 @@ class RoomJoinActivity : ComponentActivity() {
                                 message = "ルームへの参加が拒否されました",
                                 onDismiss = {
                                     waitForInput = true
-                                    // TODO: キャンセルボタン
+                                    roomId?.let {
+                                        lifecycleScope.launch {
+                                            API().cancel(it)
+                                        }
+                                    }
                                 },
                                 confirmText = null,
                                 onConfirm = {}
@@ -138,7 +142,11 @@ class RoomJoinActivity : ComponentActivity() {
                                 message = "ルームへの参加許可を待機しています",
                                 onDismiss = {
                                     waitForInput = true
-                                    // TODO: キャンセルボタン
+                                    roomId?.let {
+                                        lifecycleScope.launch {
+                                            API().cancel(it)
+                                        }
+                                    }
                                 },
                                 confirmText = null,
                                 onConfirm = {}

@@ -67,6 +67,13 @@ class API {
         }
     }
 
+    suspend fun cancel(roomId: String) {
+        if (Auth.token == null) return
+        val service = retrofit.create(RoomServices::class.java)
+        val response = service.cancel(Auth.token!!, roomId)
+        Log.e("API.cancel()", response.body().toString())
+    }
+
     suspend fun vote(roomId: String, voteFor: String, accepted: Boolean) {
         if (Auth.token == null) return
         val service = retrofit.create(RoomServices::class.java)
