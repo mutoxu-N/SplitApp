@@ -66,6 +66,7 @@ class RoomJoinActivity : ComponentActivity() {
     }
 
     init {
+        waitForInput = true
         Store.startPendingObserving()
     }
 
@@ -81,7 +82,6 @@ class RoomJoinActivity : ComponentActivity() {
                 LaunchedEffect(key1 = roomId, key2 = waitForInput) {
                     Log.e(TAG, "roomId=$roomId, waitForInput=$waitForInput")
                     if(!waitForInput && roomId != null) {
-                        waitForInput = true
                         startInRoomActivity()
                     }
                 }
@@ -111,10 +111,10 @@ class RoomJoinActivity : ComponentActivity() {
                     }
                 }
 
-                Log.e(TAG, pendingState.toString())
                 pendingState?.let {
                     when(it.isApproved) {
                         true -> {
+                            waitForInput = true
                             Store.stopPendingObserving()
                             startInRoomActivity()
                         }
@@ -124,6 +124,7 @@ class RoomJoinActivity : ComponentActivity() {
                                 title = "承認待ち",
                                 message = "ルームへの参加が拒否されました",
                                 onDismiss = {
+                                    waitForInput = true
                                     // TODO: キャンセルボタン
                                 },
                                 confirmText = null,
@@ -136,6 +137,7 @@ class RoomJoinActivity : ComponentActivity() {
                                 title = "承認待ち",
                                 message = "ルームへの参加許可を待機しています",
                                 onDismiss = {
+                                    waitForInput = true
                                     // TODO: キャンセルボタン
                                 },
                                 confirmText = null,
@@ -160,6 +162,7 @@ class RoomJoinActivity : ComponentActivity() {
                 Log.e(TAG, "joinRoom: success")
 
             } else if(!pending) {
+                waitForInput = true
                 Toast.makeText(
                     this@RoomJoinActivity,
                     "ルーム(ID:$roomId)は存在しません",
@@ -171,6 +174,7 @@ class RoomJoinActivity : ComponentActivity() {
     }
 
     private fun startInRoomActivity() {
+        waitForInput = true
         InRoomActivity.launch(
             context = this@RoomJoinActivity,
         )

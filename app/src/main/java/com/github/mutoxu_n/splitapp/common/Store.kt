@@ -41,9 +41,6 @@ object Store {
     private var meListener: ListenerRegistration? = null
     var me: MutableStateFlow<Member?> = MutableStateFlow(null)
 
-    private var roomListener: ListenerRegistration? = null
-    var room: MutableStateFlow<String?> = MutableStateFlow(null)
-
     init {
         // デバッグ時
         if(BuildConfig.DEBUG) {
@@ -87,6 +84,7 @@ object Store {
 
         val db = FirebaseFirestore.getInstance()
         val roomId: String = App.roomId.value ?: return
+        Log.e("STORE", "roomId = $roomId")
 
         settingsListener = db.collection("rooms").document(roomId).addSnapshotListener { snapshot, e ->
             if(e != null) {
@@ -235,18 +233,6 @@ object Store {
                 }
             }
         }
-
-        roomListener = db.collection("rooms").document(roomId).addSnapshotListener { snapshot, e ->
-            if(e != null) {
-                Log.w("Store", "listen:error", e)
-                return@addSnapshotListener
-            }
-            if(snapshot?.data == null) {
-                room.update { null }
-                return@addSnapshotListener
-            }
-            room.update { snapshot["name"] as String }
-        }
     }
 
     fun stopObserving() {
@@ -264,7 +250,5 @@ object Store {
         displayName.update { null }
         meListener?.remove()
         me.update { null }
-        roomListener?.remove()
-        room.update { null }
     }
 }

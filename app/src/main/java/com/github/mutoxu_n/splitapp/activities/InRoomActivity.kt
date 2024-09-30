@@ -119,6 +119,16 @@ class InRoomActivity : ComponentActivity() {
                 val members: List<Member>? by Store.members.collectAsState()
                 val pending: List<PendingMember>? by Store.pendingMembers.collectAsState()
 
+                if(settings == null) {
+                    AttentionDialog(
+                        title = "ルームから退出します。",
+                        message = "このルームは削除されたため、終了します。",
+                        dismissText = null,
+                        onDismiss = {},
+                        onConfirm = { finish() }
+                    )
+                }
+
                 if(
                     roomId == null ||
                     settings == null ||
@@ -312,22 +322,10 @@ class InRoomActivity : ComponentActivity() {
                 }
 
                 val me by Store.me.collectAsState()
-                if(me != null && members!!.map { it.name }.contains(me!!.name)) {
+                if(me != null && !members!!.map { it.name }.contains(me!!.name)) {
                     AttentionDialog(
                         title = "ルームから退出します。",
                         message = "メンバー ${me!!.name} はルームから削除されたため、ルームを退出します。",
-                        dismissText = null,
-                        onDismiss = {},
-                        onConfirm = { finish() }
-                    )
-                    return@SplitAppTheme
-                }
-
-                val roomName by Store.room.collectAsState()
-                if(roomName == null) {
-                    AttentionDialog(
-                        title = "ルームから退出します。",
-                        message = "このルームは削除されたため、終了します。",
                         dismissText = null,
                         onDismiss = {},
                         onConfirm = { finish() }
