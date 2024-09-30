@@ -236,8 +236,6 @@ object Store {
     }
 
     fun stopObserving() {
-        pendingListener?.remove()
-        pendingMembers.update { null }
         settingsListener?.remove()
         settings.update { null }
         membersListener?.remove()

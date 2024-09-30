@@ -68,7 +68,6 @@ class RoomJoinActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Store.startPendingObserving()
 
         enableEdgeToEdge()
         setContent {
@@ -101,6 +100,7 @@ class RoomJoinActivity : ComponentActivity() {
                             initialDisplayName = displayName ?: "",
                             initialRoomId = roomId ?: "",
                             onJoinClicked = { roomId, displayName, saveDisplayName ->
+                                Store.startPendingObserving()
                                 lifecycleScope.launch {
                                     inputRoomId = roomId
                                     joinRoom(roomId, displayName, saveDisplayName)
@@ -115,6 +115,11 @@ class RoomJoinActivity : ComponentActivity() {
                     when(it.isApproved) {
                         true -> {
                             waitForInput = false
+                            lifecycleScope.launch {
+                                inputRoomId?.let { rid ->
+                                    API().cancel(rid)
+                                }
+                            }
                             Store.stopPendingObserving()
                             App.updateRoomId(inputRoomId)
                         }
