@@ -166,7 +166,7 @@ private fun MemberManageListItem(
 
     if(isNameDialogShown) {
         ValueChangeDialog(
-            title = "メンバー名の変更",
+            title = stringResource(R.string.member_manage_dialog_change_name_title),
             value = member.name,
             onDismiss = { isNameDialogShown = false },
             onConfirm = {
@@ -178,10 +178,10 @@ private fun MemberManageListItem(
 
     if(isDeleteDialogShown) {
         AttentionDialog(
-            title = "ゲストの削除",
-            message = "ゲスト ${member.name} を削除します。",
+            title = stringResource(id = R.string.delete_guest_dialog_title),
+            message = stringResource(id = R.string.delete_guest_dialog_message, member.name),
             onDismiss = { isDeleteDialogShown = false },
-            confirmText = "削除する",
+            confirmText = stringResource(R.string.delete_guest_dialog_delete_button),
             onConfirm = {
                 isDeleteDialogShown = false
                 onDeleteGuest(member)
@@ -192,18 +192,21 @@ private fun MemberManageListItem(
     if(isOwner) {
         if(member.role == Role.OWNER) {
             AttentionDialog(
-                title = "オーナーを変更できません",
-                message = "自分自身のオーナー権限をはく奪することはできません。他のメンバーの役職をオーナーに設定することで、オーナー権限を譲渡できます。",
+                title = stringResource(R.string.member_manage_dialog_not_owner_title),
+                message = stringResource(R.string.member_manage_dialog_not_owner_message),
                 dismissText = null,
                 onDismiss = { isOwner=false },
-                confirmText = "閉じる",
+                confirmText = stringResource(R.string.member_manage_dialog_not_owner_button),
                 onConfirm = { isOwner = false }
             )
 
         } else {
             AttentionDialog(
-                title = "オーナーを変更します",
-                message = "オーナー権限を ${member.name} に譲渡します。この操作が完了すると、再度オーナー権限を得るまで一部の操作にアクセスできなくなります。",
+                title = stringResource(R.string.member_manage_dialog_change_owner_title),
+                message = stringResource(
+                    R.string.member_manage_dialog_change_owner_message,
+                    member.name
+                ),
                 onDismiss = { isOwner=false },
                 onConfirm = {
                     onMemberChanged(member.name, member.copy(role = Role.OWNER))

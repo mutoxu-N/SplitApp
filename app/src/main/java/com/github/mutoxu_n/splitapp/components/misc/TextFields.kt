@@ -16,7 +16,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
 
 @Composable
@@ -44,7 +46,7 @@ fun DisplayNameTextField(
             },
             isError = isDisplayNameError,
             maxLines = 1,
-            label = { Text(text = "表示名") },
+            label = { Text(text = stringResource(R.string.term_display_name)) },
         )
         Row(
             modifier = Modifier
@@ -66,7 +68,7 @@ fun DisplayNameTextField(
                         saveDisplayName = !saveDisplayName
                         onValueChanged(displayName, isDisplayNameError, saveDisplayName)
                     },
-                text = "この名前を記録する",
+                text = stringResource(R.string.display_name_keep_checkbox),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,
             )

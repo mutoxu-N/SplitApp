@@ -33,7 +33,7 @@ class API {
         val settingsModel = settings.toModel()
         val body = RoomCreateBody(settingsModel = settingsModel)
         val response = service.createRoom(Auth.token!!, name, body)
-        Log.e("API.roomCreate()", response.body().toString())
+        Log.d("API.roomCreate()", response.body().toString())
         App.updateRoomId(response.body()!!["room_id"] as String?)
     }
 
@@ -43,7 +43,7 @@ class API {
         val service = retrofit.create(RoomServices::class.java)
         val response = service.joinRoom(Auth.token!!, roomId, displayName)
 
-        Log.e("API.joinRoom()", response.body().toString())
+        Log.d("API.joinRoom()", response.body().toString())
         response.body()?.let {
             try {
                 if(it["joined"]!! as Boolean) {
@@ -69,7 +69,7 @@ class API {
         if (Auth.token == null) return
         val service = retrofit.create(RoomServices::class.java)
         val response = service.cancel(Auth.token!!, roomId)
-        Log.e("API.cancel()", response.body().toString())
+        Log.d("API.cancel()", response.body().toString())
     }
 
     suspend fun vote(roomId: String, voteFor: String, accepted: Boolean) {
@@ -80,7 +80,7 @@ class API {
             accepted = accepted,
         )
         val response = service.vote(Auth.token!!, roomId, body)
-        Log.e("API.vote()", response.body().toString())
+        Log.d("API.vote()", response.body().toString())
     }
 
     suspend fun accept(roomId: String, acceptFor: String, accepted: Boolean) {
@@ -91,7 +91,7 @@ class API {
             accepted = accepted,
         )
         val response = service.accept(Auth.token!!, roomId, body)
-        Log.e("API.vote()", response.body().toString())
+        Log.d("API.vote()", response.body().toString())
     }
 
     suspend fun createGuest(roomId: String, name: String, callBack: (Boolean) -> Unit = {}) {
@@ -102,7 +102,7 @@ class API {
         )
         val response = service.createGuest(Auth.token!!, roomId, body)
         callBack(response.body()?.get("succeed") as Boolean? ?: false)
-        Log.e("API.createGuest()", response.body().toString())
+        Log.d("API.createGuest()", response.body().toString())
     }
 
     suspend fun deleteGuest(roomId: String, name: String, callBack: (Boolean) -> Unit = {}) {
@@ -113,7 +113,7 @@ class API {
         )
         val response = service.deleteGuest(Auth.token!!, roomId, body)
         callBack(response.body()?.get("succeed") as Boolean? ?: false)
-        Log.e("API.deleteGuest()", response.body().toString())
+        Log.d("API.deleteGuest()", response.body().toString())
     }
 
 
@@ -125,7 +125,7 @@ class API {
             newMemberModel = new,
         )
         val response = service.editMember(Auth.token!!, roomId, body)
-        Log.e("API.editMember()", response.body().toString())
+        Log.d("API.editMember()", response.body().toString())
     }
 
     suspend fun editSettings(roomId: String, settingsModel: SettingsModel, callBack: (Boolean)-> Unit = {}) {
@@ -149,7 +149,7 @@ class API {
         val service = retrofit.create(RoomServices::class.java)
         val response = service.addReceipt(Auth.token!!, roomId, receiptModel)
         callBack(response.body()?.get("succeed") as Boolean? ?: false)
-        Log.e("API.createReceipt()", response.body().toString())
+        Log.d("API.createReceipt()", response.body().toString())
     }
 
     suspend fun editReceipt(roomId: String, receiptModel: ReceiptModel, callBack: (Boolean)-> Unit = {}) {
@@ -161,6 +161,6 @@ class API {
         )
         val response = service.editReceipt(Auth.token!!, roomId, body)
         callBack(response.body()?.get("succeed") as Boolean? ?: false)
-        Log.e("API.editReceipt()", response.body().toString())
+        Log.d("API.editReceipt()", response.body().toString())
     }
 }

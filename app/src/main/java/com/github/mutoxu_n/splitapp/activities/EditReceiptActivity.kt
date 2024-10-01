@@ -128,7 +128,7 @@ class EditReceiptActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     topBar = {
                         InRoomTopBar(
-                            title = if(isEdit) stringResource(R.string.topbar_title_edit_receipt) else stringResource(R.string.topbar_title_create_receipt),
+                            title = if(isEdit) stringResource(R.string.top_bar_title_edit_receipt) else stringResource(R.string.top_bar_title_create_receipt),
                             onBackClicked = { finish() }
                         )
                     }

@@ -1,7 +1,6 @@
 package com.github.mutoxu_n.splitapp.models
 
 import com.google.firebase.firestore.IgnoreExtraProperties
-import kotlin.jvm.Throws
 
 
 @IgnoreExtraProperties

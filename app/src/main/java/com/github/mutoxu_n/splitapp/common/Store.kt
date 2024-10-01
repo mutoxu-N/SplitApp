@@ -84,7 +84,6 @@ object Store {
 
         val db = FirebaseFirestore.getInstance()
         val roomId: String = App.roomId.value ?: return
-        Log.e("STORE", "roomId = $roomId")
 
         settingsListener = db.collection("rooms").document(roomId).addSnapshotListener { snapshot, e ->
             if(e != null) {

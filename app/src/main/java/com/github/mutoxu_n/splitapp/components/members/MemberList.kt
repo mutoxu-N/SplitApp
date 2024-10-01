@@ -155,10 +155,10 @@ private fun MemberListItem(
 
         if(isDialogShown) {
             AttentionDialog(
-                title = "ゲストの削除",
-                message = "ゲスト ${member.name} を削除します。",
+                title = stringResource(R.string.delete_guest_dialog_title),
+                message = stringResource(R.string.delete_guest_dialog_message, member.name),
                 onDismiss = { isDialogShown = false },
-                confirmText = "削除する",
+                confirmText = stringResource(R.string.delete_guest_dialog_delete_button),
                 onConfirm = {
                     isDialogShown = false
                     onDeleteGuest(member)

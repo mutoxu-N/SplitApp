@@ -12,7 +12,7 @@ data class Member(
 ): Parcelable {
     companion object {
         val Empty = Member(
-            name = "ERROR",
+            name = "EMPTY MEMBER",
             uid = null,
             weight = 1f,
             role = Role.NORMAL,

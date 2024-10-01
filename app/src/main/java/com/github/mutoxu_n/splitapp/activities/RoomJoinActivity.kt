@@ -25,15 +25,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.github.mutoxu_n.splitapp.App
+import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
 import com.github.mutoxu_n.splitapp.api.API
 import com.github.mutoxu_n.splitapp.common.Store
@@ -77,7 +78,7 @@ class RoomJoinActivity : ComponentActivity() {
                 val pendingState: PendingState? by Store.pendingState.collectAsState()
 
                 LaunchedEffect(key1 = roomId, key2 = waitForInput) {
-                    Log.e(TAG, "roomId=$roomId, waitForInput=$waitForInput")
+                    Log.d(TAG, "roomId=$roomId, waitForInput=$waitForInput")
                     if(!waitForInput && roomId != null) {
                         startInRoomActivity()
                     }
@@ -86,7 +87,7 @@ class RoomJoinActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         OutRoomTopBar(
-                            title = "ルームに参加する",
+                            title = stringResource(R.string.top_bar_join_room),
                             onBackClicked = { finish() },
                         )
                     },
@@ -126,8 +127,8 @@ class RoomJoinActivity : ComponentActivity() {
 
                         false -> {
                             AttentionDialog(
-                                title = "承認待ち",
-                                message = "ルームへの参加が拒否されました",
+                                title = stringResource(R.string.dialog_wait_for_approval),
+                                message = stringResource(R.string.dialog_message_deny_joining_room),
                                 onDismiss = {
                                     waitForInput = true
                                     roomId?.let {
@@ -143,8 +144,8 @@ class RoomJoinActivity : ComponentActivity() {
 
                         null -> {
                             AttentionDialog(
-                                title = "承認待ち",
-                                message = "ルームへの参加許可を待機しています",
+                                title = stringResource(R.string.dialog_wait_for_approval),
+                                message = stringResource(R.string.dialog_message_wait_for_approval),
                                 onDismiss = {
                                     waitForInput = true
                                     roomId?.let {
@@ -172,13 +173,13 @@ class RoomJoinActivity : ComponentActivity() {
         API().joinRoom(roomId, displayName) { joined, pending ->
             if(joined) {
                 waitForInput = false
-                Log.e(TAG, "joinRoom: success")
+                Log.d(TAG, "joinRoom: success")
 
             } else if(!pending) {
                 waitForInput = true
                 Toast.makeText(
                     this@RoomJoinActivity,
-                    "ルーム(ID:$roomId)は存在しません",
+                    getString(R.string.msg_room_not_exists, roomId),
                     Toast.LENGTH_SHORT,
                 ).show()
             }
@@ -233,9 +234,9 @@ private fun Screen(
             },
             isError = isRoomIdError,
             maxLines = 1,
-            label = { Text(text = "ルームID") },
+            label = { Text(text = stringResource(R.string.term_room_id)) },
             supportingText = {
-                if(isRoomIdError) Text(text = "ルームIDは6桁の大文字英数字です")
+                if(isRoomIdError) Text(text = stringResource(R.string.msg_room_id_is_6_digits))
             },
         )
 
@@ -246,7 +247,7 @@ private fun Screen(
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = 7.dp),
-                text = "ルームに参加"
+                text = stringResource(id = R.string.button_join_room)
             )
         }
     }

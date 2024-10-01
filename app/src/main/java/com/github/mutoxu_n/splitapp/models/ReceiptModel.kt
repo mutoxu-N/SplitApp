@@ -24,19 +24,6 @@ data class ReceiptModel(
         const val FIELD_REPORTED_BY = "reported_by"
         const val FIELD_TIMESTAMP = "timestamp"
 
-        @Suppress("UNCHECKED_CAST")
-        @Throws(ClassCastException::class)
-        fun fromMap(map: Map<String, Any>): ReceiptModel{
-            return ReceiptModel(
-                id = map[FIELD_ID] as String,
-                stuff = map[FIELD_STUFF] as String,
-                paid = map[FIELD_PAID] as String,
-                buyers = map[FIELD_BUYERS] as List<String>,
-                payment = map[FIELD_PAYMENT] as Int,
-                reportedBy = map[FIELD_REPORTED_BY] as String,
-                timestamp = map[FIELD_TIMESTAMP].toString(),
-            )
-        }
     }
 
     fun toReceipt(): Receipt? {

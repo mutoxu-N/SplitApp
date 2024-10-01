@@ -66,7 +66,7 @@ class RoomCreateActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         OutRoomTopBar(
-                            title = stringResource(R.string.appbar_room_create),
+                            title = stringResource(R.string.top_bar_room_create),
                             onBackClicked = { finish() }
                         )
                      },
@@ -100,7 +100,7 @@ class RoomCreateActivity : ComponentActivity() {
     }
 
     private suspend fun onCreateRoom(settings: Settings) {
-        Log.e(TAG, "onCreateRoom: $settings")
+        Log.d(TAG, "onCreateRoom: $settings")
         API().createRoom(settings)
     }
 
@@ -143,7 +143,7 @@ private fun Preview() {
         Scaffold(
             topBar = {
                 OutRoomTopBar(
-                    title = stringResource(R.string.appbar_room_create),
+                    title = stringResource(R.string.top_bar_room_create),
                 )
             },
             modifier = Modifier.fillMaxSize()

@@ -2,8 +2,6 @@
 <resources>
     <string name="app_name">Split</string>
 
-    <string name="appbar_room_create">ルームを作る</string>
-
     <string name="bottom_nav_item_info">情報</string>
     <string name="bottom_nav_item_receipts">レシート</string>
     <string name="bottom_nav_item_settings">設定</string>
@@ -15,21 +13,49 @@
     <string name="button_save_receipt">レシートの内容を保存する</string>
     <string name="button_save_settings">ルーム設定を保存する</string>
 
+    <string name="delete_guest_dialog_delete_button">削除する</string>
+    <string name="delete_guest_dialog_message">ゲスト %1$s を削除します。</string>
+    <string name="delete_guest_dialog_title">ゲストの削除</string>
+
+    <string name="dialog_create_guest">ゲストメンバーの作成</string>
+    <string name="dialog_message_deny_joining_room">ルームへの参加が拒否されました</string>
+    <string name="dialog_message_wait_for_approval">ルームへの参加許可を待機しています</string>
+    <string name="dialog_wait_for_approval">承認待ち</string>
+
+    <string name="display_name_keep_checkbox">この名前を記録する</string>
     <string name="display_room_id">ルームID</string>
 
+    <string name="error_member_is_null">メンバーの読み込みに失敗しました</string>
+
     <string name="format_datetime">yyyy/MM/dd HH:mm</string>
+
+    <string name="list_select_dialog_everyone">全員</string>
 
     <string name="logout_dialog_confirm_text">ログアウト</string>
     <string name="logout_dialog_message">ログアウトすると全ての情報が失われ、既存のルームに関する全ての情報にアクセスできなくなります。まだ割り勘支払いの終わっていないルームに参加している場合は支払い情報が失われる可能性があります。ログアウトしてもよろしいですか？</string>
     <string name="logout_dialog_title">ログアウトします</string>
 
+    <string name="member_manage_dialog_change_name_title">メンバー名の変更</string>
+    <string name="member_manage_dialog_change_owner_message">オーナー権限を %1$s に譲渡します。この操作が完了すると、再度オーナー権限を得るまで一部の操作にアクセスできなくなります。</string>
+    <string name="member_manage_dialog_change_owner_title">オーナーを変更します</string>
+    <string name="member_manage_dialog_not_owner_button">閉じる</string>
+    <string name="member_manage_dialog_not_owner_message">自分自身のオーナー権限をはく奪することはできません。他のメンバーの役職をオーナーに設定することで、オーナー権限を譲渡できます。</string>
+    <string name="member_manage_dialog_not_owner_title">オーナーを変更できません</string>
     <string name="member_role">役職</string>
     <string name="member_weight">重み</string>
 
-    <string name="receipt_stuff">商品</string>
+    <string name="msg_room_id_is_6_digits">ルームIDは6桁の大文字英数字です</string>
+    <string name="msg_room_not_exists">ルーム(ID:%1$s)は存在しません</string>
+
+    <string name="payment_list_current_payment">支払済: %1$s, 残り: %2$s</string>
+    <string name="payment_list_pay_to">" へ %1$s%2$s 支払う"</string>
+    <string name="payment_list_receive_from">" から %1$s%2$s 受け取る"</string>
+    <string name="payment_list_total_payment">(総額: %1$s)</string>
+
     <string name="receipt_paid">支払い者</string>
     <string name="receipt_payment">支払金額</string>
     <string name="receipt_reported">報告者: %1$s</string>
+    <string name="receipt_stuff">商品</string>
     <string name="receipt_summary">%1$sが%2$sを%3$s%4$sで購入しました</string>
     <string name="receipt_term_buyer">購入者</string>
     <string name="receipt_term_created_time">作成日時</string>
@@ -38,6 +64,7 @@
     <string name="request_type_always">いつでも</string>
     <string name="request_type_error">エラー</string>
     <string name="request_type_moderator">管理者が承認</string>
+    <string name="request_type_owner">オーナーが承認</string>
     <string name="request_type_vote">投票</string>
 
     <string name="role_creator">作成者</string>
@@ -56,18 +83,24 @@
     <string name="settings_room_name">ルーム名</string>
     <string name="settings_split_unit">割り勘単位</string>
 
+    <string name="term_display_name">表示名</string>
+    <string name="term_error">ERROR</string>
     <string name="term_everyone">全員</string>
     <string name="term_login">ログイン</string>
     <string name="term_logout">ログアウト</string>
     <string name="term_permission">権限</string>
+    <string name="term_room_id">ルームID</string>
 
     <string name="title_activity_edit_receipt">EditReceiptActivity</string>
     <string name="title_activity_in_room">InRoomActivity</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_member_manage">MemberManageActivity</string>
     <string name="title_activity_room_create">RoomCreateActivity</string>
     <string name="title_activity_room_join">RoomJoinActivity</string>
-    <string name="title_activity_member_manage">MemberManageActivity</string>
-    <string name="topbar_title_edit_receipt">レシートの編集</string>
-    <string name="topbar_title_create_receipt">レシートの作成</string>
-    <string name="request_type_owner">オーナーが承認</string>
+
+    <string name="top_bar_join_room">ルームに参加する</string>
+    <string name="top_bar_manage_members">メンバーの管理</string>
+    <string name="top_bar_room_create">ルームを作る</string>
+    <string name="top_bar_title_create_receipt">レシートの作成</string>
+    <string name="top_bar_title_edit_receipt">レシートの編集</string>
 </resources>

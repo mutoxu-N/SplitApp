@@ -103,7 +103,7 @@ private fun PaymentListItem(
                 style = MaterialTheme.typography.titleMedium,
             )
             Text(
-                text = "(総額: $used)",
+                text = stringResource(R.string.payment_list_total_payment, used),
                 textAlign = TextAlign.Start,
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.labelSmall,
@@ -113,7 +113,11 @@ private fun PaymentListItem(
             Text(
                 modifier = Modifier
                     .weight(1f),
-                text = "支払済: ${totalString}, 残り: $remainString",
+                text = stringResource(
+                    R.string.payment_list_current_payment,
+                    totalString,
+                    remainString
+                ),
                 textAlign = TextAlign.End,
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.labelSmall,
@@ -131,8 +135,16 @@ private fun PaymentListItem(
                             if(t.amount > 0) members[t.receiver].name
                             else members[t.payer].name
                         val msg =
-                            if(t.amount > 0) " へ ${stringResource(id = R.string.settings_currency)}${"%,d".format(t.amount)} 支払う"
-                            else " から ${stringResource(id = R.string.settings_currency)}${"%,d".format(-t.amount)} 受け取る"
+                            if(t.amount > 0) stringResource(
+                                R.string.payment_list_pay_to,
+                                stringResource(id = R.string.settings_currency),
+                                "%,d".format(t.amount)
+                            )
+                            else stringResource(
+                                R.string.payment_list_receive_from,
+                                stringResource(id = R.string.settings_currency),
+                                "%,d".format(-t.amount)
+                            )
 
                         Row(
                             verticalAlignment = Alignment.Bottom,

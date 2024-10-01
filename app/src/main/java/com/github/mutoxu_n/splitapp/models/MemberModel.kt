@@ -16,15 +16,5 @@ data class MemberModel(
         const val FIELD_UID = "uid"
         const val FIELD_WEIGHT = "weight"
         const val FIELD_ROLE = "role"
-
-        @Throws(ClassCastException::class)
-        fun fromMap(map: Map<String, Any>): MemberModel{
-            return MemberModel(
-                name = map[FIELD_NAME] as String,
-                uid = map[FIELD_UID] as String,
-                weight = map[FIELD_WEIGHT] as Double,
-                role = map[FIELD_ROLE] as Int,
-            )
-        }
     }
 }

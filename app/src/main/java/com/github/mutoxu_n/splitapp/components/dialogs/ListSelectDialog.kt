@@ -39,7 +39,7 @@ fun<T> ListSelectDialog(
     multiselect: Boolean = false,
 ) {
     if(candidates.isEmpty()) {
-        Text(text = "ERROR")
+        Text(text = stringResource(R.string.term_error))
         return
     }
 
@@ -84,7 +84,7 @@ fun<T> ListSelectDialog(
                     if(multiselect) {
                         Column {
                             CheckboxRow(
-                                name = "全員",
+                                name = stringResource(R.string.list_select_dialog_everyone),
                                 onClicked = {
                                     everyone = it
                                     newValue = if(it) listOf() else candidates.toList()

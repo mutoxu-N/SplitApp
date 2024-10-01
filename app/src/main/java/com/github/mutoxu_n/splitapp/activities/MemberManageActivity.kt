@@ -22,10 +22,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.github.mutoxu_n.splitapp.App
+import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
 import com.github.mutoxu_n.splitapp.api.API
 import com.github.mutoxu_n.splitapp.common.Store
@@ -63,7 +65,7 @@ class MemberManageActivity : ComponentActivity() {
             var guestCreateDialogShown by rememberSaveable { mutableStateOf(false) }
 
             var isError = false
-            if(members == null) { Text(text = "メンバーの読み込みに失敗しました"); isError=true }
+            if(members == null) { Text(text = stringResource(R.string.error_member_is_null)); isError=true }
             if(isError) return@setContent
 
 
@@ -72,7 +74,7 @@ class MemberManageActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     topBar = {
                         InRoomTopBar(
-                            title = "メンバーの管理",
+                            title = stringResource(R.string.top_bar_manage_members),
                             onBackClicked = { finish() }
                         )
                     },
@@ -107,7 +109,7 @@ class MemberManageActivity : ComponentActivity() {
 
                 if(guestCreateDialogShown) {
                     ValueChangeDialog(
-                        title = "ゲストメンバーの作成",
+                        title = stringResource(R.string.dialog_create_guest),
                         value = "",
                         onDismiss = { guestCreateDialogShown = false },
                         onConfirm =  {

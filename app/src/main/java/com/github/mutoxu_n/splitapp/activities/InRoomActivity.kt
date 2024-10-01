@@ -66,7 +66,6 @@ import com.github.mutoxu_n.splitapp.components.settings.RoomIdDisplay
 import com.github.mutoxu_n.splitapp.components.settings.SettingsEditor
 import com.github.mutoxu_n.splitapp.models.Member
 import com.github.mutoxu_n.splitapp.models.PendingMember
-import com.github.mutoxu_n.splitapp.models.PendingState
 import com.github.mutoxu_n.splitapp.models.Receipt
 import com.github.mutoxu_n.splitapp.models.ReceiptModel
 import com.github.mutoxu_n.splitapp.models.RequestType
