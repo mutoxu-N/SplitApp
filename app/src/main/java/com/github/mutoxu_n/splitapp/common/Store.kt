@@ -43,9 +43,9 @@ object Store {
 
     init {
         // デバッグ時
-        if(BuildConfig.DEBUG) {
-            FirebaseFirestore.getInstance().useEmulator("10.0.2.2", 8080)
-        }
+//        if(BuildConfig.DEBUG) {
+//            FirebaseFirestore.getInstance().useEmulator("10.0.2.2", 8080)
+//        }
     }
 
     fun startPendingObserving() {

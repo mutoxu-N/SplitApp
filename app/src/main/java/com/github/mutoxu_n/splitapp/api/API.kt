@@ -26,6 +26,8 @@ class API {
         .build()
 
     suspend fun createRoom(settings: Settings) {
+        Log.e("token", Auth.token.toString())
+        Log.e("address", BuildConfig.SERVER_ADDRESS)
         if (Auth.token == null) return
         val name = App.displayName.value ?: return
 
