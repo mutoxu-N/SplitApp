@@ -1,6 +1,8 @@
 package com.github.mutoxu_n.splitapp.activities
 
 import android.annotation.SuppressLint
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -51,6 +53,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.github.mutoxu_n.splitapp.App
+import com.github.mutoxu_n.splitapp.R
 import com.github.mutoxu_n.splitapp.activities.InRoomActivity.InfoTabIndex
 import com.github.mutoxu_n.splitapp.activities.ui.theme.SplitAppTheme
 import com.github.mutoxu_n.splitapp.api.API
@@ -223,6 +226,24 @@ class InRoomActivity : ComponentActivity() {
                                             InfoSettingsScreen(
                                                 roomId = roomId,
                                                 settings = settings!!,
+                                                onCopyClicked = {
+                                                    // Copy RoomId
+                                                    val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                                    val clip = ClipData.newPlainText(getString(R.string.secret_clipboard_room_id), roomId)
+                                                    clipboard.setPrimaryClip(clip)
+                                                    Toast.makeText(this@InRoomActivity, "ルームID($roomId)をコピーしました", Toast.LENGTH_SHORT).show()
+                                                },
+                                                onShareClicked = {
+                                                    // Sharesheet 表示
+                                                    val intent = Intent().apply {
+                                                        action = Intent.ACTION_SEND
+                                                        putExtra(Intent.EXTRA_TEXT, roomId)
+                                                        type = "text/plain"
+                                                    }
+                                                    val shareIntent  = Intent.createChooser(intent, null)
+                                                    startActivity(shareIntent)
+                                                }
+
                                             )
                                         }
                                         // Info/Members
@@ -456,6 +477,8 @@ private fun InfoPayScreen(
 private fun InfoSettingsScreen(
     roomId: String,
     settings: Settings,
+    onShareClicked: () -> Unit = {},
+    onCopyClicked: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -463,7 +486,15 @@ private fun InfoSettingsScreen(
             .padding(7.dp),
     ) {
         Spacer(modifier = Modifier.size(10.dp))
-        RoomIdDisplay(roomId = roomId)
+        RoomIdDisplay(
+            roomId = roomId,
+            onShareClicked = {
+                onShareClicked()
+            },
+            onCopyClicked = {
+                onCopyClicked()
+            }
+        )
         HorizontalDivider()
 
         key(settings) {
